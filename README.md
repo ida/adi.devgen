@@ -81,3 +81,7 @@ TODO
 https://github.com/ida/skriptz/blob/master/plone/addBrowser.py
 and
 https://github.com/ida/skriptz/blob/master/plone/Dexterity/addField.py
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/ida/adi.devgen/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+

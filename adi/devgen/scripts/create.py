@@ -468,7 +468,6 @@ def addSetuphandlers(path):
       description=""\n\
       handler="' + getAddonName(path) + '.setuphandlers.setupVarious" />\n\
       />\n\n'
-    insertBeforeLine(getConfigPath(path), '</configure>', str)
     if not fileHasStr(getConfigPath(path), str):
         insertBeforeLine(getConfigPath(path), '</configure>', str)
     else:

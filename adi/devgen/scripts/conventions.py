@@ -1,8 +1,10 @@
+from adi.commons.commons import getRealPath
 from adi.commons.commons import getParentDirPath
 from adi.commons.commons import fileExists
 
 def getAddonPath(path):
     """ 'path' must point to addon or a child of it. """
+    path = getRealPath(path)
     while not fileExists(path + 'setup.py'):
         path = getParentDirPath(path)
     return path
@@ -13,6 +15,10 @@ def getFirstLvlPath(path):
 
 def getLastLvlPath(path):
     path = getFirstLvlPath(path) + getAddonLastName(path) + '/'
+    return path
+
+def getConfigPath(path):
+    path = getLastLvlPath(path) + 'configure.zcml'
     return path
 
 def getProfilePath(path):

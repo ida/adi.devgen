@@ -489,7 +489,7 @@ def setupVarious(context):\n\
     if context.readDataFile('" + getAddonName(path) + ".marker.txt') is None:\n\
         return\n\
 \n\
-doOnInstall(portal)"
+    doOnInstall(portal)"
 
     addFile(getLastLvlPath(path) + 'setuphandlers.py', str)
     addFile(getProfilePath(path) + getAddonName(path) + '.marker.txt')

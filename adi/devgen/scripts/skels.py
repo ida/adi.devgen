@@ -19,19 +19,20 @@ class AddSkel(object):
         addFirstInit(first_lvl)
         addLastInit(last_lvl)
 
-    def addProfileSkel(self, path='.'):
+    def addProfileSkel(self, path, addon_name):
         """ Be installable via a Plonesite's quickinstaller.
         """
         if not path.endswith('/'): path += '/'
         if path != './':
-            self.addBaseSkel(path)
+            addon_name = path.split('/')[-2]
+            self.addBaseSkel(path, addon_name)
+
         last_lvl = getLastLvlPath(path)
         profil_path = getProfilePath(path)
+
+        registerProfile(last_lvl)
         addDirs(profil_path)
         addMetadata(profil_path)
-        if not fileExists(last_lvl + 'configure.zcml'):
-            addConfig(last_lvl)
-        addProfile(last_lvl)
 
     def addSkinSkel(self, path='.'):
         """ Add a skins-based skel."""

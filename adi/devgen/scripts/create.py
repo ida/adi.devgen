@@ -71,7 +71,7 @@ def addConfig(path):
 </configure>\n'
     addFile(path + 'configure.zcml', string)
 
-def addProfile(path):
+def registerProfile(path):
     string = '\n\
   <genericsetup:registerProfile\n\
       name="default"\n\
@@ -80,9 +80,10 @@ def addProfile(path):
       description="Installs the ' + getAddonFirstName(path) + ' package"\n\
       provides="Products.GenericSetup.interfaces.EXTENSION"\n\
       />\n'
-    if not fileExists(getLastLvlPath(path) + 'configure.zcml'): addConfig(getLastLvlPath(path))
-    insertBeforeLastTag(getLastLvlPath(path) + 'configure.zcml', string)
-
+    fil = getLastLvlPath(path) + 'configure.zcml'
+    if not fileExists(fil): addConfig(getLastLvlPath(path))
+    insertBeforeLastTag(fil, string)
+    
 def addMetadata(path):
     string = '\
 <?xml version="1.0"?>\n\

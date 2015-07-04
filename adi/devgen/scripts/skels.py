@@ -34,11 +34,12 @@ class AddSkel(object):
         addDirs(profil_path)
         addMetadata(profil_path)
 
-    def addSkinSkel(self, path='.'):
+    def addSkinSkel(self, path, addon_name):
         """ Add a skins-based skel."""
         if not path.endswith('/'): path += '/'
         if path != './':
-            self.addProfileSkel(path)
+            addon_name = path.split('/')[-2]
+            self.addProfileSkel(path, addon_name)
         name_underscored = getUnderscoredName(path)
         last_lvl = getLastLvlPath(path)
         if not fileExists(last_lvl + 'profiles'):
@@ -46,15 +47,16 @@ class AddSkel(object):
         addDirs(last_lvl + 'skins/' + name_underscored)
         addSkin(path)
 
-    def addBrowserSkel(self, path='.'):
+    def addBrowserSkel(self, path, addon_name):
         """ Add a browser-based skel."""
         if not path.endswith('/'): path += '/'
         if path != './':
-            self.addProfileSkel(path)
+            addon_name = path.split('/')[-2]
+            self.addProfileSkel(path, addon_name)
         addDirs(getResourcesPath(path))
         addBrowser(path)
 
-    def addDep(self, dep_name, path='.'):
+    def addDep(self, dep_name, path):
         """ Add a dependency-addon to an addon."""
         if not path.endswith('/'): path += '/'
         addDependency(dep_name, path)

@@ -27,12 +27,9 @@ class AddSkel(object):
             addon_name = path.split('/')[-2]
             self.addBaseSkel(path, addon_name)
 
-        last_lvl = getLastLvlPath(path)
-        profil_path = getProfilePath(path)
-
-        registerProfile(last_lvl)
-        addDirs(profil_path)
-        addMetadata(profil_path)
+        registerProfile(getLastLvlPath(path))
+        addDirs(getProfilePath(path))
+        addMetadata(getProfilePath(path))
 
     def addSkinSkel(self, path, addon_name):
         """ Add a skins-based skel."""

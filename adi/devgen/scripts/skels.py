@@ -5,9 +5,10 @@ from create import *
 
 class AddSkel(object):
 
-    def addBaseSkel(self, path):
+    def addBaseSkel(self, path, addon_name=None):
         """ Be avail- and installable for ZOPE.
         """
+        print path
         if not path.endswith('/'): path += '/'
         addon_name = path.split('/')[-2]
         addon_first_name = addon_name.split('.')[0]
@@ -43,9 +44,6 @@ class AddSkel(object):
         addDirs(last_lvl + 'skins/' + name_underscored)
         addSkin(path)
 
-    def addSkinCSS(self, path):
-        pass
-
     def addBrowserSkel(self, path):
         """ Add a browser-based skel."""
         if not path.endswith('/'): path += '/'
@@ -53,7 +51,20 @@ class AddSkel(object):
         addDirs(getResourcesPath(path))
         addBrowser(path)
 
-    def addBuildoutSkel(self, path):
+    def addDep(self, dep_name, path):
+        """ Add a dependency-addon to an addon."""
+        if not path.endswith('/'): path += '/'
+        addDependency(dep_name, path)
+
+    def addInstallerScript(self, path):
+        """ Add and register a file called 'setuphandlers.py', 
+            which will be executed on (re-)installs.
+        """
+        if not path.endswith('/'): path += '/'
+        addSetuphandlers(path)
+
+
+    def addBuildoutSkel(self, path='.'):
         """ Add a buildout skel."""
         if not path.endswith('/'): path += '/'
         path += 'plone-instance/'
@@ -64,15 +75,3 @@ class AddSkel(object):
     def buildOut(self, path):
         """ Trigger bootstrapping and outbuilding."""
         buildout(path)
-
-    def addDep(self, dep_name, path):
-        """ Add a dependency-addon to an addon."""
-        if not path.endswith('/'): path += '/'
-        addDependency(dep_name, path)
-
-    def addInstallScript(self, path):
-        """ Add and register a file called 'setuphandlers.py', 
-            which will be executed on (re-)installs.
-        """
-        if not path.endswith('/'): path += '/'
-        addSetuphandlers(path)

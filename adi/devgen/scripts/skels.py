@@ -5,10 +5,9 @@ from create import *
 
 class AddSkel(object):
 
-    def addBaseSkel(self, path, addon_name=None):
+    def addBaseSkel(self, path):
         """ Be avail- and installable for ZOPE.
         """
-        print path
         if not path.endswith('/'): path += '/'
         addon_name = path.split('/')[-2]
         addon_first_name = addon_name.split('.')[0]
@@ -20,11 +19,12 @@ class AddSkel(object):
         addFirstInit(first_lvl)
         addLastInit(last_lvl)
 
-    def addProfileSkel(self, path):
+    def addProfileSkel(self, path='.'):
         """ Be installable via a Plonesite's quickinstaller.
         """
         if not path.endswith('/'): path += '/'
-        self.addBaseSkel(path)
+        if path != './':
+            self.addBaseSkel(path)
         last_lvl = getLastLvlPath(path)
         profil_path = getProfilePath(path)
         addDirs(profil_path)
@@ -33,10 +33,11 @@ class AddSkel(object):
             addConfig(last_lvl)
         addProfile(last_lvl)
 
-    def addSkinSkel(self, path):
+    def addSkinSkel(self, path='.'):
         """ Add a skins-based skel."""
         if not path.endswith('/'): path += '/'
-        self.addProfileSkel(path)
+        if path != './':
+            self.addProfileSkel(path)
         name_underscored = getUnderscoredName(path)
         last_lvl = getLastLvlPath(path)
         if not fileExists(last_lvl + 'profiles'):
@@ -44,19 +45,20 @@ class AddSkel(object):
         addDirs(last_lvl + 'skins/' + name_underscored)
         addSkin(path)
 
-    def addBrowserSkel(self, path):
+    def addBrowserSkel(self, path='.'):
         """ Add a browser-based skel."""
         if not path.endswith('/'): path += '/'
-        self.addProfileSkel(path)
+        if path != './':
+            self.addProfileSkel(path)
         addDirs(getResourcesPath(path))
         addBrowser(path)
 
-    def addDep(self, dep_name, path):
+    def addDep(self, dep_name, path='.'):
         """ Add a dependency-addon to an addon."""
         if not path.endswith('/'): path += '/'
         addDependency(dep_name, path)
 
-    def addInstallerScript(self, path):
+    def addInstallerScript(self, path='.'):
         """ Add and register a file called 'setuphandlers.py', 
             which will be executed on (re-)installs.
         """

@@ -35,20 +35,14 @@ def devgen():
         function_name = args.pop(0)                 # collect function-name
         function = getattr(AddSkel, function_name)  # get function of imported class by corresponding name
 
-    if len(args) < 1:                               # no function-argument provided
-        exit(getattr(function, '__doc__'))          # help: show the choosen function's docstring
-    else:                                           # a function-argument is provided
-        argument = args.pop(0)                      # collect function-argument
 
-    if len(args) > 0:                               # there's still args left
-        path = args.pop(0)                          # we assume it's the optional path-arg
+    if len(args) > 0:
+        argument = args.pop(0)
+        getattr(AddSkel(), function_name)(argument, path)
+    else:
+        getattr(AddSkel(), function_name)(path)
 
-    if len(args) > 0:                               # there's still args left
-        exit('got more args than expected')         # something went wrong, abort
-
-
-    getattr(AddSkel(), function_name)(argument, path)
-
+#        exit(getattr(function, '__doc__'))          # help: show the choosen function's docstring
 #    amount_of_expected_arguments = len(inspect.getargspec(function)[0])
 
 if __name__ == '__devgen__':                    # execute this script only of commandline, not of imports

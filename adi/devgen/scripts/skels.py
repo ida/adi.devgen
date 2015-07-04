@@ -5,7 +5,7 @@ from create import *
 
 class AddSkel(object):
 
-    def addBaseSkel(self, path):
+    def addBaseSkel(self, path, addon_name):
         """ Be avail- and installable for ZOPE.
         """
         if not path.endswith('/'): path += '/'

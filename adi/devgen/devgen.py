@@ -20,30 +20,36 @@ def devgen():
         $ devgen addDep mailtoplone.base        # register a dependency-addon
     """
 
-    # For now, we assume at least two args and the most three args.
+    path = '.'                                      # if user didn't specify, we assume to be in the addon
 
-    function = None
+    function = None                                 # try to find these three vars in the following
     function_name = None
     argument = None
-    path = '.'
 
-    args = sys.argv                                 # get user's input as a list
-    this_script_path = args.pop(0)                  # remove sys.argv's first default-arg
+    args = sys.argv                                 # get user's input as a list, using sys.argv
+    this_script_path = args.pop(0)                  # remove sys.argv's inbuilt first default-arg
+    this_script_name = this_script_path.split('/')[-1]  # extract name of it
+
     if len(args) < 1:                               # no function-name provided
-        exit(devgen.__doc__)                        # help: show this function's docstring
+        exit(this_script_name.__doc__)              # show this function's docstring and abort
     else:                                           # a function-name is provided
         function_name = args.pop(0)                 # collect function-name
         function = getattr(AddSkel, function_name)  # get function of imported class by corresponding name
 
 
     if len(args) > 0:
+        path = args.pop(0)
+    if len(args) > 0:
         argument = args.pop(0)
-        getattr(AddSkel(), function_name)(argument, path)
-    else:
-        getattr(AddSkel(), function_name)(path)
+#            getattr(AddSkel(), function_name)(path, argument)
 
-#        exit(getattr(function, '__doc__'))          # help: show the choosen function's docstring
-#    amount_of_expected_arguments = len(inspect.getargspec(function)[0])
+    expected_args = inspect.getargspec(function)[0]
+    if len(expected_args) == 2:                             # expected are self and path
+        getattr(AddSkel(), function_name)(path)             # execute corresponding func
+    elif len(expected_args) == 3:                           # expected are 'self', 'path' and one more arg
+        if not argument:
+            exit(getattr(function, '__doc__'))              # show the choosen function's docstring and abort
+        getattr(AddSkel(), function_name)(path, argument)   # execute corresponding func
 
 if __name__ == '__devgen__':                    # execute this script only of commandline, not of imports
     devgen()

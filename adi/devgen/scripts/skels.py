@@ -26,7 +26,6 @@ class AddSkel(object):
         """
         if not path.endswith('/'): path += '/'
         if path != './':
-            addon_name = path.split('/')[-2]
             self.addBaseSkel(path)
 
         registerProfile(getLastLvlPath(path))
@@ -37,13 +36,12 @@ class AddSkel(object):
         """ Add a skins-based skel."""
         if not path.endswith('/'): path += '/'
         if path != './':
-            addon_name = path.split('/')[-2]
-            if not fileExists(getProfilePath(path)):
-                self.addProfileSkel(path)
+            path = path.split('/')[-2]
+            self.addProfileSkel(path)
+        if not fileExists(getProfilePath(path)):
+            self.addProfileSkel('.')
         name_underscored = getUnderscoredName(path)
         last_lvl = getLastLvlPath(path)
-        if not fileExists(last_lvl + 'profiles'):
-            self.addProfileSkel(path)
         addDirs(last_lvl + 'skins/' + name_underscored)
         addSkin(path)
 
@@ -51,7 +49,9 @@ class AddSkel(object):
         """ Add a browser-based skel."""
         if not path.endswith('/'): path += '/'
         if path != './':
-            addon_name = path.split('/')[-2]
+            path = path.split('/')[-2]
+            self.addProfileSkel(path)
+        if not fileExists(getProfilePath(path)):
             self.addProfileSkel(path)
         addDirs(getResourcesPath(path))
         addBrowser(path)

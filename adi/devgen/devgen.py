@@ -59,7 +59,7 @@ def devgen():
     # EXECUTE FUNCTION
     
     if len(expected_args) > 1:                              # more than a path expected
-        getattr(AddSkel(), function_name)(path, argument)   # execute corresponding func with arg
+        getattr(AddSkel(), function_name)(argument, path)   # execute corresponding func with arg
     else:                                                   # only a path expected
         getattr(AddSkel(), function_name)(path)             # execute corresponding func without arg
 

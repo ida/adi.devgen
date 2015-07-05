@@ -88,11 +88,12 @@ def addMetadata(path):
     string = '\
 <?xml version="1.0"?>\n\
 <metadata>\n\
-<version>1000</version>\n\
-<dependencies>\n\
-</dependencies>\n\
+  <version>1000</version>\n\
+  <dependencies>\n\
+  </dependencies>\n\
 </metadata>\n'
-    addFile(getProfilePath(path) + 'metadata.xml', string)
+    if not fileExists(getProfilePath(path) + 'metadata.xml'):
+        addFile(getProfilePath(path) + 'metadata.xml', string)
 
 def addSkin(path):
     conf = getLastLvlPath(path) + 'configure.zcml'
@@ -247,7 +248,7 @@ def addDependency(dep_name, path):
     insertBeforeLine(path, pattern, string)
     path = getProfilePath(path) + 'metadata.xml'
     pattern = '</dependencies>'
-    string = '<dependency>profile-' + dep_name + ':default</dependency>'
+    string = '    <dependency>profile-' + dep_name + ':default</dependency>\n'
     insertBeforeLine(path, pattern, string)
 
 def addBootstrap(path):

@@ -61,7 +61,7 @@ class AddSkel(object):
         if not path.endswith('/'): path += '/'
         addDependency(dep_name, path)
 
-    def addInstallerScript(self, path='.'):
+    def addInstallerScript(self, path):
         """ Add and register a file called 'setuphandlers.py', 
             which will be executed on (re-)installs.
         """

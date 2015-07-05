@@ -33,12 +33,13 @@ class AddSkel(object):
         addDirs(getProfilePath(path))
         addMetadata(getProfilePath(path))
 
-    def addSkinSkel(self, path, addon_name):
+    def addSkinSkel(self, path):
         """ Add a skins-based skel."""
         if not path.endswith('/'): path += '/'
         if path != './':
             addon_name = path.split('/')[-2]
-            self.addProfileSkel(path, addon_name)
+            if not fileExists(getProfilePath(path)):
+                self.addProfileSkel(path)
         name_underscored = getUnderscoredName(path)
         last_lvl = getLastLvlPath(path)
         if not fileExists(last_lvl + 'profiles'):

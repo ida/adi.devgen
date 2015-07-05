@@ -44,7 +44,7 @@ def devgen():
 #            getattr(AddSkel(), function_name)(path, argument)
 
     expected_args = inspect.getargspec(function)[0]
-    if len(expected_args) == 2:                             # expected are self and path
+    if len(expected_args) == 2:                             # expected are 'self' and 'path'
         getattr(AddSkel(), function_name)(path)             # execute corresponding func
     elif len(expected_args) == 3:                           # expected are 'self', 'path' and one more arg
         if not argument:

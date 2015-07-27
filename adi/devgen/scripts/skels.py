@@ -113,9 +113,9 @@ class AddSkel(object):
             elif typ=='fs':
                 os.system('cp -r ' + url + ' .')
 
-    def getReposOfSameHost(self, url, eggs, path='.'):
+    def getReposOfSameVCSUser(self, url, eggs, path='.'):
         """ Example usage:
-devgen getReposOfSameHost 'github.com/collective' 'collective.portlet.sitemap -b 1.0.4, mailtoplone.base'
+devgen getReposOfSameVCSUser 'github.com/collective' 'collective.portlet.sitemap -b 1.0.4, mailtoplone.base'
         """
         if not url.endswith('/'): url += '/'
         urls = []

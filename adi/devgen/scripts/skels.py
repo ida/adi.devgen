@@ -63,7 +63,7 @@ class AddSkel(object):
 
     def addInstallerScript(self, path):
         """ Add and register a file called 'setuphandlers.py', 
-            which will be executed on (re-)installs.
+            in addon, which will be executed on (re-)installs.
         """
         if not path.endswith('/'): path += '/'
         addSetuphandlers(path)
@@ -80,3 +80,35 @@ class AddSkel(object):
     def buildOut(self, path):
         """ Trigger bootstrapping and outbuilding."""
         buildout(path)
+
+    def getDevEggs(self, urls, path):
+        """ Expects a str with with repo-urls,
+            separated by commas, then downloads/clones/checks
+            them out to this directory, or specify another path.
+            Optionally prepend repo-type to address, available are:
+            'git' and 'svn', defaults to git.
+            If, url doesn't start with 'http://' it will be appended.
+            If you are forced to use SSL, type full adress: 'https://github.com/(...)'
+            Example:
+            $ devgen getDevEggs 'github.com/ida/adi.devgen --branch brunch, svn.plone.org/svn/collective/adi.suite/trunk/ adi.suite'
+        """
+        types = ['git', 'svn'] # if omitted, defaults to first item
+        urls = urls.split(',')
+        print urls
+        for url in urls:
+            url = url.strip() # remove trailing spaces
+            print 'u'
+            if url.split(' ')[0] in types: # user specified type
+                typ = url.split(' ')[0]
+                url = url.split(' ')[1:]
+            else:
+                typ = types[0] # default to first type
+
+            if not url.startswith('http'):
+                url = 'http://' + url
+
+            if typ=='git':
+                os.system('git clone ' + url)
+            elif typ=='svn':
+                os.system('svn co ' + url)
+

@@ -113,3 +113,16 @@ class AddSkel(object):
             elif typ=='fs':
                 os.system('cp -r ' + url + ' .')
 
+    def getReposOfSameHost(self, url, eggs, path='.'):
+        """ Example usage:
+devgen getReposOfSameHost 'github.com/collective' 'collective.portlet.sitemap -b 1.0.4, mailtoplone.base'
+        """
+        if not url.endswith('/'): url += '/'
+        urls = []
+        eggs = eggs.split(',')
+        for egg in eggs:
+            egg = egg.strip() # remove trailing spaces
+            urls.append(url + egg)
+        urls = ','.join(urls)
+        self.getDevEggs(urls, '.')
+

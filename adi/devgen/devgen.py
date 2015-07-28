@@ -31,10 +31,8 @@ def devgen():
 
     args = sys.argv                                 # get user's input as a list, using sys.argv
     this_script_path = args.pop(0)                  # remove sys.argv's inbuilt first default-arg
-    this_script_name = this_script_path.split('/')[-1]  # extract name of it
-
     if len(args) < 1:                               # no function-name provided
-        exit(this_script_name.__doc__)              # show this function's docstring and abort
+        exit(devgen.__doc__)                        # show this function's docstring and abort
     else:                                           # a function-name is provided
         function_name = args.pop(0)                 # collect function-name
         function = getattr(AddSkel, function_name)  # get function of imported class by corresponding name

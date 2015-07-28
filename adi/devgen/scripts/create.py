@@ -1,5 +1,5 @@
 import os
-from adi.commons.commons import *
+from commons import *
 from conventions import *
 
 def addSetup(path):

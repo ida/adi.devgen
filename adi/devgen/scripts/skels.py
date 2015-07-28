@@ -1,7 +1,7 @@
 import os
-from adi.commons.commons import *
-from conventions import *
-from create import *
+from adi.devgen.commons import *
+from adi.devgen.conventions import *
+from adi.devgen.create import *
 
 class AddSkel(object):
 

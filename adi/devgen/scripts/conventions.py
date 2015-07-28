@@ -1,6 +1,6 @@
-from adi.devgen.scripts.commons import getRealPath
-from adi.devgen.scripts.commons import getParentDirPath
-from adi.devgen.scripts.commons import fileExists
+from commons.commons import getRealPath
+from commons.commons import getParentDirPath
+from commons.commons import fileExists
 
 def getAddonPath(path):
     """ 'path' must point to addon or a child of it. """

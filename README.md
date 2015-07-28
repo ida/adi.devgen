@@ -14,17 +14,16 @@ Add 'adi.devgen' to the eggs-section in your buildout-config, run buildout.
 As not released yet, clone it and add it as a development-egg, also to buildout.
 
 
-Dependencies
-============
-
-'adi.commons' not released, yet. Get it of: github.com/ida/adi.commons, proceed as with this addon.
-
-
 Usage
 =====
 
 You'll now find an executable called 'devgen' in your instance's bin-folder and can use it like this:
 
+    $ path/to/instance/bin/devgen [FUCNTION_NAME] [ARGUMENT(S)]
+
+Look into 'adi/devgen/scripts/skels.py', to see the all of the available functions and expected arguments.
+
+Some examples in the following...
 
 Create new addon
 ----------------
@@ -82,6 +81,4 @@ https://github.com/ida/skriptz/blob/master/plone/addBrowser.py
 and
 https://github.com/ida/skriptz/blob/master/plone/Dexterity/addField.py
 
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/ida/adi.devgen/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 

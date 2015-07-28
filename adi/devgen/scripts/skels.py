@@ -115,7 +115,7 @@ class AddSkel(object):
 
     def getReposOfSameVCSUser(self, url, eggs, path='.'):
         """ Example usage:
-devgen getReposOfSameVCSUser 'github.com/collective' 'collective.portlet.sitemap -b 1.0.4, mailtoplone.base'
+        $ devgen getReposOfSameVCSUser 'github.com/collective' 'collective.portlet.sitemap -b 1.0.4, mailtoplone.base'
         """
         if not url.endswith('/'): url += '/'
         urls = []
@@ -125,23 +125,4 @@ devgen getReposOfSameVCSUser 'github.com/collective' 'collective.portlet.sitemap
             urls.append(url + egg)
         urls = ','.join(urls)
         self.getDevEggs(urls, '.')
-
-    def getVersionsConfigs(self, plone_version, path):
-        """Creates a folder 'configs', downloads versions.cfg in it and
-           gets the other configs referenced in versions.cfg's
-           'extends'-var, too, so we can work offline.
-        """
-        file_name = 'versions.cfg'
-        versions_cfg = 'http://dist.plone.org/release/' + plone_version + '/' + file_name
-        folder='configs-' + plone_version
-        os.system('mkdir ' + folder)
-        os.system('wget ' + versions_cfg)
-        os.system('mv versions.cfg ' + folder)
-        versions_cfg = folder + '/versions.cfg'
-        string = open(versions_cfg).read();
-        urls = extractUrlsOfStr(string) 
-        for url in urls:
-            file_name = url.split('/')[-1]
-            os.system('wget ' + url)
-            os.system('mv ' + file_name + ' ' + folder)
 

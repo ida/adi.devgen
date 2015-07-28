@@ -1,6 +1,6 @@
 import os
-from commons import *
-from conventions import *
+from adi.devgen.scripts.commons import *
+from adi.devgen.scripts.conventions import *
 
 def addSetup(path):
     addon_name = path.split('/')[-2]

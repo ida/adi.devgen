@@ -1,4 +1,4 @@
-# The imparative convention: Let paths always end with a slash!
+# The imparative convention: Let (dir-)paths always end with a slash!
 
 import os
 import re
@@ -43,11 +43,15 @@ def getParentDirPath(path):
     parent_path = '/'.join((path.split('/')[:-1])) + '/'
     return parent_path
 
-def readFile(path):
-    fil = open(path)
-    string = fil.read()
-    fil.close()    
+def getStr(path):
+    with open(path) as fil:
+        string = fil.read()
     return string
+
+def getLines(path):
+    with open(path) as fil:
+        lines = fil.readlines()
+    return lines
 
 def fileHasStr(path, pattern):
     str = readFile(path)
@@ -57,7 +61,16 @@ def fileHasStr(path, pattern):
 # STRS #
 ########
 
-def extractUrlsOfStr(string):
+def getIndent(string):
+    indent = ''
+    for char in string:
+        if char == ' ':
+            indent += char
+        else:
+            break
+    return indent
+
+def getUrls(string):
     """ Returns everything starting with 'http' and
         ending with a whitespace or '>', as a list.
     """
@@ -73,22 +86,8 @@ def extractUrlsOfStr(string):
 
     return trimmed_urls
 
-def getLines(path):
-    with open(path) as fil:
-        lines = fil.readlines()
-    return lines
-
-def getIndent(line):
-    indent = ''
-    for char in line:
-        if char == ' ':
-            indent += char
-        else:
-            break
-    return indent
-
-def hasStr(str, pattern):
-    if str.find(pattern) != -1: return True
+def hasStr(string, pattern):
+    if string.find(pattern) != -1: return True
     else: return False
 
 def insertAfterLine(path, pattern, string, PRESERVE_INDENT=True):

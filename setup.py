@@ -25,7 +25,6 @@ setup(name='adi.devgen',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'adi.commons',
           # -*- Extra requirements: -*-
       ],
       entry_points="""

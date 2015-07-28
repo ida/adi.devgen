@@ -17,35 +17,33 @@ As not released yet, clone it and add it as a development-egg, also to buildout.
 Usage
 =====
 
-You'll now find an executable called 'devgen' in your instance's bin-folder and can use it like this:
+You'll now find an executable called 'devgen' in your instance's bin-folder,
+type 'devgen' only, to get further help on how to use devgen:
 
-    $ path/to/instance/bin/devgen [FUCNTION_NAME] [ARGUMENT(S)]
+    $ path/to/instance/bin/devgen
 
-Look into 'adi/devgen/scripts/skels.py', to see the all of the available functions and expected arguments.
 
 Some examples in the following...
 
-Create new addon
-----------------
 
-$ ./path/to/your/instance/bin/devgen addSkinSkel your.addon
+    $ ./path/to/your/instance/bin/devgen addSkinSkel your.addon
 
 Creates an installable Plone-Addon, with a stylesheet, a javascript and a template in a skin folder.
-In contrary to brwoser-based resources, you won't need to empty the browser's cache on a reload, after changing your stylesheet or javascript.
+In contrary to browser-based resources, you won't need to empty the browser's cache on a reload, after changing your stylesheet or javascript.
 
 
-$ ./path/to/your/instance/bin/devgen addBrowserSkel your.addon
+    $ ./path/to/your/instance/bin/devgen addBrowserSkel your.addon
 
 Creates an installable Plone-Addon, with a stylesheet and a javascript in a browser's resource-folder.
 You'll want that for complex sites, where things are likely to go haywire and binding resources to an interface is a good idea.
 
 
-$ ./path/to/your/instance/bin/devgen addInstallSkel your.addon
+    $ ./path/to/your/instance/bin/devgen addInstallSkel your.addon
 
 Creates an installable add-on, that is: Holds a profile for the quickinstaller.
 
 
-$ ./path/to/your/instance/bin/devgen addBaseSkel your.addon
+    $ ./path/to/your/instance/bin/devgen addBaseSkel your.addon
 
 Creates a base skeleton for a Python-egg, installable via buildout.
 
@@ -53,7 +51,7 @@ Creates a base skeleton for a Python-egg, installable via buildout.
 Local commands (executed of within the addon)
 ---------------------------------------------
 
-$ ./path/to/your/instance/bin/devgen addDep collective.bestaddonever
+    $ ./path/to/your/instance/bin/devgen addDep collective.bestaddonever
 
 Registers 'collective.bestaddonever' as a dependency to the addon.
 
@@ -61,8 +59,9 @@ Registers 'collective.bestaddonever' as a dependency to the addon.
 Note
 ----
 
-Optionally you can specify a path to the addon, just append it to the command as an additional argument,
-otherwise it is assumed you are inside of the addon or for addon-creation, create it right where you are.
+Optionally you can specify a path, just append it to the command as an additional argument,
+otherwise it is assumed you are inside of the addon or for an addon-creation,
+it'll create it in the current directory, where you execute `devgen`.
 
 
 TODO

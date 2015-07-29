@@ -54,7 +54,7 @@ def getLines(path):
     return lines
 
 def fileHasStr(path, pattern):
-    str = readFile(path)
+    str = getStr(path)
     return hasStr(str, pattern)
 
 ########
@@ -136,7 +136,7 @@ def insertBeforeLastTag(path, string):
     tag_start_pos = 0
     digest = ''
     IN_TAG = False
-    food = readFile(path)
+    food = getStr(path)
     lenn = len(food) - 1
     pos = lenn
     while pos > 0:

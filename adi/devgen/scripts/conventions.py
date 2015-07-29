@@ -10,7 +10,7 @@ def getAddonPath(path):
         path = getParentDirPath(path)
         max_exceed -= 1
         if max_exceed < 1:
-            exit('The passed path seems not to be valid, aborting now.')
+            exit('Either you are not inside of an addon, or forgot to specify a target path, please try again.')
     return path
 
 def getFirstLvlPath(path):

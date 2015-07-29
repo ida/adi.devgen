@@ -21,6 +21,21 @@ class AddSkel(object):
         addFirstInit(first_lvl)
         addLastInit(last_lvl)
 
+    def addMetaSkel(self, path):
+        """ Adds a README and a docs-folder with a history-file.
+            Because.
+            And to be publishable on pypi.
+        """
+        if not path.endswith('/'): path += '/'
+        if path != './':
+            path = self.addBaseSkel(path)
+        addFile(path + 'README.md', 'Introduction\n============\n\n\
+An addon for Plone, aiming to [be so useful, you never want to miss it again].\n\nUsage\n=====\n\n')
+        addDirs(path + 'docs')
+        addFile(path + 'docs/HISTORY.txt', 'Changelog\n=========\n')
+#TODO        setValsInSetupPy(path + 'setup.py')
+
+
     def addProfileSkel(self, path):
         """ Be installable via a Plonesite's quickinstaller.
         """

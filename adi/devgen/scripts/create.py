@@ -248,8 +248,8 @@ def addDependency(dep_name, path):
     insertBeforeLine(path, pattern, string)
     path = getProfilePath(path) + 'metadata.xml'
     pattern = '</dependencies>'
-    string = '    <dependency>profile-' + dep_name + ':default</dependency>\n'
-    insertBeforeLine(path, pattern, string)
+    string = '  <dependency>profile-' + dep_name + ':default</dependency>\n'
+    insertBeforeLine(path, pattern, string, KEEP_INDENT=False)
 
 def addBootstrap(path):
     string = """#Copyright (c) 2006 Zope Foundation and Contributors.

@@ -10,7 +10,7 @@ def getAddonPath(path):
         path = getParentDirPath(path)
         max_exceed -= 1
         if max_exceed < 1:
-            exit("Cannot find a 'setup.py', maybe you missed to pass a name/path?")
+            exit("No setup.py found. Likely something's wrong with the passed path.")
     return path
 
 def getFirstLvlPath(path):

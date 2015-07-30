@@ -91,7 +91,7 @@ def hasStr(string, pattern):
     if string.find(pattern) != -1: return True
     else: return False
 
-def insertAfterLine(path, pattern, string, PRESERVE_INDENT=True):
+def insertAfterLine(path, pattern, string, KEEP_INDENT=True):
     FOUND = False
     tmp_path = path + '.tmp'
     if not string.endswith('\n'):
@@ -99,7 +99,7 @@ def insertAfterLine(path, pattern, string, PRESERVE_INDENT=True):
     with open(path) as fin, open(tmp_path, 'w') as fout:
         for line in fin:
             if line.find(pattern) != -1:
-                if PRESERVE_INDENT:
+                if KEEP_INDENT:
                     string = getIndent(line) + string
                 FOUND = True
             fout.write(line)
@@ -108,25 +108,25 @@ def insertAfterLine(path, pattern, string, PRESERVE_INDENT=True):
                 FOUND = False
     shutil.move(tmp_path, path)
 
-def insertBeforeLine(path, pattern, string):
+def insertBeforeLine(path, pattern, string, KEEP_INDENT=True):
     digest = ''
     indent = ''
     for line in getLines(path):
         if line.find(pattern) > -1:
             digest += indent + string
         digest += line
-        if line != '\n':
+        if KEEP_INDENT and line != '\n':
             indent = getIndent(line)    
     addFile(path, digest, OVERWRITE=True)
 
-def insertAfterFirstLine(path, string, PRESERVE_INDENT=True):
+def insertAfterFirstLine(path, string, KEEP_INDENT=True):
     digest = ''
     lines = open(path).readlines()
     FIRSTLINE_PASSED = False
     for line in lines:
         digest += line
         if not FIRSTLINE_PASSED:
-            if PRESERVE_INDENT:
+            if KEEP_INDENT:
                 string = getIndent(line) + string
             digest += string
             FIRSTLINE_PASSED = True

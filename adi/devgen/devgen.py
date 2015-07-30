@@ -3,44 +3,52 @@ import inspect
 from adi.devgen.scripts.skels import AddSkel
 
 def devgen():
-    """ Creates Plone-Add-On-Skeletons of the commandline.
-        
+    """
+        Create Plone-Add-On-Skeletons of the commandline.
+
         Usage
         =====
-        $ devgen [function_name] [argument] [path]
+        $ devgen [function_name] [argument(s)] [path]
         
         Legend
         ======
         'function_name' : Required, can be any function's name you find in 'adi/devgen/scripts/skels.py'.
-        'argument'      : Optional, if the functions expects more args than 'self' and 'path'.
+        'argument'      : Optional, if the functions expects more arguments, than only the function-name.
         'path'          : Optional, if not given, it is assumed, you execute devgen in an addon, defaults to '.'
 
         Examples
         ========
-        $ devgen addSkinsSkel example.addon     # create an addon
+        $ devgen addSkinsSkel example.addon     # create an addon with a skins-folder
         $ devgen addDep mailtoplone.base        # register a dependency-addon
+
+        Help
+        ====
+        To see, which arguments a function expects, type:
+
+        $ devgen [function_name]
+
     """
 
-    path = '.'
+    path = '.' # default-value
 
     function = None
     function_name = None
     argument = None
 
-    # GET FUNCTION
+    # Get passed arguments of user:
 
     args = sys.argv                                 # get user's input as a list, using sys.argv
     this_script_path = args.pop(0)                  # remove sys.argv's inbuilt first default-arg
 
     if len(args) < 1:                               # no function-name provided of user
-        print '\n\n    Hi! Type "devgen methodName", to see what a method can do for you.'
-        print '\n    The availabe methods are:\n'
+        print '\n Hi! Type "devgen [function_name]", to see, what\n\
+ a function does and expects. Available are:\n'
         funks = ''
         funcs = dir(AddSkel)
         for fun in funcs:
             if not fun.startswith('__'):            # except built-in methods
                 funks += ' ' + fun
-        print '   ' + funks + '\n\n'
+        print funks + '\n\n'
         exit()                                      # abort
 #        exit(devgen.__doc__)                        # show this function's docstring and abort
 

@@ -6,6 +6,15 @@ import shutil
 import glob
 
 #########
+# Paths #
+#########
+
+def getHome():
+    home = os.path.expanduser("~") + '/'
+    return home
+
+
+#########
 # FILES #
 #########
 

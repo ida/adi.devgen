@@ -50,7 +50,7 @@ class AddSkel(object):
 An addon for Plone, aiming to [be so useful, you never want to miss it again].\n\nUsage\n=====\n\n')
         addDirs(path + 'docs')
         addFile(path + 'docs/HISTORY.txt', 'Changelog\n=========\n')
-#TDO        setValsInSetupPy(path + 'setup.py')
+        setSetupPy(path + 'setup.py')
 
     def addProfileSkel(self, path):
         """ Be installable via a Plonesite's quickinstaller.

@@ -251,6 +251,42 @@ def addDependency(dep_name, path):
     string = '  <dependency>profile-' + dep_name + ':default</dependency>\n'
     insertBeforeLine(path, pattern, string, KEEP_INDENT=False)
 
+def setSetupPyProp(path, prop, val):
+    """Expects path to setup.py, a prop and a val and exchanges the val in file.
+    """
+    lines = getLines(path)
+    for i, line in enumerate(lines):
+        stripped_line = line.strip()
+        if stripped_line.startswith(prop + '='):
+            line_splits = line.split('=')
+            line = line_splits[0] + "='" + val + "',\n"
+            lines[i] = line
+    string = ''.join(lines)
+    addFile(path, string, OVERWRITE=True)
+
+def setSetupPy(path, defaults_path='.buildout/devgen.cfg'):
+    """Writes default-values into setup.py.
+    Expects a path to the addon's setup.py and a path to a defaults-file.
+    Defaults-file must be in this format:
+    prop=val
+    author=Jane Austin
+    author_email=jane@aust.in
+    Line by line, no quotes or commas needed.
+    """
+
+    if not defaults_path: defaults_path = getHome() + defaults_path
+    if not fileExists(defaults_path): exit('No defaults provided, "' + defaults_path + '" doesn\'t exist. Aborting now.')
+
+
+    default_lines = getLines(defaults_path)
+    for default in default_lines:
+        default = default.strip()
+        if default is not '':
+            pair = default.split('=')
+            prop = pair[0]
+            val = pair[1]
+            setSetupPyProp(path, prop, val)
+
 def addBootstrap(path):
     string = """#Copyright (c) 2006 Zope Foundation and Contributors.
 # All Rights Reserved.

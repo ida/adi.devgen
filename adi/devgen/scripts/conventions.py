@@ -10,7 +10,7 @@ def getAddonPath(path):
         path = getParentDirPath(path)
         max_exceed -= 1
         if max_exceed < 1:
-            exit('Either you are not inside of an addon, or forgot to specify a target path, please try again.')
+            exit("Cannot find a 'setup.py', maybe you missed to pass a name/path?")
     return path
 
 def getFirstLvlPath(path):

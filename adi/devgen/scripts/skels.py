@@ -5,21 +5,38 @@ from adi.devgen.scripts.create import *
 
 class AddSkel(object):
 
-    def addBaseSkel(self, path):
-        """ Be avail- and installable for ZOPE.
+    def addBaseSkel(self, addon_name):
         """
-        if not path.endswith('/'): path += '/'
+            Minimum skel for a Plone-addon, expects at least an addon-name.
 
-        addon_name = path.split('/')[-2]
+            Example:
+
+            $ devgen addBaseSkel addon.name
+
+            Optionally prepend a path, if you want the addon not to be 
+            created in this folder:
+
+            $ devgen addBaseSkel /path/to/target/folder/addon.name
+
+            Registers egg in buildout's syspath and is thereby
+            available to the instance's Python-interpreter. Can be
+            used for addons, which don't need profiles.
+
+        """
+
+        addon_path = addon_name + '/'
+
         addon_first_name = addon_name.split('.')[0]
         addon_scnd_name = addon_name.split('.')[1]
-        first_lvl = path + addon_first_name + '/'
+        first_lvl = addon_path + addon_first_name + '/'
         last_lvl = first_lvl + addon_scnd_name + '/'
 
         addDirs(last_lvl)
-        addSetup(path)
+        addSetup(addon_path)
         addFirstInit(first_lvl)
         addLastInit(last_lvl)
+
+        return addon_path
 
     def addMetaSkel(self, path):
         """ Adds a README and a docs-folder with a history-file.
@@ -33,8 +50,7 @@ class AddSkel(object):
 An addon for Plone, aiming to [be so useful, you never want to miss it again].\n\nUsage\n=====\n\n')
         addDirs(path + 'docs')
         addFile(path + 'docs/HISTORY.txt', 'Changelog\n=========\n')
-#TODO        setValsInSetupPy(path + 'setup.py')
-
+#TDO        setValsInSetupPy(path + 'setup.py')
 
     def addProfileSkel(self, path):
         """ Be installable via a Plonesite's quickinstaller.

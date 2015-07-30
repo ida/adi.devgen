@@ -90,6 +90,9 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
     def addDep(self, dep_name, path):
         """ Add a dependency-addon to an addon."""
         if not path.endswith('/'): path += '/'
+        if path != './':
+            path = path.split('/')[-2]
+            self.addProfileSkel(path)
         addDependency(dep_name, path)
 
     def addInstallerScript(self, path):

@@ -264,7 +264,7 @@ def setSetupPyProp(path, prop, val):
     string = ''.join(lines)
     addFile(path, string, OVERWRITE=True)
 
-def setSetupPy(path, defaults_path='.buildout/devgen.cfg'):
+def setSetupPy(path, defaults_path=getHome() + '.buildout/devgen.cfg'):
     """Writes default-values into setup.py.
     Expects a path to the addon's setup.py and a path to a defaults-file.
     Defaults-file must be in this format:
@@ -274,7 +274,6 @@ def setSetupPy(path, defaults_path='.buildout/devgen.cfg'):
     Line by line, no quotes or commas needed.
     """
 
-    if not defaults_path: defaults_path = getHome() + defaults_path
     if not fileExists(defaults_path): exit('No defaults provided, "' + defaults_path + '" doesn\'t exist. Aborting now.')
 
 

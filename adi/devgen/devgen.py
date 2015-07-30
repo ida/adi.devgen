@@ -41,30 +41,35 @@ def devgen():
     this_script_path = args.pop(0)                  # remove sys.argv's inbuilt first default-arg
 
     if len(args) < 1:                               # no function-name provided of user
-        print '\n Hi! Type "devgen [function_name]", to see, what\n\
- a function does and expects. Available are:\n'
+        print '\n\
+Choose one of the function-names listed below and type "devgen [function_name]"\n\
+to see, what it does and expects. Alternatively type "devgen help"\n\
+to get a more verbose description of this tool.\n'
         funks = ''
         funcs = dir(AddSkel)
         for fun in funcs:
             if not fun.startswith('__'):            # except built-in methods
+#                if fun.find('Skel') != -1:          # show only skel-methods, for now
                 funks += ' ' + fun
         print funks + '\n\n'
         exit()                                      # abort
-#        exit(devgen.__doc__)                        # show this function's docstring and abort
 
 
     else:                                           # a function-name is provided
         function_name = args.pop(0)                 # collect function-name
+        if function_name == 'help':                 # user asked for help
+            exit(devgen.__doc__)                    # show this function's docstring and abort
+
         function = getattr(AddSkel, function_name)  # get function of imported class by corresponding name
 
     # COMPARE ARGS
     
-    # What does the func expect?
-    expected_args = inspect.getargspec(function)[0]
-    # Remove 'self', user cannot pass that one :)
-    if 'self' in expected_args: expected_args.remove('self')
+    expected_args = inspect.getargspec(function)[0] # get the function's expected arguments
 
-    if len(args) < len(expected_args)-1:            # not enough args passed
+    if 'self' in expected_args:                     # except self-keyword of expected arguments,
+        expected_args.remove('self')                # user can't pass that one ;)
+
+    if len(args) < len(expected_args)-1:            # not enough args passed, -1 excepts the optional path
             exit(getattr(function, '__doc__'))      # show the choosen function's docstring and abort
 
     if len(expected_args) > 1:                      # more than a path expected

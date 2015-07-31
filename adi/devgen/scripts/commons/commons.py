@@ -101,21 +101,17 @@ def hasStr(string, pattern):
     else: return False
 
 def insertAfterLine(path, pattern, string, KEEP_INDENT=True):
-    FOUND = False
-    tmp_path = path + '.tmp'
-    if not string.endswith('\n'):
-        string + '\n'
-    with open(path) as fin, open(tmp_path, 'w') as fout:
-        for line in fin:
-            if line.find(pattern) != -1:
-                if KEEP_INDENT:
-                    string = getIndent(line) + string
-                FOUND = True
-            fout.write(line)
-            if FOUND:
-                fout.write(string)
-                FOUND = False
-    shutil.move(tmp_path, path)
+    nuline = None
+    digest = ''
+    indent = ''
+    for line in getLines(path):
+        if line.find(pattern) > -1:
+            nuline = string
+        digest += line
+        if KEEP_INDENT and line != '\n':
+            indent = getIndent(line)    
+        if nuline: digest+= indent + nuline; nuline = None
+    addFile(path, digest, OVERWRITE=True)
 
 def insertBeforeLine(path, pattern, string, KEEP_INDENT=True):
     digest = ''

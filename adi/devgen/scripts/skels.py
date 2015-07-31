@@ -39,13 +39,14 @@ class AddSkel(object):
         return addon_path
 
     def addMetaSkel(self, path):
-        """ Adds a README and a docs-folder with a history-file.
+        """ Adds a README, a MANIFEST and a docs-folder with a history-file.
             Because.
             And to be publishable on pypi.
         """
         if not path.endswith('/'): path += '/'
-        if path != './':
-            path = self.addBaseSkel(path)
+        if path != './': path = self.addBaseSkel(path)
+        addon_forename = getAddonFirstName(path)
+        addFile(path + 'MANIFEST.in', 'recursive-include ' + addon_forename + ' *\nrecursive-include docs *\ninclude *.txt\ninclude *.rst\ninclude *.md\nglobal-exclude *.pyc\nglobal-exclude *.pyo\n')
         addFile(path + 'README.md', 'Introduction\n============\n\n\
 An addon for Plone, aiming to [be so useful, you never want to miss it again].\n\nUsage\n=====\n\n')
         addDirs(path + 'docs')

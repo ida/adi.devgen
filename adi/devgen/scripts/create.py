@@ -245,7 +245,7 @@ def addDependency(dep_name, path):
     path = getAddonPath(path) + 'setup.py'
     pattern = "'setuptools',"
     string = "'" + dep_name + "',\n"
-    insertBeforeLine(path, pattern, string)
+    insertAfterLine(path, pattern, string)
     path = getProfilePath(path) + 'metadata.xml'
     pattern = '</dependencies>'
     string = '  <dependency>profile-' + dep_name + ':default</dependency>\n'

@@ -34,32 +34,28 @@ def devgen():
     this_script_path = args.pop(0)                  # remove sys.argv's inbuilt first default-arg
     # FIRST AID
     if len(args) < 1:                               # no argument provided of user
-        print '\n\
-Choose one of the function-names listed below and type "devgen [function_name]"\n\
-to see, what it does and expects. Alternatively type "devgen help"\n\
-to get a more verbose description of this tool.\n'  # help
-        funks = ''
-        funcs = dir(AddSkel)                        # get functions of AddSkel
-        for fun in funcs:                           # for each one
+        usable_funcs = ''
+        all_funcs = dir(AddSkel)                    # get functions of AddSkel
+        for fun in all_funcs:
             if not fun.startswith('__'):            # except built-in methods
-                funks += ' ' + fun                  # collect all others
-        exit(funks + '\n\n')                        # show them and abort
+                usable_funcs += ' ' + fun           # collect all others, show them and abort
+        exit('\n\
+Choose one of the function-names listed below and type\n\
+"devgen [function_name]" to see, what it does and expects.\n\
+Alternatively type "devgen help", to get a verbose description of this tool.\n' + usable_funcs + '\n\n')
     if args[0] == 'help':                           # at least one arg was passed, it's the help-keyword
         exit(devgen.__doc__)                        # show this function's docstring and abort
-    # GET FUNCTION                                  # at least one argument was passed by user
-    function_name = args.pop(0)                     # it's not the help-keyword, so must be the function-name
+    function_name = args.pop(0)                     # it's not the help-keyword, so it must be the function-name
     function = getattr(AddSkel, function_name)      # get function of AddSkel-class by corresponding name
-    # GET EXPECTATION
     expected_args = inspect.getargspec(function)[0] # get the function's expected arguments
     if 'self' in expected_args:                     # except self-keyword of expected arguments,
         expected_args.remove('self')                # user can't pass that one ;)
     if len(args) == len(expected_args)-1:           # user omitted passing a path
         args.append(path)                           # add default-path to args
-    # MET EXPECTATION?
     if len(args) != len(expected_args):             # still, less or more args are given than expected
         exit(getattr(function, '__doc__'))          # show the choosen function's docstring and abort
-    # EXECUTE FUNCTION
     getattr(AddSkel(), function_name)(*args)
 
-if __name__ == '__devgen__':    # only, if this script is executed,
-    devgen()                    # execute devgen only of commandline not, if imported
+if __name__ == '__devgen__':
+    devgen()
+

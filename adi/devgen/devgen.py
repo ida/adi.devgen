@@ -56,6 +56,9 @@ Alternatively type "devgen help", to get a verbose description of this tool.\n' 
         exit(getattr(function, '__doc__'))          # show the choosen function's docstring and abort
     getattr(AddSkel(), function_name)(*args)
 
-if __name__ == '__devgen__':
+# '__name__' is '__devgen__',
+# unless executed of commandline,
+# then Python turns '__name__' to '__main__'
+if __name__ == '__main__':
     devgen()
 

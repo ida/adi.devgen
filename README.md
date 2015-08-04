@@ -3,65 +3,113 @@ Introduction
 
 Yet another command-line Plone-Add-On-Generator, just the way I like it:
 
-No dependencies, some Python-methods, that's all.
+No dependencies, no possible conflicts, some Python-methods, that's all.
+
+
+Goals
+=====
+
+Be as generic as possible, e.g. `addDep` registers a dependencie's name in an existing addon, assuming you are located *somewhere* in your addon, it's:
+
+    $ devgen addDep collective.bestaddonever
+
+But, you can also append a path ending with your addon-name, then this command will create the addon also on the fly, if it doesn't exist already:
+
+    $ devgen addDep collective.bestaddonever my.addon
+
+
+Be able to specify the location-path where the command should be executed, so I do not have to change directories, or switch to other (screen-)windows all the time, I'm lazy. Incredibly lazy:
+
+    $ devgen addDep collective.bestaddonever /over/the/rainbow/my.addon
+
+
+Put the documentation into the doc-strings of the functions. Function's are building up upon another, so one can learn developing step-by-step, starting with the minimal base-skel.
 
 
 Installation
 =============
 
-Add 'adi.devgen' to the eggs-section in your buildout-config, run buildout.
+With lovely pip, as easy as:
 
-As not released yet, clone it and add it as a development-egg, also to buildout.
+    $ pip install -e git+https://github.com/ida/adi.devgen.git#egg=adi.devgen
+
+
+If you haven't installed pip yet, do it. For Ubuntu that is:
+
+    $ sudo apt-get install python-pip -y
+
+
+Or for Fedora:
+
+    $ sudo yum install python-pip -y
+
+
+Alternatively, you can also clone this repo and add it to buildout as a development-egg, that'll give you the executable in the instance's bin-directory:
+
+    $ cd path/to/instance
+
+    $ ./bin/devgen
 
 
 Usage
 =====
 
-You'll now find an executable called 'devgen' in your instance's bin-folder,
-type 'devgen' only, to get further help on how to use devgen:
+Type the command alone, to get a help-text, what it can do for you:
 
-    $ path/to/instance/bin/devgen
-
-
-Some examples in the following...
+    $ devgen
 
 
-    $ ./path/to/your/instance/bin/devgen addSkinSkel your.addon
+That also lists the available functions, to get a function's help-text, type:
 
-Creates an installable Plone-Addon, with a stylesheet, a javascript and a template in a skin folder.
+    $ devgen [FUNCTION_NAME]
+
+
+Examples
+========
+
+Create boilerplate for an addon, that can do nothing, but be installed in a Plonesite:
+
+    $ devgen addProfileSkel your.addon
+
+
+Create it not in the directory, where you are, but somewhere else:
+
+    $ devgen addProfileSkel your.addon /some/where/else
+
+
+Register another addon as a dependency to your addon:
+
+    $ devgen addDep collective.bestaddonever your.addon
+
+Or, first locate into your addon, then you can omit the appended path (defaults to '.'):
+
+    $ cd your.addon
+    $ devgen addDep collective.bestaddonever
+
+
+Create an installable Plone-Addon, with a stylesheet, a javascript and a template in a skin folder:
+
+    $ devgen addSkinSkel your.addon
+
 In contrary to browser-based resources, you won't need to empty the browser's cache on a reload, after changing your stylesheet or javascript.
 
 
-    $ ./path/to/your/instance/bin/devgen addBrowserSkel your.addon
+Create an installable Plone-Addon, with a stylesheet and a javascript in a browser's resource-folder.
 
-Creates an installable Plone-Addon, with a stylesheet and a javascript in a browser's resource-folder.
-You'll want that for complex sites, where things are likely to go haywire and binding resources to an interface is a good idea.
-
-
-    $ ./path/to/your/instance/bin/devgen addInstallSkel your.addon
-
-Creates an installable add-on, that is: Holds a profile for the quickinstaller.
+    $ devgen addBrowserSkel your.addon
 
 
-    $ ./path/to/your/instance/bin/devgen addBaseSkel your.addon
+Add docs-folder and read defaults for setup.py:
 
-Creates a base skeleton for a Python-egg, installable via buildout.
+    $ devgen addMetaSkel
 
+If a file '~/.buildout/devgen.cfg' is present, values will be read of it and inserted to setup.py. Its format is expected to be like:
 
-Local commands (executed of within the addon)
----------------------------------------------
+author=Arbi Trary
 
-    $ ./path/to/your/instance/bin/devgen addDep collective.bestaddonever
+author_email=arbi@tra.ry
 
-Registers 'collective.bestaddonever' as a dependency to the addon.
-
-
-Note
-----
-
-Optionally you can specify a path, just append it to the command as an additional argument,
-otherwise it is assumed you are inside of the addon or for an addon-creation,
-it'll create it in the current directory, where you execute `devgen`.
+url=https://github.com/arbitrary/your.addon
 
 
 TODO
@@ -69,15 +117,8 @@ TODO
 
 - Regard more than one dotted namespace for addon.
 
-- Add meta-stuff like doc's folder, to be ready for publication.
-
-- Split methods into smaller reusable chunks.
-
-- Get setup.py-properties infos of a local default-config, say, if present in '$HOME/.buildout'.
+- Split functions into smaller reusable chunks.
 
 - Possibly transfer:
-https://github.com/ida/skriptz/blob/master/plone/addBrowser.py
-and
 https://github.com/ida/skriptz/blob/master/plone/Dexterity/addField.py
-
 

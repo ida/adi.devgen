@@ -43,18 +43,25 @@ def devgen():
 Choose one of the function-names listed below and type\n\
 "devgen [function_name]" to see, what it does and expects.\n\
 Alternatively type "devgen help", to get a verbose description of this tool.\n' + usable_funcs + '\n\n')
+
     if args[0] == 'help':                           # at least one arg was passed, it's the help-keyword
         exit(devgen.__doc__)                        # show this function's docstring and abort
+
     function_name = args.pop(0)                     # it's not the help-keyword, so it must be the function-name
     function = getattr(AddSkel, function_name)      # get function of AddSkel-class by corresponding name
     expected_args = inspect.getargspec(function)[0] # get the function's expected arguments
     if 'self' in expected_args:                     # except self-keyword of expected arguments,
         expected_args.remove('self')                # user can't pass that one ;)
+
     if len(args) == len(expected_args)-1:           # user omitted passing a path
         args.append(path)                           # add default-path to args
+
     if len(args) != len(expected_args):             # still, less or more args are given than expected
-        exit(getattr(function, '__doc__'))          # show the choosen function's docstring and abort
-    getattr(AddSkel(), function_name)(*args)
+        docstr = getattr(function, '__doc__')
+        helptxt = '\n    This function expects, these arguments: \n    ' + ' '.join(expected_args) + '\n    , please try again.\n' + docstr
+        exit(helptxt)                               # help and abort
+
+    getattr(AddSkel(), function_name)(*args)        # everything went well, we've come this far, now exe func
 
 # '__name__' is '__devgen__',
 # unless executed of commandline,

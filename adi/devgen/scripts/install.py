@@ -7,6 +7,7 @@ from adi.commons.commons import getFirstChildrenPaths
 from adi.commons.commons import getIndent
 from adi.commons.commons import getLines
 from adi.commons.commons import getUrls
+from adi.commons.commons import getRealPath
 from adi.commons.commons import fileExists
 from adi.commons.commons import hasStr
 
@@ -67,7 +68,9 @@ def makeConfigsUrlsLocal(configs_path):
         addFile(tmpfil, string)
 
 
-def addPloneSkel(plone_version, path):
+def addPloneSkel(plone_version, path='.'):
+
+    path = getRealPath(path)
 
     # NAMES
     instance_name = 'plone-instance'
@@ -96,4 +99,4 @@ def addPloneSkel(plone_version, path):
     getConfigs(configs_path, plone_version)
     makeConfigsUrlsLocal(configs_path)
     addBuildoutConfig(plone_version, instance_path)
-
+    os.system('cd ' + instance_path + ';' + virtenv_path + 'bin/buildout;./bin/instance fg')

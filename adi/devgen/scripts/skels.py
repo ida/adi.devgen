@@ -131,12 +131,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         if not path.endswith('/'): path += '/'
         path += 'plone-instance/'
         addDirs(path + 'src/')
-        addBootstrap(path)
-        addBuildout(path)
-
-    def buildOut(self, path):
-        """ Trigger bootstrapping and outbuilding."""
-        buildout(path)
+        addBuildoutConfig(path)
 
     def getDevEggs(self, urls, path):
         """ Expects a str with with repo-urls,

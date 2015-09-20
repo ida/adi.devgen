@@ -304,7 +304,7 @@ def setSetupPy(path, defaults_path=getHome() + '.buildout/devgen.cfg'):
             setSetupPyProp(path, prop, val)
 
 
-def addBuildout(path):
+def addBuildoutConfig(path):
     string = """[buildout]
 parts =
     instance

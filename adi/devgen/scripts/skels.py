@@ -72,7 +72,7 @@ class AddSkel(object):
         addFile(path + 'README.md', 'Introduction\n============\n\n\
 An addon for Plone, aiming to [be so useful, you never want to miss it again].\n\nUsage\n=====\n\n')
         addDirs(path + 'docs')
-        addFile(path + 'docs/HISTORY.txt', 'Changelog\n=========\n')
+        addDocs(path)
         setSetupPy(path + 'setup.py')
 
     def addProfileSkel(self, path):

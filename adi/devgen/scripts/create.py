@@ -3,6 +3,7 @@ import os
 from adi.commons.commons import addFile
 from adi.commons.commons import fileHasStr
 from adi.commons.commons import fileExists
+from adi.commons.commons import getLines
 from adi.commons.commons import getHome
 from adi.commons.commons import insertAfterFirstLine
 from adi.commons.commons import insertAfterLine

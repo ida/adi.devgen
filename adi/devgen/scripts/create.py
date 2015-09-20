@@ -345,17 +345,17 @@ recipe = collective.recipe.plonesite == 1.9.0
     addFile(path + 'buildout.cfg', string)
 
 def addSetuphandlers(path):
-    str = '<genericsetup:importStep\n\
+    string = '<genericsetup:importStep\n\
       name="' + getAddonName(path) + '"\n\
       title="' + getAddonName(path) + ' special import handlers"\n\
       description=""\n\
       handler="' + getAddonName(path) + '.setuphandlers.setupVarious" />\n\
       />\n\n'
-    if not fileHasStr(getConfigPath(path), str):
-        insertBeforeLine(getConfigPath(path), '</configure>', str)
+    if not fileHasStr(getConfigPath(path), string):
+        insertBeforeLine(getConfigPath(path), '</configure>', string)
     else:
         print 'Skipped registration of setuphandlers, already exists.'
-    str = "from Products.CMFCore.utils import getToolByName\n\
+    string = "from Products.CMFCore.utils import getToolByName\n\
 \n\
 def doOnInstall(context):\n\
     # Put your code, to be executed on an install, here.\n\
@@ -374,5 +374,5 @@ def setupVarious(context):\n\
 \n\
     doOnInstall(portal)"
 
-    addFile(getLastLvlPath(path) + 'setuphandlers.py', str)
+    addFile(getLastLvlPath(path) + 'setuphandlers.py', string)
     addFile(getProfilePath(path) + getAddonName(path) + '.marker.txt')

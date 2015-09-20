@@ -24,7 +24,7 @@ def addSetup(path):
 from setuptools import setup, find_packages\n\
 import os\n\
 \n\
-version = \'1.0\'\n\
+version = \'0.1.dev0\'\n\
 \n\
 setup(name=\'' + addon_name + '\',\n\
       version=version,\n\

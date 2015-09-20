@@ -16,6 +16,7 @@ from adi.devgen.scripts.conventions import getBrowserPath
 from adi.devgen.scripts.conventions import getConfigPath
 from adi.devgen.scripts.conventions import getLastLvlPath
 from adi.devgen.scripts.conventions import getProfilePath
+from adi.devgen.scripts.conventions import getResourcesPath
 from adi.devgen.scripts.conventions import getUnderscoredName
 from adi.devgen.scripts.conventions import getUppercasedName
 

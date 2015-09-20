@@ -10,10 +10,8 @@ from adi.devgen.scripts.conventions import getProfilePath
 from adi.devgen.scripts.conventions import getResourcesPath
 from adi.devgen.scripts.conventions import getUnderscoredName
 
-from adi.devgen.scripts.create import buildout
-from adi.devgen.scripts.create import addBootstrap
 from adi.devgen.scripts.create import addBrowser
-from adi.devgen.scripts.create import addBuildout
+from adi.devgen.scripts.create import addBuildoutConfig
 from adi.devgen.scripts.create import addDependency
 from adi.devgen.scripts.create import addFirstInit
 from adi.devgen.scripts.create import addLastInit

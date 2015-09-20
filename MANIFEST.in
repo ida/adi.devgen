@@ -1,0 +1,5 @@
+recursive-include adi *
+recursive-include docs *
+include *
+global-exclude *.pyc
+

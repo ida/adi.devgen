@@ -42,9 +42,11 @@ class AddSkel(object):
 
         """
 
-        addon_path = addon_name + '/'
-
-        if not fileExists(addon_path):
+        if not addon_name.endswith('/'): addon_name += '/'
+        
+        addon_path = addon_name
+        
+        if addon_path != './':
 
             addon_first_name = addon_name.split('.')[0]
             addon_scnd_name = addon_name.split('.')[1]
@@ -56,7 +58,10 @@ class AddSkel(object):
             addFirstInit(first_lvl)
             addLastInit(last_lvl)
 
-        return addon_path
+            return addon_path
+
+        else:
+            exit('Please specify a path to the addon.')
 
     def addMetaSkel(self, path):
         """ Add 'README.md', 'MANIFEST.in' and a docs-folder with further files.

@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.4.dev0'
+version = '0.4'
 
 setup(name='adi.devgen',
       version=version,
@@ -11,6 +11,7 @@ setup(name='adi.devgen',
       # Get more strings from
       # http://pypi.python.org/pypi?:action=list_classifiers
       classifiers=[
+        "Framework :: Plone",
         "Programming Language :: Python",
         ],
       keywords='',

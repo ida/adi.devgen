@@ -31,7 +31,10 @@ version = \'0.1.dev0\'\n\
 setup(name=\'' + addon_name + '\',\n\
       version=version,\n\
       description="",\n\
-      long_description="",\n\
+      long_description=open("README.md").read() + "\n" +\n\
+                             open(os.path.join("docs", "INSTALL.md")).read(),\n\
+                             open(os.path.join("docs", "USAGE.md")).read(),\n\
+                             ",\n\
       classifiers=[\n\
         "Framework :: Plone",\n\
         "Programming Language :: Python",\n\

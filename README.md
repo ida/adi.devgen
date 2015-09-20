@@ -6,49 +6,16 @@ Yet another command-line Plone-Add-On-Generator, just the way I like it:
 No dependencies, no possible conflicts, some Python-methods, that's all.
 
 
-Goals
-=====
-
-Be as generic as possible, e.g. `addDep` registers a dependencie's name in an existing addon, assuming you are located *somewhere* in your addon, it's:
-
-    $ devgen addDep collective.bestaddonever
-
-But, you can also append a path ending with your addon-name, then this command will create the addon also on the fly, if it doesn't exist already:
-
-    $ devgen addDep collective.bestaddonever my.addon
-
-
-Be able to specify the location-path where the command should be executed, so I do not have to change directories, or switch to other (screen-)windows all the time, I'm lazy. Incredibly lazy:
-
-    $ devgen addDep collective.bestaddonever /over/the/rainbow/my.addon
-
-
-Put the documentation into the doc-strings of the functions. Function's are building up upon another, so one can learn developing step-by-step, starting with the minimal base-skel.
-
 
 Installation
 =============
 
-With lovely pip, as easy as:
-
-    $ pip install -e git+https://github.com/ida/adi.devgen.git#egg=adi.devgen
+    pip install adi.devgen
 
 
-If you haven't installed pip yet, do it. For Ubuntu that is:
+Alternatively add `adi.devgen` as an egg to your buildout, then
+the `devgen`-executable should be available in its bin-directory.
 
-    $ sudo apt-get install python-pip -y
-
-
-Or for Fedora:
-
-    $ sudo yum install python-pip -y
-
-
-Alternatively, you can also clone this repo and add it to buildout as a development-egg, that'll give you the executable in the instance's bin-directory:
-
-    $ cd path/to/instance
-
-    $ ./bin/devgen
 
 
 Usage
@@ -59,7 +26,7 @@ Type the command alone, to get a help-text, what it can do for you:
     $ devgen
 
 
-That also lists the available functions, to get a function's help-text, type:
+That'll also lists the available generator-functions, to get a function's help-text, type:
 
     $ devgen [FUNCTION_NAME]
 
@@ -99,7 +66,7 @@ Create an installable Plone-Addon, with a stylesheet and a javascript in a brows
     $ devgen addBrowserSkel your.addon
 
 
-Add docs-folder and read defaults for setup.py:
+Add docs-folder and read defaults for setup.py of a config:
 
     $ devgen addMetaSkel
 

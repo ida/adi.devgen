@@ -18,7 +18,7 @@ from adi.devgen.scripts.create import addDependency
 from adi.devgen.scripts.create import addFirstInit
 from adi.devgen.scripts.create import addLastInit
 from adi.devgen.scripts.create import addMetadata
-from adi.devgen.scripts.create import addSetup
+from adi.devgen.scripts.create import addSetupPy
 from adi.devgen.scripts.create import addSkin
 from adi.devgen.scripts.create import registerProfile
 from adi.devgen.scripts.create import setSetupPy
@@ -54,7 +54,7 @@ class AddSkel(object):
             last_lvl = first_lvl + addon_scnd_name + '/'
 
             addDirs(last_lvl)
-            addSetup(addon_path)
+            addSetupPy(addon_path)
             addFirstInit(first_lvl)
             addLastInit(last_lvl)
 

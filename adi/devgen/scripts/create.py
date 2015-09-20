@@ -19,7 +19,7 @@ from adi.devgen.scripts.conventions import getProfilePath
 from adi.devgen.scripts.conventions import getUnderscoredName
 from adi.devgen.scripts.conventions import getUppercasedName
 
-def addSetup(path):
+def addSetupPy(path):
     addon_name = path.split('/')[-2]
     addon_first_name = addon_name.split('.')[0]
     string = '\

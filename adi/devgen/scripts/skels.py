@@ -2,6 +2,7 @@ import os
 
 from adi.commons.commons import addDirs
 from adi.commons.commons import addFile
+from adi.commons.commons import fileExists
 
 from adi.devgen.scripts.conventions import getAddonFirstName
 from adi.devgen.scripts.conventions import getLastLvlPath
@@ -42,15 +43,17 @@ class AddSkel(object):
 
         addon_path = addon_name + '/'
 
-        addon_first_name = addon_name.split('.')[0]
-        addon_scnd_name = addon_name.split('.')[1]
-        first_lvl = addon_path + addon_first_name + '/'
-        last_lvl = first_lvl + addon_scnd_name + '/'
+        if not fileExists(addon_path):
 
-        addDirs(last_lvl)
-        addSetup(addon_path)
-        addFirstInit(first_lvl)
-        addLastInit(last_lvl)
+            addon_first_name = addon_name.split('.')[0]
+            addon_scnd_name = addon_name.split('.')[1]
+            first_lvl = addon_path + addon_first_name + '/'
+            last_lvl = first_lvl + addon_scnd_name + '/'
+
+            addDirs(last_lvl)
+            addSetup(addon_path)
+            addFirstInit(first_lvl)
+            addLastInit(last_lvl)
 
         return addon_path
 

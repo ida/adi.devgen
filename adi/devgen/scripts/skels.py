@@ -21,6 +21,8 @@ from adi.devgen.scripts.create import addSkin
 from adi.devgen.scripts.create import registerProfile
 from adi.devgen.scripts.create import setSetupPy
 
+from adi.devgen.scripts.install import addPloneSkel
+
 class AddSkel(object):
 
     def addBaseSkel(self, addon_name):
@@ -62,6 +64,7 @@ class AddSkel(object):
 
         else:
             exit('Please specify a path to the addon.')
+
 
     def addMetaSkel(self, path):
         """ Add 'README.md', 'MANIFEST.in' and a docs-folder with further files.
@@ -128,13 +131,6 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         addSetuphandlers(path)
 
 
-    def addBuildoutSkel(self, path='.'):
-        """ Add a buildout skel."""
-        if not path.endswith('/'): path += '/'
-        path += 'plone-instance/'
-        addDirs(path + 'src/')
-        addBuildoutConfig(path)
-
     def getDevEggs(self, urls, path):
         """ Expects a str with with repo-urls,
             separated by commas, then downloads/clones/checks
@@ -167,6 +163,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
             elif typ=='fs':
                 os.system('cp -r ' + url + ' .')
 
+
     def getReposOfSameVCSUser(self, url, eggs, path='.'):
         """ Example usage:
         $ devgen getReposOfSameVCSUser 'github.com/collective' 'collective.portlet.sitemap -b 1.0.4, mailtoplone.base'
@@ -179,4 +176,9 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
             urls.append(url + egg)
         urls = ','.join(urls)
         self.getDevEggs(urls, '.')
+
+    def installPlone(self, plone_version, path):
+        if not path.endswith('/'): path += '/'
+        addPloneSkel(plone_version, path)
+
 

@@ -1,4 +1,6 @@
 import os
+
+from adi.commons.commons import addFile
 from adi.commons.commons import addDirs
 from adi.commons.commons import delFile
 from adi.commons.commons import getFirstChildrenPaths
@@ -7,6 +9,8 @@ from adi.commons.commons import getLines
 from adi.commons.commons import getUrls
 from adi.commons.commons import fileExists
 from adi.commons.commons import hasStr
+
+from adi.devgen.scripts.create import addBuildoutConfig
 
 def createFolders(paths):
     for path in paths:
@@ -63,7 +67,7 @@ def makeConfigsUrlsLocal(configs_path):
         addFile(tmpfil, string)
 
 
-def addPloneSkel(container, plone_version):
+def addPloneSkel(plone_version, path):
 
     # NAMES
     instance_name = 'plone-instance'
@@ -75,28 +79,21 @@ def addPloneSkel(container, plone_version):
     virtenv_name = 'virtenv'
 
     # PATHS
-    instance_path = container + instance_name + '/'
-    shared_path = container + shared_name + '/'
+    instance_path = path + instance_name + '/'
+    shared_path = path + shared_name + '/'
     
-    deveggs_path = container + deveggs_name + '/'
+    deveggs_path = path + deveggs_name + '/'
     eggs_path = shared_path + eggs_name + '/'
     configs_path = shared_path + configs_name + '/'
     virtenv_path = shared_path + virtenv_name + '/'
     buildout_path = virtenv_path + 'bin/buildout'
 
-
     # ACTION
-#    if fileExists(container): delDirs(container); print 'DEV: destroy' #DEV
-#    paths = [instance_path, deveggs_path, shared_path, eggs_path, configs_path]
-#    createFolders(paths)
-#    installBuildout(virtenv_path)
-#    getConfigs(configs_path, plone_version)
+#    if fileExists(path): delDirs(path); print 'DEV: destroy' #DEV
+    paths = [instance_path, deveggs_path, shared_path, eggs_path, configs_path]
+    createFolders(paths)
+    installBuildout(virtenv_path)
+    getConfigs(configs_path, plone_version)
     makeConfigsUrlsLocal(configs_path)
-
-def main(container, plone_version):
-    if not container.endswith('/'): container += '/'
-    addPloneSkel(container, plone_version)
-
-if __name__ == '__main__':
-    main('puildout', '4.3.4')
+    addBuildoutConfig(plone_version, instance_path)
 

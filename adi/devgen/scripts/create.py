@@ -315,13 +315,13 @@ def setSetupPy(path, defaults_path=getHome() + '.buildout/devgen.cfg'):
             setSetupPyProp(path, prop, val)
 
 
-def addBuildoutConfig(path):
+def addBuildoutConfig(plone_version, path):
     string = """[buildout]
 parts =
     instance
     plonesite
 
-extends = http://dist.plone.org/release/4.3-latest/versions.cfg  
+extends = ../.shared/configs/""" + plone_version + """/versions.cfg
 
 eggs-directory = /home/ida/.buildout/eggs
 
@@ -341,7 +341,8 @@ zcml =
 [plonesite]
 # Newest (1.9.1) breaks layout, when autoinstall devegg:
 recipe = collective.recipe.plonesite == 1.9.0
-#products = dev.addon"""
+#products = dev.addon
+"""
     addFile(path + 'buildout.cfg', string)
 
 def addSetuphandlers(path):

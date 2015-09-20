@@ -1,6 +1,19 @@
 import os
-from commons.commons import *
-from adi.devgen.scripts.conventions import *
+
+from adi.commons.commons import addFile
+from adi.commons.commons import fileHasStr
+from adi.commons.commons import fileExists
+from adi.commons.commons import insertAfterFirstLine
+from adi.commons.commons import insertAfterLine
+from adi.commons.commons import insertBeforeLine
+from adi.commons.commons import insertBeforeLastTag
+
+from adi.devgen.scripts.conventions import getAddonName
+from adi.devgen.scripts.conventions import getAddonFirstName
+from adi.devgen.scripts.conventions import getConfigPath
+from adi.devgen.scripts.conventions import getLastLvlPath
+from adi.devgen.scripts.conventions import getProfilePath
+from adi.devgen.scripts.conventions import getUnderscoredName
 
 def addSetup(path):
     addon_name = path.split('/')[-2]

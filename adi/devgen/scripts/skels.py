@@ -1,7 +1,23 @@
 import os
-from commons.commons import *
-from adi.devgen.scripts.conventions import *
-from adi.devgen.scripts.create import *
+
+from adi.commons.commons import addDirs
+from adi.commons.commons import addFile
+
+from adi.devgen.scripts.conventions import getAddonFirstName
+from adi.devgen.scripts.conventions import getLastLvlPath
+from adi.devgen.scripts.conventions import getProfilePath
+from adi.devgen.scripts.conventions import getResourcesPath
+from adi.devgen.scripts.conventions import getUnderscoredName
+
+from adi.devgen.scripts.create import addBootstrap
+from adi.devgen.scripts.create import addBuildout
+from adi.devgen.scripts.create import addDependency
+from adi.devgen.scripts.create import addFirstInit
+from adi.devgen.scripts.create import addLastInit
+from adi.devgen.scripts.create import addSetup
+from adi.devgen.scripts.create import buildout
+from adi.devgen.scripts.create import registerProfile
+from adi.devgen.scripts.create import setSetupPy
 
 class AddSkel(object):
 

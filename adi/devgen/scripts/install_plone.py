@@ -1,5 +1,12 @@
 import os
-from commons.commons import *
+from adi.commons.commons import addDirs
+from adi.commons.commons import delFile
+from adi.commons.commons import getFirstChildrenPaths
+from adi.commons.commons import getIndent
+from adi.commons.commons import getLines
+from adi.commons.commons import getUrls
+from adi.commons.commons import fileExists
+from adi.commons.commons import hasStr
 
 def createFolders(paths):
     for path in paths:
@@ -46,8 +53,6 @@ def makeConfigsUrlsLocal(configs_path):
                     new_line = local_path + '\n'
                     if line.startswith('extends'):
                         new_line = 'extends = ' + new_line
-                    print 'OLD' + line
-                    print 'NEW' + new_line
                     new_lines.append('#' + line + indent + new_line)
             else:
                 new_lines.append(line)

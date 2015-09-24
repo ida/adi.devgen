@@ -12,6 +12,7 @@ from adi.devgen.scripts.conventions import getUnderscoredName
 
 from adi.devgen.scripts.create import addBrowser
 from adi.devgen.scripts.create import addBuildoutConfig
+from adi.devgen.scripts.create import addDocs
 from adi.devgen.scripts.create import addDependency
 from adi.devgen.scripts.create import addFirstInit
 from adi.devgen.scripts.create import addLastInit

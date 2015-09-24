@@ -64,7 +64,6 @@ setup(name=\'' + addon_name + '\',\n\
 
 def addDocs(path):
     """Add doc-folder containing 'CHANGES.md', 'INSTALL.md' and 'USAGE.md'."""
-    addDirs(path + 'docs')
     addFile(path + 'docs/CHANGES.md', 'Changelog\n=========\n')
     addFile(path + 'docs/INSTALL.md', 'Installation\n===========\n')
     addFile(path + 'docs/USAGE.md', 'Usage\n=====\n')

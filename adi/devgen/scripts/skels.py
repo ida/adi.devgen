@@ -25,7 +25,7 @@ from adi.devgen.scripts.install import addPloneSkel
 
 class AddSkel(object):
 
-    def addBaseSkel(self, addon_name):
+    def addBaseSkel(self, path):
         """
             Minimum skel for a Plone-addon, expects at least an addon-name.
 
@@ -44,29 +44,28 @@ class AddSkel(object):
 
         """
 
-        if not addon_name.endswith('/'): addon_name += '/'
+        if not path.endswith('/'): path += '/'
         
-        addon_path = addon_name
-        
-        if addon_path != './':
+        if path != './':
+
+            addon_name = path[:-1]
 
             addon_first_name = addon_name.split('.')[0]
             addon_scnd_name = addon_name.split('.')[1]
-            first_lvl = addon_path + addon_first_name + '/'
+            first_lvl = path + addon_first_name + '/'
             last_lvl = first_lvl + addon_scnd_name + '/'
 
             addDirs(last_lvl)
-            addSetupPy(addon_path)
+            addSetupPy(path)
             addFirstInit(first_lvl)
             addLastInit(last_lvl)
 
-            return addon_path
+            return path
 
         else:
-            exit('Please specify a path to the addon.')
+            exit('No setup.py found. Please specify a path to the addon, by appending it as an additional argument.')
 
-
-    def addMetaSkel(self, path):
+    def addMetaSkel(self, path='.'):
         """ Add 'README.md', 'MANIFEST.in' and a docs-folder with further files.
             To inform your users and to be possibly publishable on pypi.
         """
@@ -80,7 +79,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         addDocs(path)
         setSetupPy(path + 'setup.py')
 
-    def addProfileSkel(self, path):
+    def addProfileSkel(self, path='.'):
         """ Be installable via a Plonesite's quickinstaller.
         """
         if not path.endswith('/'): path += '/'
@@ -91,7 +90,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         addDirs(getProfilePath(path))
         addMetadata(getProfilePath(path))
 
-    def addSkinSkel(self, path):
+    def addSkinSkel(self, path='.'):
         """ Add a skins-based skel."""
         if not path.endswith('/'): path += '/'
         if path != './':
@@ -104,7 +103,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         addDirs(last_lvl + 'skins/' + name_underscored)
         addSkin(path)
 
-    def addBrowserSkel(self, path):
+    def addBrowserSkel(self, path='.'):
         """ Add a browser-based skel."""
         if not path.endswith('/'): path += '/'
         if path != './':
@@ -115,7 +114,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         addDirs(getResourcesPath(path))
         addBrowser(path)
 
-    def addDep(self, dep_name, path):
+    def addDep(self, dep_name, path='.'):
         """ Add a dependency-addon to an addon."""
         if not path.endswith('/'): path += '/'
         if path != './':
@@ -123,7 +122,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
             self.addProfileSkel(path)
         addDependency(dep_name, path)
 
-    def addInstallerScript(self, path):
+    def addInstallScript(self, path='.'):
         """ Add and register a file called 'setuphandlers.py', 
             in addon, which will be executed on (re-)installs.
         """
@@ -131,7 +130,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         addSetuphandlers(path)
 
 
-    def getDevEggs(self, urls, path):
+    def getRepos(self, urls, path='.'):
         """ Expects a str with with repo-urls,
             separated by commas, then downloads/clones/checks
             them out to this directory, or specify another path.
@@ -142,11 +141,14 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
             Example:
             $ devgen getDevEggs 'github.com/ida/adi.devgen --branch brunch, svn svn.plone.org/svn/collective/adi.suite/trunk/ adi.suite'
         """
+        repos_path = path
+        if repos_path == '.' or repos_path == './': repos_path = ''
         types = ['git', 'svn', 'fs'] # if omitted, defaults to first item
         urls = urls.split(',')
         for url in urls:
             url = url.strip() # remove trailing spaces
-
+            repo_name = url.split('/')[-1].split('.git')[0]
+            path = repos_path + repo_name
             if url.split(' ')[0] in types: # user specified type
                 typ = url.split(' ')[0] # get type
                 url = ' '.join(url.split(' ')[1:]) # remove type of url
@@ -157,27 +159,32 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
                 url = 'http://' + url
 
             if typ=='git':
-                os.system('git clone ' + url)
+                os.system('git clone ' + url + ' ' + path)
             elif typ=='svn':
-                os.system('svn co ' + url)
+                os.system('svn co ' + url + ' ' + path)
             elif typ=='fs':
-                os.system('cp -r ' + url + ' .')
+                os.system('cp -r ' + url + ' ' + path)
 
 
-    def getReposOfSameVCSUser(self, url, eggs, path='.'):
-        """ Example usage:
-        $ devgen getReposOfSameVCSUser 'github.com/collective' 'collective.portlet.sitemap -b 1.0.4, mailtoplone.base'
+    def getReposOfUser(self, url, eggs, path='.'):
         """
+        Usage:
+        $ devgen getReposOfUser [user_address] [repos as CSV-str]
+        Example:
+        $ devgen getReposOfUser 'github.com/collective' 'collective.portlet.sitemap -b 1.0.4, mailtoplone.base'
+        """
+
         if not url.endswith('/'): url += '/'
+        if not path.endswith('/'): path += '/'
         urls = []
         eggs = eggs.split(',')
         for egg in eggs:
             egg = egg.strip() # remove trailing spaces
             urls.append(url + egg)
         urls = ','.join(urls)
-        self.getDevEggs(urls, '.')
+        self.getRepos(urls, path)
 
-    def installPlone(self, plone_version, path):
+    def installPlone(self, plone_version, path='.'):
         if not path.endswith('/'): path += '/'
         addPloneSkel(plone_version, path)
 

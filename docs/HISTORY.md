@@ -1,6 +1,18 @@
 Changelog
 =========
 
+0.6 (150923)
+------------
+
+- Update README, improve installPlone().
+
+
+0.5 (150921)
+------------
+
+- Fix imports, better hlp-msgs, improve installPlone().
+
+
 0.4 (150920)
 ------------
 

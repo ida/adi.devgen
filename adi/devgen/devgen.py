@@ -45,19 +45,29 @@ def devgen():
 
     # If user gave less args than expected, add default-vals to passed args:
     if required_args_amount > len(args):
+
         if defaults:
+
             i = 0
+
             while i*-1 < len(defaults):
+
                 i -= 1                                          
+
                 expected_args[i] = expected_args[i] + '="' + defaults[i] + '"'
+
             if len(args) < len(expected_args):
+
                 missing_args = len(expected_args) - len(args)
+
                 while missing_args > 0:
+
                     args.append(defaults[i])
+
                     missing_args -= 1
 
     # Compare expectations with given arguments:
-    if required_args_amount > len(args) or required_args_amount < len(args) :
+    if len(expected_args) > len(args) or len(expected_args) < len(args):
         helptxt = "\nThis didn't work out, less or more arguments are given, than expected, try again:\n"
         helptxt += '\n     '
         helptxt += function_name + '(' + ', '.join(expected_args) + '):'

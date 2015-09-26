@@ -12,17 +12,17 @@ def devgen():
     Usage
     =====
 
-    $ devgen [function_name] [argument1] [argument2] ...
+    $ devgen [FUNCTION_NAME] [ARGUMENT_1] [ARGUMENT_2] ...
 
     Legend
     ======
 
     function_name = Any function you can find in './script/skels.py'.
 
-    argument(s)   = Any function expects at least one argument, it is the path 
-                    to the addon, in which the function is supposed to be 
-                    executed. You can omit the path, if your current location
-                    is anywhere inside of an addon.
+    argument(s)   = Any function expects at least one argument, it's the path 
+                    to the directory, in which the choosen function is supposed
+                    to be executed. You can omit the path, if your current
+                    location is anywhere inside of an addon.
 
     Help
     ====
@@ -33,11 +33,7 @@ def devgen():
 
     Show expected arguments of a function:
     
-        $ devgen [function_name]
-
-    Show this docstr:
-    
-        $ devgen help
+        $ devgen [FUNCTION_NAME]
 """
 
     available_functions = []
@@ -63,7 +59,7 @@ def devgen():
                 available_functions.append(fun)     # collect all others, show them and this func's docstr, abort.
         exit("\nAvailable functions:\n\n        " + 
 ", ".join(available_functions) + ".\n\n\
-Type `devgen [FUCNTION_NAME]` to see which arguments a function expects.\n\n\
+Type `devgen [FUNCTION_NAME]` to see which arguments a function expects.\n\n\
 Type `devgen help` to see devgen's docstr for more help.\n")
 
 

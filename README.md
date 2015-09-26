@@ -16,6 +16,9 @@ Installation
 Alternatively add `adi.devgen` as an egg to your buildout, then
 the `devgen`-executable should be available in its bin-directory.
 
+Development-version:
+
+    pip install -e git+https://github.com/ida/adi.devgen.git#egg=adi.devgen
 
 
 Usage
@@ -41,7 +44,7 @@ Create boilerplate for an addon, that can do nothing, but be installed in a Plon
 
 Create it not in the directory, where you are, but somewhere else:
 
-    $ devgen addProfileSkel your.addon /some/where/else
+    $ devgen addProfileSkel /some/where/else/your.addon
 
 
 Register another addon as a dependency to your addon:

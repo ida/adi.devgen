@@ -15,6 +15,8 @@ def devgen():
         $ devgen [function_name]
 """
 
+    available_functions = []
+
     expected_args_amount = 0
 
     defaults_amount = 0
@@ -34,13 +36,12 @@ def devgen():
     # NO ARGS PASSED, SHOW HELP AND ABORT:
 
     if len(args) < 1:                               # No argument was provided of user,
-        usable_funcs = ''
         all_funcs = dir(AddSkel)                    # get functions of AddSkel,
         for fun in all_funcs:
             if not fun.startswith('__'):            # except built-in methods,
-                usable_funcs += ' ' + fun           # collect all others, show them and this func's docstr, abort.
+                available_functions.append(fun)     # collect all others, show them and this func's docstr, abort.
         exit(devgen.__doc__ + '\n\
-    The available functions are:\n\n        ' + usable_funcs + '\n\n')
+    The available functions are:\n\n        ' + ', '.join(available_functions) + '\n\n')
 
 
     # GET FUNCTION OF PASSED FUNCTION-NAME:

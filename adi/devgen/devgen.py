@@ -33,45 +33,52 @@ def devgen():
         $ devgen [FUNCTION_NAME]
 """
 
-    available_functions = []
-
     expected_args_amount = 0
 
     defaults_amount = 0
 
     required_args_amount = 0
 
+    # GET FUNCTIONS:
+    available_functions = []
+    all_functions = dir(AddSkel)
+    for fun in all_functions:
+        if not fun.startswith('__'): # except built-in methods
+            available_functions.append(fun)
 
-    # GET USER-INPUT:
+    # GET INPUT:
     args = sys.argv
-    # Remove sys.argv's inbuilt first and only arg (= not passed of user):
+    # Remove sys.argv's inbuilt arg of args:
     this_script_path = args.pop(0)                  
+    # Prep var:
     args_amount = len(args)
 
-    # NO ARGS PASSED, SHOW HELP AND ABORT:
-    if len(args) < 1:                               # No argument was provided of user,
-        all_funcs = dir(AddSkel)                    # get functions of AddSkel,
-        for fun in all_funcs:
-            if not fun.startswith('__'):            # except built-in methods,
-                available_functions.append(fun)     # collect all others, show them and this func's docstr, abort.
+    #
+    # HELP
+    #
+
+    # No argument was provided of user:
+    if len(args) < 1:
         exit("\nThe available functions are:\n\n        " + 
 ", ".join(available_functions) + ".\n\n\
 Type `devgen [FUNCTION_NAME]` to see which arguments a function expects.\n\n\
 Type `devgen help` to get a verbose description of this tool.\n")
 
+    # At least one arg was passed, it must be the function-name:
+    function_name = args.pop(0)
+    # Unless it's the call for help, show this function's docstr and abort:
+    if function_name == 'help': exit(devgen.__doc__)
 
-    # GET FUNCTION OF PASSED FUNCTION-NAME:
-    function_name = args.pop(0)                     # At least one arg was passed, it must be the function-name,
-    if function_name == 'help': exit(devgen.__doc__)# unless it's the call for help.
-    if not function_name in available_functions:    # Does funcion-name exist at all?
+    # Passed function-name doesn't exist:
+    if function_name not in available_functions:
         exit("\nThis function-name doesn't exist, maybe a typo? \
-Try again, you can choose of these:\n\n" + available_functions + ".\n")
-    function = getattr(AddSkel, function_name)      # Get function of AddSkel-class by corresponding name.
+Try again, you can choose of these:\n\n" + ", ".join(available_functions) + ".\n")
+    
+    # GET FUNCTION:
+    function = getattr(AddSkel, function_name)
 
-
-    # GET FUNCTION'S ARGS:
+    # GET ARGS:
     expected_args = inspect.getargspec(function)[0]
-    # Except self of expected arguments, user can't pass that one:
     if 'self' in expected_args: expected_args.remove('self')
     expected_args_amount = len(expected_args)
     defaults = inspect.getargspec(function)[3]

@@ -4,10 +4,7 @@ from adi.devgen.scripts.skels import AddSkel
 
 def devgen():
     """
-    Introduction
-    ============
-
-    Create Plone-addon-development-skeletons/boilerplates of the commandline.
+    devgen - Create Plone-development-boilerplates of the commandline.
 
     Usage
     =====
@@ -57,10 +54,10 @@ def devgen():
         for fun in all_funcs:
             if not fun.startswith('__'):            # except built-in methods,
                 available_functions.append(fun)     # collect all others, show them and this func's docstr, abort.
-        exit("\nAvailable functions:\n\n        " + 
+        exit("\nThe available functions are:\n\n        " + 
 ", ".join(available_functions) + ".\n\n\
 Type `devgen [FUNCTION_NAME]` to see which arguments a function expects.\n\n\
-Type `devgen help` to see devgen's docstr for more help.\n")
+Type `devgen help` to get a verbose description of this tool.\n")
 
 
     # GET FUNCTION OF PASSED FUNCTION-NAME:

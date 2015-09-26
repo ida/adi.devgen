@@ -51,14 +51,14 @@ def devgen():
 
     # GET FUNCTION'S ARGS:
 
-    expected_args = inspect.getargspec(function)[0] # Get the function's expected arguments,
+    expected_args = inspect.getargspec(function)[0]
     
+    # Except self of expected arguments, user can't pass that one:
+    if 'self' in expected_args: expected_args.remove('self')
+
     expected_args_amount = len(expected_args)
     
-    if 'self' in expected_args:                     # except self-keyword of expected arguments,
-        expected_args.remove('self')                # user can't pass that one ;)
-
-    defaults = inspect.getargspec(function)[3]      # Get possible default-values.
+    defaults = inspect.getargspec(function)[3]
 
 
     # COMPUTE REQUIRED ARGS:
@@ -76,22 +76,20 @@ def devgen():
 
     # VALIDATE PASSED ARGS:
     
-    # If less args than required or more args than expected were passed, abort:
+    # If less args than required or more args than expected were passed:
     if required_args_amount > args_amount or args_amount > expected_args_amount:
+        # Prep hlp-msg:
         helptxt = "\nThis didn't work out, less or more arguments are given, \
                    than expected, try again:\n\n    "
-        # Show function name and its expected args, including default-vals:
+        # Include function-name, its expected args and default-vals in hlp-msg:
         helptxt += function_name + '(' + ', '.join(expected_args) + '):'
-        # Show function's docstr:
+        # Include function's docstr in hlp-msg:
         helptxt += '\n        """' + getattr(function, '__doc__') + '"""'
+        # Show hlp-msg and abort:
         exit(helptxt)
 
     # If less args than expected were passed, append default-vals to args:
     if args_amount < expected_args_amount:
-
-        print args
-        print expected_args
-        print defaults
 
         missing_args_amount = expected_args_amount - args_amount
 
@@ -108,7 +106,7 @@ def devgen():
             missing_defaults_amount -= 1
 
 
-    # EXECUTE FUNCTION CORRESPONDING TO PASSED FUNCTION-NAME:
+    # EXECUTE CORRESPONDING FUNCTION OF PASSED FUNCTION-NAME:
 
     getattr(AddSkel(), function_name)(*args)
 

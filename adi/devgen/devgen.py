@@ -39,19 +39,18 @@ def devgen():
 
     required_args_amount = 0
 
-    # GET FUNCTIONS:
-    available_functions = []
-    all_functions = dir(AddSkel)
-    for fun in all_functions:
-        if not fun.startswith('__'): # except built-in methods
-            available_functions.append(fun)
-
-    # GET INPUT:
+    # Get input:
     args = sys.argv
     # Remove sys.argv's inbuilt arg of args:
     this_script_path = args.pop(0)                  
-    # Prep var:
-    args_amount = len(args)
+
+    # Get functions of AddSkel:
+    available_functions = []
+    all_functions = dir(AddSkel)
+    for fun in all_functions:
+        # Except built-in methods:
+        if not fun.startswith('__'):
+            available_functions.append(fun)
 
     #
     # HELP
@@ -59,15 +58,16 @@ def devgen():
 
     # No argument was provided of user:
     if len(args) < 1:
-        exit("\nThe available functions are:\n\n        " + 
-", ".join(available_functions) + ".\n\n\
-Type `devgen [FUNCTION_NAME]` to see which arguments a function expects.\n\n\
+        exit("\nAvailable functions: " + ", ".join(available_functions) + ".\n\n\
+Type `devgen [FUNCTION_NAME]` to see which arguments a function expects and its docstr.\n\n\
 Type `devgen help` to get a verbose description of this tool.\n")
 
     # At least one arg was passed, it must be the function-name:
     function_name = args.pop(0)
     # Unless it's the call for help, show this function's docstr and abort:
     if function_name == 'help': exit(devgen.__doc__)
+    # Now after removing funcname of args, get amount of rest of args:
+    args_amount = len(args)
 
     # Passed function-name doesn't exist:
     if function_name not in available_functions:
@@ -90,18 +90,20 @@ Try again, you can choose of these:\n\n" + ", ".join(available_functions) + ".\n
     else:
         required_args_amount = expected_args_amount
 
-    # VALIDATE PASSED ARGS:
+    # VALIDATE ARGS:
+
     # If less args than required or more args than expected were passed:
     if required_args_amount > args_amount or args_amount > expected_args_amount:
         # Prep hlp-msg:
         helptxt = "\nThis didn't work out, less or more arguments are given, \
-                   than expected, try again:\n\n    "
+than expected, try again:\n\n"
         # Include function-name, its expected args and default-vals in hlp-msg:
-        helptxt += function_name + '(' + ', '.join(expected_args) + '):'
+        helptxt += '    ' + function_name + '(' + ', '.join(expected_args) + '):'
         # Include function's docstr in hlp-msg:
         helptxt += '\n        """' + getattr(function, '__doc__') + '"""'
         # Show hlp-msg and abort:
         exit(helptxt)
+
     # If less args than expected were passed, append default-vals to args:
     if args_amount < expected_args_amount:
         missing_args_amount = expected_args_amount - args_amount

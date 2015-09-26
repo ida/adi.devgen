@@ -45,26 +45,30 @@ class AddSkel(object):
 
         """
 
+        # Regard this tools convention to let dir-paths always end with a slash:
         if not path.endswith('/'): path += '/'
         
-        if path != './':
+        addon_name = path[:-1] # omit last slash
 
-            addon_name = path[:-1]
+        # If a path to addon was prepended, extract addon_name of path:
+        if addon_name.find('/') != -1: addon_name.split('/')[-1]
 
-            addon_first_name = addon_name.split('.')[0]
-            addon_scnd_name = addon_name.split('.')[1]
-            first_lvl = path + addon_first_name + '/'
-            last_lvl = first_lvl + addon_scnd_name + '/'
+        # Prep path for creating dirs:
+        addon_first_name = addon_name.split('.')[0]
+        addon_scnd_name = addon_name.split('.')[1]
+        first_lvl = path + addon_first_name + '/'
+        last_lvl = first_lvl + addon_scnd_name + '/'
 
-            addDirs(last_lvl)
-            addSetupPy(path)
-            addFirstInit(first_lvl)
-            addLastInit(last_lvl)
+        # Create dirs:
+        addDirs(last_lvl)
 
-            return path
+        # Create files:
+        addSetupPy(path)
+        addFirstInit(first_lvl)
+        addLastInit(last_lvl)
 
-        else:
-            exit('No setup.py found. Please specify a path to the addon, by appending it as an additional argument.')
+        return path
+
 
     def addMetaSkel(self, path='.'):
         """ Add 'README.md', 'MANIFEST.in' and a docs-folder with further files.

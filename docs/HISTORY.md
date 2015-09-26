@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.7 (150926)
+------------
+
+- Fix brown-bag-release, better hlp-msgs.
+
+
 0.6 (150923)
 ------------
 

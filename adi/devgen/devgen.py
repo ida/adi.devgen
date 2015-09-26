@@ -4,15 +4,19 @@ from adi.devgen.scripts.skels import AddSkel
 
 def devgen():
     """
-    Create Plone-development-skeletons of the commandline.
-    
-    Usage:
+Create Plone-addon-development-skeletons of the commandline.
 
-        $ devgen [function_name] [argument(s)]
+Usage:
+    $ devgen [function_name] [argument(s)]
 
-    To see which arguments a function expects, type:
+Legend:
+    function_name = Any function you can find in './script/skels.py'.
 
-        $ devgen [function_name]
+Show available functions:
+    $ devgen
+
+Show expected args of func:
+    $ devgen [function_name]
 """
 
     available_functions = []
@@ -41,12 +45,16 @@ def devgen():
             if not fun.startswith('__'):            # except built-in methods,
                 available_functions.append(fun)     # collect all others, show them and this func's docstr, abort.
         exit(devgen.__doc__ + '\n\
-    The available functions are:\n\n        ' + ', '.join(available_functions) + '\n\n')
+The available functions are:\n\n        ' + 
+', '.join(available_functions) + '.\n\n')
 
 
     # GET FUNCTION OF PASSED FUNCTION-NAME:
 
     function_name = args.pop(0)                     # At least one arg was passed, it must be the function-name.
+    if not function_name in available_functions:    # Is ist valid?
+        exit("\nThis function-name doesn't exist, maybe a typo? \
+Try again, you can choose of these:\n\n" + available_functions + ".\n")
     function = getattr(AddSkel, function_name)      # Get function of AddSkel-class by corresponding name.
 
 

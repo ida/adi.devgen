@@ -34,7 +34,7 @@ version = \'0.1.dev0\'\n\
 setup(name=\'' + addon_name + '\',\n\
       version=version,\n\
       description="",\n\
-      long_description=open("README.md").read(),\n\
+      long_description=open("README.rst").read(),\n\
       classifiers=[\n\
         "Framework :: Plone",\n\
         "Programming Language :: Python",\n\
@@ -61,10 +61,10 @@ setup(name=\'' + addon_name + '\',\n\
     addFile(path + 'setup.py', string)
 
 def addDocs(path):
-    """Add doc-folder containing 'CHANGES.md', 'INSTALL.md' and 'USAGE.md'."""
-    addFile(path + 'docs/CHANGES.md', 'Changelog\n=========\n')
-    addFile(path + 'docs/INSTALL.md', 'Installation\n===========\n')
-    addFile(path + 'docs/USAGE.md', 'Usage\n=====\n')
+    """Add doc-folder containing 'CHANGES.rst', 'INSTALL.rst' and 'USAGE.rst'."""
+    addFile(path + 'docs/CHANGES.rst', 'Changelog\n=========\n')
+    addFile(path + 'docs/INSTALL.rst', 'Installation\n===========\n')
+    addFile(path + 'docs/USAGE.rst', 'Usage\n=====\n')
 
 def addFirstInit(path):
     string = '\

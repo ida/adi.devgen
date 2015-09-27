@@ -114,7 +114,7 @@ class AddSkel(object):
         os.system('git add .; git commit -m "' + comment + '"')
 
     def addMetaSkel(self, path='.'):
-        """ Add 'README.md', 'MANIFEST.in' and a docs-folder with further files.
+        """ Add 'README.rst', 'MANIFEST.in' and a docs-folder with further files.
             To inform your users and to be possibly publishable on pypi.
         """
         if not path.endswith('/'): path += '/'
@@ -122,7 +122,7 @@ class AddSkel(object):
         
         addon_forename = getAddonFirstName(path)
         addFile(path + 'MANIFEST.in', 'recursive-include ' + addon_forename + ' *\nrecursive-include docs *\ninclude *.md\nglobal-exclude *.pyc\nglobal-exclude *.pyo\n')
-        addFile(path + 'README.md', 'Introduction\n============\n\n\
+        addFile(path + 'README.rst', 'Introduction\n============\n\n\
 An addon for Plone, aiming to [be so useful, you never want to miss it again].\n')
         addDirs(path + 'docs')
         addDocs(path)

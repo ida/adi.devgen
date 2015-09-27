@@ -10,7 +10,8 @@ def getAddonPath(path):
         path = getParentDirPath(path)
         max_exceed -= 1
         if max_exceed < 1:
-            exit("No setup.py found. Please specify a path to the addon, by appending it as an additional argument.")
+            print "No setup.py found. Please specify a path to the addon, by appending it as an additional argument."
+            path = None
     return path
 
 def getFirstLvlPath(path):

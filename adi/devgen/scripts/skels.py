@@ -12,6 +12,8 @@ from adi.devgen.scripts.conventions import getProfilePath
 from adi.devgen.scripts.conventions import getResourcesPath
 from adi.devgen.scripts.conventions import getUnderscoredName
 
+from adi.devgen.scripts.create import addAndRegisterCss
+from adi.devgen.scripts.create import addAndRegisterJs
 from adi.devgen.scripts.create import addBrowser
 from adi.devgen.scripts.create import addBuildoutConfig
 from adi.devgen.scripts.create import addDocs
@@ -69,6 +71,24 @@ class AddSkel(object):
             path = self.addProfileSkel(path)
         addDirs(getResourcesPath(path))
         addBrowser(path)
+
+    def addCss(self, filename, path='.'):
+        """Register and add a browser-based CSS-file."""
+        if not path.endswith('/'): path += '/'
+        if path != './':
+            if not fileExists(path):
+                self.addBrowserSkel(path)
+            if not fileExists(getLastLvlPath(path)+'browser'):
+                self.addBrowserSkel(path)
+        addAndRegisterCss(filename, path)
+
+    def addJs(self, filename, path='.'):
+        """Register and add a browser-based JS-file."""
+        if not path.endswith('/'): path += '/'
+        if path != './':
+            if not fileExists(path) or not fileExists(getLastLvlPath(path) + 'browser'):
+                self.addBrowserSkel(path)
+        addAndRegisterJs(filename, path)
 
     def addDep(self, dep_name, path='.'):
         """ Add a dependency-addon to an addon."""
@@ -162,7 +182,6 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
                 os.system('svn co ' + url + ' ' + path)
             elif typ=='fs':
                 os.system('cp -r ' + url + ' ' + path)
-
 
     def getReposOfUser(self, url, eggs, path='.'):
         """

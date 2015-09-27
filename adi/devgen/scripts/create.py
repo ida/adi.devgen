@@ -197,26 +197,33 @@ def addBrowserConf(path):
         directory="resources"\n\
       />\n\
 \n\
-<!--\n\
-    <include package="plone.app.contentmenu" />\n\
-    <browser:page\n\
-        for="*"\n\
-        name="adi_popadi_view_view"\n\
-        template="resources/adi_popadi_view.pt"\n\
-        permission="zope2.View"\n\
-        layer=".interfaces.IAdiPopadi"\n\
-      />\n\
-\n\
-    <browser:page\n\
-        for="*"\n\
-        name="adi_popadi_view_helpers"\n\
-        class=".adi_popadi_viewhelpers.View"\n\
-        permission="zope2.View"\n\
-        layer=".interfaces.IAdiPopadi"\n\
-      />\n\
--->\n\
 \n</configure>'
     addFile(getBrowserPath(path) + 'configure.zcml', string)
+
+def addAndRegisterCss(filename, path):
+    string = '<stylesheet title=""\n\
+    id="++resource++' + getAddonName(path) + '/resources/' + filename + '.css"\n\
+    media="screen" rel="stylesheet" rendering="import"\n\
+    cacheable="True" compression="safe" cookable="True"\n\
+    enabled="1" expression=""/>\n'
+    insertBeforeLastTag(getProfilePath(path) + 'cssregistry.xml', string)
+    string = '#visual-portal-wrapper:before{content:"++resource++' + \
+              getAddonName(path) + '/resources/' + filename + '.css loaded"}'
+    addFile(getResourcesPath(path) + filename + '.css', string)
+
+def addAndRegisterJs(filename, path):
+    string = '<javascript authenticated="False" cacheable="True" compression="none"\n\
+    conditionalcomment="" cookable="True" enabled="True" expression=""\n\
+    id="++resource++' + getAddonName(path) + '/resources/' + filename + '.js"\n\
+    inline="False"/>\n'
+    insertBeforeLastTag(getProfilePath(path) + 'jsregistry.xml', string)
+    string = '\
+(function($) {\n\
+        $(document).ready(function() {\n\
+            $("<div>++resource++' + getAddonName(path) + '/resources/' + filename + '.js loaded</div>").insertBefore("#visual-portal-wrapper")\n\
+        }); //docready\n\
+})(jQuery);\n'
+    addFile(getResourcesPath(path) + filename + '.js', string)
 
 def addBrowser(path):
     # Add interface:
@@ -232,40 +239,18 @@ class I' + getUppercasedName(path) + '(Interface):\n\
     </layers>')
     # Register resources in config:
     addBrowserConf(path)
-    # Register resources in profile:
-    # CSS:
+    # Add CSS-config:
     string = '\
 <?xml version="1.0"?>\n\
 <object name="portal_css">\n\
- <stylesheet title=""\n\
-    id="++resource++' + getAddonName(path) + 'resources/' + getUnderscoredName(path) + '.css"\n\
-    media="screen" rel="stylesheet" rendering="import"\n\
-    cacheable="True" compression="safe" cookable="True"\n\
-    enabled="1" expression=""/>\n\
-\n\
-</object>'
+</object>\n'
     addFile(getProfilePath(path) + 'cssregistry.xml', string)
-    # JS:
+    # Add JS-config:
     string = '\
 <?xml version="1.0"?>\n\
 <object name="portal_javascripts">\n\
- <javascript authenticated="False" cacheable="True" compression="none"\n\
-    conditionalcomment="" cookable="True" enabled="True" expression=""\n\
-    id="++resource++' + getAddonName(path) + 'resources/' + getUnderscoredName(path) + '.js"\n\
-    inline="False"/>\n\
-</object>'
+</object>\n'
     addFile(getProfilePath(path) + 'jsregistry.xml', string)
-    # Create resources:
-    # CSS:
-    addFile(getResourcesPath(path) + getUnderscoredName(path) + '.css', '#visual-portal-wrapper:before{content:"++resource++' + getAddonName(path) + 'resources/' + getUnderscoredName(path) + '.css loaded"}')
-    # JS:
-    string = '\
-(function($) {\n\
-        $(document).ready(function() {\n\
-            $("<div>++resource++' + getAddonName(path) + 'resources/' + getUnderscoredName(path) + '.js loaded</div>").insertBefore("#visual-portal-wrapper")\n\
-        }); //docready\n\
-})(jQuery);'
-    addFile(getResourcesPath(path) + getUnderscoredName(path) + '.js', string)
 
 def addDependency(dep_name, path):
     path = getAddonPath(path) + 'setup.py'

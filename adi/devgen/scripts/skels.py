@@ -17,6 +17,7 @@ from adi.devgen.scripts.create import addDependency
 from adi.devgen.scripts.create import addFirstInit
 from adi.devgen.scripts.create import addLastInit
 from adi.devgen.scripts.create import addMetadata
+from adi.devgen.scripts.create import addSetuphandlers
 from adi.devgen.scripts.create import addSetupPy
 from adi.devgen.scripts.create import addSkin
 from adi.devgen.scripts.create import registerProfile

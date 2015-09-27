@@ -108,7 +108,7 @@ class AddSkel(object):
     def addLog(self, comment, path='.'):
         """Add passed comment to docs/CHANGES.rst and execute git-commit for all indexed modified files with the comment."""
         if not path.endswith('/'): path += '/'
-        path += 'docs/CHANGES.rst'
+        path = getAddonPath(path) + 'docs/CHANGES.rst'
         if not fileExists(path): addFile(path)
         insertAfterNthLine(path, comment, 6)
         os.system('git add .; git commit -m "' + comment + '"')

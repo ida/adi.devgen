@@ -12,6 +12,7 @@ from adi.commons.commons import insertBeforeLastTag
 
 from adi.devgen.scripts.conventions import getAddonName
 from adi.devgen.scripts.conventions import getAddonFirstName
+from adi.devgen.scripts.conventions import getAddonPath
 from adi.devgen.scripts.conventions import getBrowserPath
 from adi.devgen.scripts.conventions import getConfigPath
 from adi.devgen.scripts.conventions import getLastLvlPath

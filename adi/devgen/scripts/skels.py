@@ -3,8 +3,10 @@ import os
 from adi.commons.commons import addDirs
 from adi.commons.commons import addFile
 from adi.commons.commons import fileExists
+from adi.commons.commons import insertAfterNthLine
 
 from adi.devgen.scripts.conventions import getAddonFirstName
+from adi.devgen.scripts.conventions import getAddonPath
 from adi.devgen.scripts.conventions import getLastLvlPath
 from adi.devgen.scripts.conventions import getProfilePath
 from adi.devgen.scripts.conventions import getResourcesPath
@@ -27,96 +29,44 @@ from adi.devgen.scripts.install import addPloneSkel
 
 class AddSkel(object):
 
+    def addOn(self, path):
+        """Create addon with browser-based skel and metadata."""
+        self.addBrowserSkel(path)
+        self.addMetaSkel(path)
+
     def addBaseSkel(self, path):
         """
-            Minimum skel for a Plone-addon, expects at least an addon-name.
-
-            Example:
-
-            $ devgen addBaseSkel addon.name
-
-            Optionally prepend a path, if you want the addon not to be 
-            created in this folder:
-
-            $ devgen addBaseSkel /path/to/target/folder/addon.name
-
-            Registers egg in buildout's syspath and is thereby
-            available to the instance's Python-interpreter. Can be
-            used for addons, which don't need profiles.
+        Create minimum-skel: Root folder with setup.py, first-level and second-level-folder and their '__init__.py's.
+        Registers egg in buildout's syspath and is thereby
+        available to the ZOPE-instance's Python-interpreter. Can be
+        used for addons, which don't need profiles.
 
         """
-
-        # Regard this tools convention to let dir-paths always end with a slash:
         if not path.endswith('/'): path += '/'
-        
-        addon_name = path[:-1] # omit last slash
-
-        # If a path to addon was prepended, extract addon_name of path:
-        if addon_name.find('/') != -1: addon_name.split('/')[-1]
-
-        # Prep path for creating dirs:
-        addon_first_name = addon_name.split('.')[0]
-        addon_scnd_name = addon_name.split('.')[1]
-        first_lvl = path + addon_first_name + '/'
-        last_lvl = first_lvl + addon_scnd_name + '/'
-
-        # Create dirs:
-        addDirs(last_lvl)
-
-        # Create files:
-        addSetupPy(path)
-        addFirstInit(first_lvl)
-        addLastInit(last_lvl)
-
-        return path
-
-
-    def addMetaSkel(self, path='.'):
-        """ Add 'README.md', 'MANIFEST.in' and a docs-folder with further files.
-            To inform your users and to be possibly publishable on pypi.
-        """
-        if not path.endswith('/'): path += '/'
-        if path != './': path = self.addBaseSkel(path)
-        addon_forename = getAddonFirstName(path)
-        addFile(path + 'MANIFEST.in', 'recursive-include ' + addon_forename + ' *\nrecursive-include docs *\ninclude *.md\nglobal-exclude *.pyc\nglobal-exclude *.pyo\n')
-        addFile(path + 'README.md', 'Introduction\n============\n\n\
-An addon for Plone, aiming to [be so useful, you never want to miss it again].\n')
-        addDirs(path + 'docs')
-        addDocs(path)
-        setSetupPy(path + 'setup.py')
-
-    def addProfileSkel(self, path='.'):
-        """ Be installable via a Plonesite's quickinstaller.
-        """
-        if not path.endswith('/'): path += '/'
-        if path != './':
-            self.addBaseSkel(path)
-
-        registerProfile(getLastLvlPath(path))
-        addDirs(getProfilePath(path))
-        addMetadata(getProfilePath(path))
-
-    def addSkinSkel(self, path='.'):
-        """ Add a skins-based skel."""
-        if not path.endswith('/'): path += '/'
-        if path != './':
-            path = path.split('/')[-2]
-            self.addProfileSkel(path)
-        if not fileExists(getProfilePath(path)):
-            self.addProfileSkel('.')
-        name_underscored = getUnderscoredName(path)
-        last_lvl = getLastLvlPath(path)
-        addDirs(last_lvl + 'skins/' + name_underscored)
-        addSkin(path)
+        if not fileExists(path):
+            addon_name = path[:-1] # omit last slash
+            # If a path to addon was prepended, extract addon_name of path:
+            if addon_name.find('/') != -1: addon_name.split('/')[-1]
+            # Prep path for creating dirs:
+            addon_first_name = addon_name.split('.')[0]
+            addon_scnd_name = addon_name.split('.')[1]
+            first_lvl = path + addon_first_name + '/'
+            last_lvl = first_lvl + addon_scnd_name + '/'
+            # Create dirs:
+            addDirs(last_lvl)
+            # Create files:
+            addSetupPy(path)
+            addFirstInit(first_lvl)
+            addLastInit(last_lvl)
 
     def addBrowserSkel(self, path='.'):
         """ Add a browser-based skel."""
         if not path.endswith('/'): path += '/'
-        if path != './':
+        if path != './' and not fileExists(path):
             path = path.split('/')[-2]
             self.addProfileSkel(path)
         if not fileExists(getProfilePath(path)):
-            self.addProfileSkel(path)
+            path = self.addProfileSkel(path)
         addDirs(getResourcesPath(path))
         addBrowser(path)
 
@@ -135,6 +85,48 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         if not path.endswith('/'): path += '/'
         addSetuphandlers(path)
 
+    def addLog(self, comment, path='.'):
+        """Add passed comment to docs/CHANGES.rst and execute git-commit for all indexed modified files with the comment."""
+        if not path.endswith('/'): path += '/'
+        path += 'docs/CHANGES.rst'
+        if not fileExists(path): addFile(path)
+        insertAfterNthLine(path, comment, 6)
+        os.system('git add .; git commit -m "' + comment + '"')
+
+    def addMetaSkel(self, path='.'):
+        """ Add 'README.md', 'MANIFEST.in' and a docs-folder with further files.
+            To inform your users and to be possibly publishable on pypi.
+        """
+        if not path.endswith('/'): path += '/'
+        if path != './': self.addBaseSkel(path)
+        
+        addon_forename = getAddonFirstName(path)
+        addFile(path + 'MANIFEST.in', 'recursive-include ' + addon_forename + ' *\nrecursive-include docs *\ninclude *.md\nglobal-exclude *.pyc\nglobal-exclude *.pyo\n')
+        addFile(path + 'README.md', 'Introduction\n============\n\n\
+An addon for Plone, aiming to [be so useful, you never want to miss it again].\n')
+        addDirs(path + 'docs')
+        addDocs(path)
+        setSetupPy(path + 'setup.py')
+
+    def addProfileSkel(self, path='.'):
+        """ Be installable via a Plonesite's quickinstaller.
+        """
+        if not path.endswith('/'): path += '/'
+        if path != './': self.addBaseSkel(path)
+        if not fileExists(getProfilePath(path)):
+            registerProfile(getLastLvlPath(path))
+            addDirs(getProfilePath(path))
+            addMetadata(getProfilePath(path))
+
+    def addSkinSkel(self, path='.'):
+        """ Add a skins-based skel."""
+        if not path.endswith('/'): path += '/'
+        if not fileExists(getProfilePath(path)):
+            self.addProfileSkel(path)
+        name_underscored = getUnderscoredName(path)
+        last_lvl = getLastLvlPath(path)
+        addDirs(last_lvl + 'skins/' + name_underscored)
+        addSkin(path)
 
     def getRepos(self, urls, path='.'):
         """ Expects a str with with repo-urls,
@@ -193,5 +185,4 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
     def installPlone(self, plone_version, path='.'):
         if not path.endswith('/'): path += '/'
         addPloneSkel(plone_version, path)
-
 

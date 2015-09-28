@@ -106,12 +106,15 @@ class AddSkel(object):
         addSetuphandlers(path)
 
     def addLog(self, comment, path='.'):
-        """Add passed comment to docs/CHANGES.rst and execute git-commit for all indexed modified files with the comment."""
+        """
+        Add passed comment to docs/CHANGES.rst with auto-appended current username
+        and execute git-commit for all indexed modified files with the comment.
+        """
         if not path.endswith('/'): path += '/'
         path = getAddonPath(path) + 'docs/CHANGES.rst'
         if not fileExists(path): addFile(path)
         insertAfterNthLine(path, '- ' + comment + '. [' + os.getenv('USER') + ']\n', 6)
-        os.system('git add .; git commit -m "' + comment + '"')
+        os.system('git commit -am "' + comment + '"')
 
     def addMetaSkel(self, path='.'):
         """ Add 'README.rst', 'MANIFEST.in' and a docs-folder with further files.

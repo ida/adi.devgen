@@ -110,7 +110,7 @@ class AddSkel(object):
         if not path.endswith('/'): path += '/'
         path = getAddonPath(path) + 'docs/CHANGES.rst'
         if not fileExists(path): addFile(path)
-        insertAfterNthLine(path, comment, 6)
+        insertAfterNthLine(path, '- ' + comment + '. [' + os.getenv('USER') + ']\n', 6)
         os.system('git add .; git commit -m "' + comment + '"')
 
     def addMetaSkel(self, path='.'):

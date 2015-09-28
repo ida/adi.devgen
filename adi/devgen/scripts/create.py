@@ -62,7 +62,12 @@ setup(name=\'' + addon_name + '\',\n\
 
 def addDocs(path):
     """Add doc-folder containing 'CHANGES.rst', 'INSTALL.rst' and 'USAGE.rst'."""
-    addFile(path + 'docs/CHANGES.rst', 'Changelog\n=========\n')
+    addFile(path + 'docs/CHANGES.rst', """0.1.dev0 (unreleased)
+----------------
+
+- Initial commit.
+    
+""")
     addFile(path + 'docs/INSTALL.rst', 'Installation\n===========\n')
     addFile(path + 'docs/USAGE.rst', 'Usage\n=====\n')
 

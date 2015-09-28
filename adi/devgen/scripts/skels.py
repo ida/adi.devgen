@@ -157,7 +157,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
             If, url doesn't start with 'http://' and it's not of type 'fs', it will be appended.
             If you are forced to use SSL, type full adress: 'https://github.com/(...)'
             Example:
-            $ devgen getDevEggs 'github.com/ida/adi.devgen --branch brunch, svn svn.plone.org/svn/collective/adi.suite/trunk/ adi.suite'
+            $ devgen getRepos 'github.com/ida/adi.devgen --branch brunch, svn svn.plone.org/svn/collective/adi.suite/trunk/ adi.suite'
         """
         repos_path = path
         if repos_path == '.' or repos_path == './': repos_path = ''

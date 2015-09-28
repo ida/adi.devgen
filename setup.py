@@ -7,7 +7,7 @@ setup(name='adi.devgen',
       version=version,
       description="Misc helper-scripts for creating and expanding Plone-Add-Ons.",
       long_description=open("README.md").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.md")).read(),
+                       open(os.path.join("docs", "CHANGES.rst")).read(),
       # Get more strings from
       # http://pypi.python.org/pypi?:action=list_classifiers
       classifiers=[

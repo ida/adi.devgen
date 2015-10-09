@@ -23,6 +23,7 @@ from adi.devgen.scripts.conventions import getUnderscoredName
 from adi.devgen.scripts.conventions import getUppercasedName
 
 def addSetupPy(path):
+    """Add skel for setup.py in root-folder of addon."""
     addon_name = path.split('/')[-2]
     addon_first_name = addon_name.split('.')[0]
     string = '\
@@ -42,7 +43,7 @@ setup(name=\'' + addon_name + '\',\n\
       keywords=\'\',\n\
       author=\'\',\n\
       author_email=\'\',\n\
-      url=\'http://svn.plone.org/svn/collective/\',\n\
+      url=\'https://github.com/collective/\',\n\
       license=\'GPL\',\n\
       packages=find_packages(exclude=[\'ez_setup\']),\n\
       namespace_packages=[\'' + addon_first_name + '\'],\n\
@@ -104,6 +105,7 @@ def addConfig(path):
     addFile(path + 'configure.zcml', string)
 
 def registerProfile(path):
+    """Register 'profiles/default' in an addon's main configure.zcml."""
     string = '\n\
   <genericsetup:registerProfile\n\
       name="default"\n\
@@ -117,6 +119,7 @@ def registerProfile(path):
     insertBeforeLastTag(fil, string)
     
 def addMetadata(path):
+    """Add metadata.xml to a profile."""
     string = '\
 <?xml version="1.0"?>\n\
 <metadata>\n\
@@ -128,6 +131,7 @@ def addMetadata(path):
         addFile(getProfilePath(path) + 'metadata.xml', string)
 
 def addSkin(path):
+    """Register skin-folder in configure.zcml and add metadata.xml to profile."""
     conf = getLastLvlPath(path) + 'configure.zcml'
     if not fileExists(conf): addConfig(getLastLvlPath(path))
     insertAfterFirstLine(conf, '    xmlns:cmf="http://namespaces.zope.org/cmf"\n')
@@ -190,6 +194,7 @@ def addSkinResources(path):
     # Will be accessible via: 'http://host:8080/site/[...]/portal_skins/example_addon/example_addon')
 
 def addBrowserConf(path):
+    """Add configure.zcml to browser-directory."""
     name = getAddonName(path)
     string= '<configure\n\
  xmlns="http://namespaces.zope.org/zope"\n\
@@ -207,6 +212,7 @@ def addBrowserConf(path):
     addFile(getBrowserPath(path) + 'configure.zcml', string)
 
 def addAndRegisterCss(filename, path):
+    """Register and add browser-based CSS-file with 'has-loaded'-content."""
     string = '<stylesheet title=""\n\
     id="++resource++' + getAddonName(path) + '/resources/' + filename + '.css"\n\
     media="screen" rel="stylesheet" rendering="import"\n\
@@ -218,6 +224,7 @@ def addAndRegisterCss(filename, path):
     addFile(getResourcesPath(path) + filename + '.css', string)
 
 def addAndRegisterJs(filename, path):
+    """Register and add browser-based JS-file with 'has-loaded'-content."""
     string = '<javascript authenticated="False" cacheable="True" compression="none"\n\
     conditionalcomment="" cookable="True" enabled="True" expression=""\n\
     id="++resource++' + getAddonName(path) + '/resources/' + filename + '.js"\n\
@@ -314,6 +321,8 @@ extends = ../.shared/configs/""" + plone_version + """/versions.cfg
 
 eggs-directory = /home/ida/.buildout/eggs
 
+versions = versions
+
 #develop = src/dev.addon
 
 [instance]
@@ -331,6 +340,12 @@ zcml =
 # Newest (1.9.1) breaks layout, when autoinstall devegg:
 recipe = collective.recipe.plonesite == 1.9.0
 #products = dev.addon
+
+[versions]
+# Overcome neverending setuptools-conflict-hell,
+# thanks to thet and pbauer, see github.com/minimalplone4:
+zc.buildout = >= 2.2.1
+setuptools = >= 2.2
 """
     addFile(path + 'buildout.cfg', string)
 
@@ -366,3 +381,4 @@ def setupVarious(context):\n\
 
     addFile(getLastLvlPath(path) + 'setuphandlers.py', string)
     addFile(getProfilePath(path) + getAddonName(path) + '.marker.txt')
+

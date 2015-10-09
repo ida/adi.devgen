@@ -13,6 +13,44 @@ from adi.commons.commons import hasStr
 
 from adi.devgen.scripts.create import addBuildoutConfig
 
+def addBuildoutDefault(plone_version, path):
+    string = """[buildout]
+parts =
+    instance
+    plonesite
+
+extends = configs/plone/""" + plone_version + """/versions.cfg
+
+eggs-directory = """ + + """/.buildout/.eggs
+
+versions = versions
+
+#develop = src/dev.addon
+
+[instance]
+recipe = plone.recipe.zope2instance
+user = admin:admin
+eggs =
+#    dev.addon
+    Pillow
+    Plone
+    plone.reload
+zcml =
+    plone.reload
+
+[plonesite]
+# Newest (1.9.1) breaks layout, when autoinstall devegg:
+recipe = collective.recipe.plonesite == 1.9.0
+#products = dev.addon
+
+[versions]
+# Overcome neverending setuptools-conflict-hell,
+# thanks to thet and pbauer, see github.com/minimalplone4:
+zc.buildout = >= 2.2.1
+setuptools = >= 2.2
+"""
+    addFile(path + 'buildout.cfg', string)
+
 def createFolders(paths):
     for path in paths:
         addDirs(path)

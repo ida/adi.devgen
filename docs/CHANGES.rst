@@ -4,6 +4,7 @@ Changelog
 0.7 (150926)
 ------------
 
+- Improve install-setup.. [ida]
 Add addLog(), addCss() and addJs(), fix imports.
 - Fix brown-bag-release, better hlp-msgs.
 

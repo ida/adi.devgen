@@ -15,7 +15,6 @@ from adi.devgen.scripts.conventions import getUnderscoredName
 from adi.devgen.scripts.create import addAndRegisterCss
 from adi.devgen.scripts.create import addAndRegisterJs
 from adi.devgen.scripts.create import addBrowser
-from adi.devgen.scripts.create import addBuildoutConfig
 from adi.devgen.scripts.create import addDocs
 from adi.devgen.scripts.create import addDependency
 from adi.devgen.scripts.create import addFirstInit
@@ -204,7 +203,19 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         urls = ','.join(urls)
         self.getRepos(urls, path)
 
-    def installPlone(self, plone_version, path='.'):
+    def addPlone(self, path='.'):
+        """Add a Plone-build."""
         if not path.endswith('/'): path += '/'
-        addPloneSkel(plone_version, path)
+        plone_vs = '4.3.4'
+        addPloneSkel(plone_vs, path)
+
+    def buildOut(self, path='.'):
+        """Run buildout."""
+        os.system('cd ' + path)
+        os.system(getHome() + '.virtenv/bin buildout')
+
+    def run(self, path='.'):
+        """Run instance/raise server."""
+        os.system('cd ' + path)
+        os.system(path + 'bin/instance fg')
 

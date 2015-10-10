@@ -311,15 +311,15 @@ def setSetupPy(path, defaults_path=getHome() + '.buildout/devgen.cfg'):
             setSetupPyProp(path, prop, val)
 
 
-def addBuildoutConfig(plone_version, path):
+def addBuildoutDefaultConfig(path):
     string = """[buildout]
 parts =
     instance
     plonesite
 
-extends = ../.shared/configs/""" + plone_version + """/versions.cfg
+extends = configs/versions.cfg
 
-eggs-directory = /home/ida/.buildout/eggs
+eggs-directory = eggs
 
 versions = versions
 
@@ -347,7 +347,7 @@ recipe = collective.recipe.plonesite == 1.9.0
 zc.buildout = >= 2.2.1
 setuptools = >= 2.2
 """
-    addFile(path + 'buildout.cfg', string)
+    addFile(path + 'default.cfg', string)
 
 def addSetuphandlers(path):
     string = '<genericsetup:importStep\n\

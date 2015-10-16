@@ -19,24 +19,28 @@ def installBuildout(virtenv_path):
     os.system(virtenv_path + 'bin/pip install setuptools -U')
     os.system(virtenv_path + 'bin/pip install zc.buildout')
 
-def getConfigs(plone_version, path):
-    """Downloads versions.cfg and also gets the other
+def getConfigs(versions_url, configs_path):
+    """Downloads config and also gets the other
        configs referenced in its 'extends'-var, too,
        so we can work offline and let buildout run even faster.
     """
-    versions_url = 'http://dist.plone.org/release/' + plone_version + '/versions.cfg'
-    os.system('wget ' + versions_url + ' -P ' + path)
-    versions_path = path + '/versions.cfg'
-    string = open(versions_path).read();
-    urls = getUrls(string)
-    print 'urls'
-    print urls
-    for url in urls:
-        os.system('wget ' + url + ' -P ' + path)
-    makeConfigsUrlsLocal(path)
+    urls = [versions_url]
+    while urls:
+        url = urls.pop(0)
+        fname = url.split('/')[-1]
+        fpath = configs_path + fname
+        print fpath
+        if not fileExists(fpath):
+            os.system('wget ' + url + ' -P ' + configs_path)
+            string = open(fpath).read();
+            read_urls = getUrls(string)
+            for read_url in read_urls:
+                read_name = read_url.split('/')[-1]
+                if not fileExists(configs_path + read_name):
+                    urls.append(read_url)
 
 def makeConfigsUrlsLocal(configs_path):
-    """Changes 'http://blabla/config.cfg' to 'config.cfg'
+    """Change 'http://blabla/config.cfg' to 'config.cfg'
        in the extends-parts of the configs.
     """
     configs_paths = getFirstChildrenPaths(configs_path)
@@ -65,36 +69,35 @@ def makeConfigsUrlsLocal(configs_path):
             delFile(config_path)
         addFile(config_path, string)
 
-
 def addBuildoutSkel(plone_vs):
     """
     Create $HOME/[path]. In it create default.cfg, eggs, deveggs, configs and a
     virtenv. Install buildout with the latter.
     """
-
+    # Prep paths:
+    url = 'http://dist.plone.org/release/' + plone_vs + '/versions.cfg'
     path = getHome() + '.buildout/'
-
     paths = [path, path + 'eggs/', path + 'deveggs/', path + 'configs/']
 
     # Create dirs:
     for p in paths: addDirs(p)
 
     # Create virtenv:
-    if not fileExists(path + 'virtenv'): installBuildout(path + 'virtenv'); print 'Add virt'
+    #if not fileExists(path + 'virtenv'): installBuildout(path + 'virtenv')
 
     # Create confs:
-    conf_path = path + 'configs/' + plone_vs + '/'
-    if not fileExists(conf_path): addDirs(conf_path); print 'Add ' + conf_path; getConfigs(plone_vs, conf_path)
+    configs_path = path + 'configs/' + plone_vs + '/'
+    if not fileExists(configs_path):
+        addDirs(configs_path)
+        getConfigs(url, configs_path)
+        makeConfigsUrlsLocal(configs_path)
 
     # Create default-conf:
     addBuildoutDefaultConfig(plone_vs, path)
 
-
 def addPloneSkel(plone_vs, path):
     """Checks, if shared buildout-sources are available and adds a buildout.cfg to directory."""
-
-    addBuildoutSkel(plone_vs)
+    addBuildoutSkel(plone_vs, path)
     if not fileExists(path): addDirs(path)
     os.system('touch ' + path + 'buildout.cfg')
-
 

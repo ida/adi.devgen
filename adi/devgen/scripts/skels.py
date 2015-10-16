@@ -3,6 +3,7 @@ import os
 from adi.commons.commons import addDirs
 from adi.commons.commons import addFile
 from adi.commons.commons import fileExists
+from adi.commons.commons import getHome
 from adi.commons.commons import insertAfterNthLine
 
 from adi.devgen.scripts.conventions import getAddonFirstName
@@ -26,7 +27,7 @@ from adi.devgen.scripts.create import addSkin
 from adi.devgen.scripts.create import registerProfile
 from adi.devgen.scripts.create import setSetupPy
 
-from adi.devgen.scripts.install import addPloneSkel
+from adi.devgen.scripts.install import addBuildoutSkel
 
 class AddSkel(object):
 
@@ -203,19 +204,21 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         urls = ','.join(urls)
         self.getRepos(urls, path)
 
-    def addPlone(self, path='.'):
-        """Add a Plone-build."""
+    def addBuild(self, path='.', plone_vs='4.3.4'):
+        """Check, if shared buildout-sources are available, add buildout.cfg, run buildout."""
         if not path.endswith('/'): path += '/'
-        plone_vs = '4.3.4'
-        addPloneSkel(plone_vs, path)
+        if not fileExists(path): addDirs(path)
+        addBuildoutSkel(plone_vs)
+        os.system('touch ' + path + 'buildout.cfg')
+#        self.buildOut()
 
     def buildOut(self, path='.'):
         """Run buildout."""
-        os.system('cd ' + path)
-        os.system(getHome() + '.virtenv/bin buildout')
+        if not path.endswith('/'): path += '/'
+        os.system(getHome() + '.virtenv/bin/buildout -c ' + path + 'buildout.cfg')
 
     def run(self, path='.'):
-        """Run instance/raise server."""
-        os.system('cd ' + path)
+        """Raise server-client, a.k.a. instance."""
+        if not path.endswith('/'): path += '/'
         os.system(path + 'bin/instance fg')
 

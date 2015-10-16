@@ -24,12 +24,13 @@ def getConfigs(plone_version, path):
        configs referenced in its 'extends'-var, too,
        so we can work offline and let buildout run even faster.
     """
-    versions_name = 'versions.cfg'
-    versions_url = 'http://dist.plone.org/release/' + plone_version + '/' + versions_name
+    versions_url = 'http://dist.plone.org/release/' + plone_version + '/versions.cfg'
     os.system('wget ' + versions_url + ' -P ' + path)
     versions_path = path + '/versions.cfg'
     string = open(versions_path).read();
     urls = getUrls(string)
+    print 'urls'
+    print urls
     for url in urls:
         os.system('wget ' + url + ' -P ' + path)
     makeConfigsUrlsLocal(path)
@@ -60,40 +61,40 @@ def makeConfigsUrlsLocal(configs_path):
             else:
                 new_lines.append(line)
         string = ''.join(new_lines)
-        tmpfil = config_path + '.tmp'
-        if fileExists(tmpfil):
-            delFile(tmpfil)
-        addFile(tmpfil, string)
+        if fileExists(config_path):
+            delFile(config_path)
+        addFile(config_path, string)
 
-def addBuildoutSkel(plone_vs, path):
+
+def addBuildoutSkel(plone_vs):
     """
-    Create $HOME/.buildout. In it create default.cfg, eggs, deveggs, configs and a
+    Create $HOME/[path]. In it create default.cfg, eggs, deveggs, configs and a
     virtenv. Install buildout with the latter.
     """
-    paths = [path,
-             path + 'eggs/',
-             path + 'deveggs/',
-             path + 'configs/']
 
-    for p in paths:
-        addDirs(p)
+    path = getHome() + '.buildout/'
 
-    addBuildoutDefaultConfig(path)
+    paths = [path, path + 'eggs/', path + 'deveggs/', path + 'configs/']
 
-    path += 'configs/' + plone_vs + '/'
-    if not fileExists(path): addDirs(path); getConfigs(plone_vs, path)
+    # Create dirs:
+    for p in paths: addDirs(p)
 
-    os.system('ln -s ' + path + 'versions.cfg ' + paths[-1] + 'versions.cfg')
+    # Create virtenv:
+    if not fileExists(path + 'virtenv'): installBuildout(path + 'virtenv'); print 'Add virt'
+
+    # Create confs:
+    conf_path = path + 'configs/' + plone_vs + '/'
+    if not fileExists(conf_path): addDirs(conf_path); print 'Add ' + conf_path; getConfigs(plone_vs, conf_path)
+
+    # Create default-conf:
+    addBuildoutDefaultConfig(plone_vs, path)
 
 
 def addPloneSkel(plone_vs, path):
-    """ """
+    """Checks, if shared buildout-sources are available and adds a buildout.cfg to directory."""
+
+    addBuildoutSkel(plone_vs)
+    if not fileExists(path): addDirs(path)
     os.system('touch ' + path + 'buildout.cfg')
-
-    path = getHome() + '.virtenv/'
-    if not fileExists(path): installBuildout(path)
-
-    path = getHome() + '.buildout/'
-    if not fileExists(path): addBuildoutSkel(plone_vs, path)
 
 

@@ -311,13 +311,13 @@ def setSetupPy(path, defaults_path=getHome() + '.buildout/devgen.cfg'):
             setSetupPyProp(path, prop, val)
 
 
-def addBuildoutDefaultConfig(path):
+def addBuildoutDefaultConfig(plone_vs, path):
     string = """[buildout]
 parts =
     instance
     plonesite
 
-extends = configs/versions.cfg
+extends = configs/""" + plone_vs + """/versions.cfg
 
 eggs-directory = eggs
 
@@ -332,6 +332,7 @@ eggs =
 #    dev.addon
     Pillow
     Plone
+    plone.api
     plone.reload
 zcml =
     plone.reload

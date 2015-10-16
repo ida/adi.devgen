@@ -205,7 +205,10 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         self.getRepos(urls, path)
 
     def addPlone(self, path='.', plone_version='4.3.4'):
-        """Check, if shared buildout-sources are available, add buildout.cfg, run buildout."""
+        """
+        Check, if shared buildout-sources are available in $HOME/.buildout,
+        add buildout.cfg to path, run buildout.
+        """
         if not path.endswith('/'): path += '/'
         if not fileExists(path): addDirs(path)
         else: exit(path + ' exists already, aborting now, nothing changed.')
@@ -214,12 +217,16 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         self.buildOut(path)
 
     def buildOut(self, path='.'):
-        """Run buildout."""
+        """
+        Run buildout in path.
+        """
         if not path.endswith('/'): path += '/'
-        os.system(getHome() + '.virtenv/bin/buildout -c ' + path + 'buildout.cfg')
+        os.system(getHome() + '.buildout/virtenv/bin/buildout -c ' + path + 'buildout.cfg')
 
     def run(self, path='.'):
-        """Raise server-client, a.k.a. instance."""
+        """
+        Raise server-client, a.k.a. instance, in path.
+        """
         if not path.endswith('/'): path += '/'
         os.system(path + 'bin/instance fg')
 

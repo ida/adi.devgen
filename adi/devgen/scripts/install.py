@@ -20,9 +20,10 @@ def installBuildout(virtenv_path):
     os.system(virtenv_path + 'bin/pip install zc.buildout')
 
 def getConfigs(versions_url, configs_path):
-    """Downloads config and also gets the other
-       configs referenced in its 'extends'-var, too,
-       so we can work offline and let buildout run even faster.
+    """
+    Download versions.cfg, looks for the referenced other configs in its
+    extends-section, also downloads these configs  and looks in their
+    extends-section, for more urls, until all configs are downoladed.
     """
     urls = [versions_url]
     while urls:
@@ -40,7 +41,8 @@ def getConfigs(versions_url, configs_path):
                     urls.append(read_url)
 
 def makeConfigsUrlsLocal(configs_path):
-    """Change 'http://blabla/config.cfg' to 'config.cfg'
+    """
+    Change 'http://blabla/config.cfg' to 'config.cfg'
        in the extends-parts of the configs.
     """
     configs_paths = getFirstChildrenPaths(configs_path)

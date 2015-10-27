@@ -104,6 +104,12 @@ def addConfig(path):
 </configure>\n'
     addFile(path + 'configure.zcml', string)
 
+def registerBrowser(path):
+    """Register 'browser'-directory in an addon's main configure.zcml."""
+    string = '<include package=".browser" />'
+    if not fileHasStr(getConfigPath(path), string):
+        insertBeforeLine(getConfigPath(path), '</configure>', string)
+
 def registerProfile(path):
     """Register 'profiles/default' in an addon's main configure.zcml."""
     string = '\n\
@@ -239,6 +245,8 @@ def addAndRegisterJs(filename, path):
     addFile(getResourcesPath(path) + filename + '.js', string)
 
 def addBrowser(path):
+    # Add init:
+    addFile(getBrowserPath(path) + '__init__.py', '')
     # Add interface:
     addFile(getLastLvlPath(path) + 'interfaces.py', 'from zope.interface import Interface\n\n\
 class I' + getUppercasedName(path) + '(Interface):\n\
@@ -247,7 +255,7 @@ class I' + getUppercasedName(path) + '(Interface):\n\
     # Add browserlayer: 
     addFile(getProfilePath(path) + 'browserlayer.xml', '<?xml version="1.0"?>\n\
     <layers>\n\
-        <layer name="' + getAddonName(path)  + 'browser.layer"\n\
+        <layer name="' + getAddonName(path)  + '.layer"\n\
                    interface="' + getAddonName(path)  + '.interfaces.I' + getUppercasedName(path)  + '" />\n\
     </layers>')
     # Register resources in config:
@@ -359,8 +367,6 @@ def addSetuphandlers(path):
       />\n\n'
     if not fileHasStr(getConfigPath(path), string):
         insertBeforeLine(getConfigPath(path), '</configure>', string)
-    else:
-        print 'Skipped registration of setuphandlers, already exists.'
     string = "from Products.CMFCore.utils import getToolByName\n\
 \n\
 def doOnInstall(context):\n\

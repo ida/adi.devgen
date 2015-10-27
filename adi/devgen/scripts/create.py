@@ -214,7 +214,7 @@ def addBrowserConf(path):
 def addAndRegisterCss(filename, path):
     """Register and add browser-based CSS-file with 'has-loaded'-content."""
     string = '<stylesheet title=""\n\
-    id="++resource++' + getAddonName(path) + '/resources/' + filename + '.css"\n\
+    id="++resource++' + getAddonName(path) + '.resources/' + filename + '.css"\n\
     media="screen" rel="stylesheet" rendering="import"\n\
     cacheable="True" compression="safe" cookable="True"\n\
     enabled="1" expression=""/>\n'

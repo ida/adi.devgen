@@ -16,9 +16,10 @@ Installation
 Alternatively add `adi.devgen` as an egg to your buildout, then
 the `devgen`-executable should be available in its bin-directory.
 
-Development-version:
+Development-versions:
 
     pip install -e git+https://github.com/ida/adi.devgen.git#egg=adi.devgen
+    pip install -e git+https://github.com/ida/adi.commons.git#egg=adi.commons
 
 
 Usage

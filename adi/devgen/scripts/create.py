@@ -33,8 +33,8 @@ import os\n\
 version = \'0.1.dev0\'\n\
 \n\
 long_description = ''\n\
-if os.path.exists('README.rst'):\n\
-    long_description = pen("README.rst").read()\n\
+if os.path.exists("README.rst"):\n\
+    long_description = open("README.rst").read()\n\
 \n\
 setup(name=\'' + addon_name + '\',\n\
       version=version,\n\

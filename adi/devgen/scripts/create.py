@@ -32,7 +32,7 @@ import os\n\
 \n\
 version = \'0.1.dev0\'\n\
 \n\
-long_description = ''\n\
+long_description = \'\'\n\
 if os.path.exists("README.rst"):\n\
     long_description = open("README.rst").read()\n\
 \n\

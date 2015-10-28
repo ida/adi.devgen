@@ -249,7 +249,9 @@ def addAndRegisterJs(filename, path):
     addFile(getResourcesPath(path) + filename + '.js', string)
 
 def addBrowser(path):
-    # Add init:
+    # Register browser-dir:
+    registerBrowser(path)
+    # Add init to browser-dir:
     addFile(getBrowserPath(path) + '__init__.py', '')
     # Add interface:
     addFile(getLastLvlPath(path) + 'interfaces.py', 'from zope.interface import Interface\n\n\

@@ -124,7 +124,7 @@ class AddSkel(object):
         if path != './': self.addBaseSkel(path)
         
         addon_forename = getAddonFirstName(path)
-        addFile(path + 'MANIFEST.in', 'recursive-include ' + addon_forename + ' *\nrecursive-include docs *\ninclude *.md\nglobal-exclude *.pyc\nglobal-exclude *.pyo\n')
+        addFile(path + 'MANIFEST.in', 'recursive-include ' + addon_forename + ' *\nrecursive-include docs *\ninclude *.rst\nglobal-exclude *.pyc\nglobal-exclude *.pyo\n')
         addFile(path + 'README.rst', 'Introduction\n============\n\n\
 An addon for Plone, aiming to [be so useful, you never want to miss it again].\n')
         addDirs(path + 'docs')

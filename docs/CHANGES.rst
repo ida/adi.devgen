@@ -1,13 +1,20 @@
 Changelog
 =========
 
+0.8 (151002)
+------------
+
+- Generate missing browser-slug in config.
+
+- Change docs from MD-format to RST, as pypi requires.
+
+- Add addCss() and addJs().
+
+
 0.7 (150926)
 ------------
 
-- Improve install Plone.. [ida]
-- Improve install-setup.. [ida]
-Add addLog(), addCss() and addJs(), fix imports.
-- Fix brown-bag-release, better hlp-msgs.
+- Fix missing import and typo in setup.py-generation, which broke addons-installs.
 
 
 0.6 (150923)

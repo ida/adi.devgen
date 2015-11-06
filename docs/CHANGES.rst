@@ -4,6 +4,8 @@ Changelog
 0.9.dev0 (XXXXXX)
 ------------
 
+- Add default-values of a function's expected arguments, to help-msg.
+
 
 0.8 (151002)
 ------------

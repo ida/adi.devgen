@@ -205,16 +205,16 @@ def addSkinResources(path):
 
 def addBrowserConf(path):
     """Add configure.zcml to browser-directory."""
-    name = getAddonName(path)
+    addon_name = getAddonName(path)
     string= '<configure\n\
  xmlns="http://namespaces.zope.org/zope"\n\
  xmlns:five="http://namespaces.zope.org/five"\n\
  xmlns:browser="http://namespaces.zope.org/browser"\n\
- i18n_domain="'+name+'">\n\
+ i18n_domain="' + addon_name + '">\n\
 \n\
     <include package="plone.app.contentmenu" />\n\
     <browser:resourceDirectory\n\
-        name="'+name+'.resources"\n\
+        name="' + addon_name + '.resources"\n\
         directory="resources"\n\
       />\n\
 \n\
@@ -230,14 +230,14 @@ def addAndRegisterCss(filename, path):
     enabled="1" expression=""/>\n'
     insertBeforeLastTag(getProfilePath(path) + 'cssregistry.xml', string)
     string = '#visual-portal-wrapper:before{content:"++resource++' + \
-              getAddonName(path) + '/resources/' + filename + '.css loaded"}'
+              getAddonName(path) + '.resources/' + filename + '.css loaded"}'
     addFile(getResourcesPath(path) + filename + '.css', string)
 
 def addAndRegisterJs(filename, path):
     """Register and add browser-based JS-file with 'has-loaded'-content."""
     string = '<javascript authenticated="False" cacheable="True" compression="none"\n\
     conditionalcomment="" cookable="True" enabled="True" expression=""\n\
-    id="++resource++' + getAddonName(path) + '/resources/' + filename + '.js"\n\
+    id="++resource++' + getAddonName(path) + '.resources/' + filename + '.js"\n\
     inline="False"/>\n'
     insertBeforeLastTag(getProfilePath(path) + 'jsregistry.xml', string)
     string = '\

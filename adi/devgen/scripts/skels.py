@@ -72,6 +72,42 @@ class AddSkel(object):
         addDirs(getResourcesPath(path))
         addBrowser(path)
 
+    def addMetaSkel(self, path='.'):
+        """ Add 'README.rst', 'MANIFEST.in' and a docs-folder with further files.
+            To inform your users and to be possibly publishable on pypi.
+        """
+        if not path.endswith('/'): path += '/'
+        if path != './': self.addBaseSkel(path)
+        
+        addon_forename = getAddonFirstName(path)
+        addFile(path + 'MANIFEST.in', 'recursive-include ' + addon_forename + ' *\nrecursive-include docs *\ninclude *.rst\nglobal-exclude *.pyc\nglobal-exclude *.pyo\n')
+        addFile(path + 'README.rst', 'Introduction\n============\n\n\
+An addon for Plone, aiming to [be so useful, you never want to miss it again].\n')
+        addDirs(path + 'docs')
+        addDocs(path)
+        setSetupPy(path + 'setup.py')
+
+    def addProfileSkel(self, path='.'):
+        """ Be installable via a Plonesite's quickinstaller.
+        """
+        if not path.endswith('/'): path += '/'
+        if not fileExists(path) and path != './':
+            self.addBaseSkel(path)
+        if not fileExists(getProfilePath(path)):
+            registerProfile(getLastLvlPath(path))
+            addDirs(getProfilePath(path))
+            addMetadata(getProfilePath(path))
+
+    def addSkinSkel(self, path='.'):
+        """ Add a skins-based skel."""
+        if not path.endswith('/'): path += '/'
+        if not fileExists(getProfilePath(path)):
+            self.addProfileSkel(path)
+        name_underscored = getUnderscoredName(path)
+        last_lvl = getLastLvlPath(path)
+        addDirs(last_lvl + 'skins/' + name_underscored)
+        addSkin(path)
+
     def addCss(self, filename, path='.'):
         """Register and add a browser-based CSS-file."""
         if not path.endswith('/'): path += '/'
@@ -115,41 +151,6 @@ class AddSkel(object):
         if not fileExists(path): addFile(path)
         insertAfterNthLine(path, '- ' + comment + '. [' + os.getenv('USER') + ']\n', 6)
         os.system('git commit -am "' + comment + '"')
-
-    def addMetaSkel(self, path='.'):
-        """ Add 'README.rst', 'MANIFEST.in' and a docs-folder with further files.
-            To inform your users and to be possibly publishable on pypi.
-        """
-        if not path.endswith('/'): path += '/'
-        if path != './': self.addBaseSkel(path)
-        
-        addon_forename = getAddonFirstName(path)
-        addFile(path + 'MANIFEST.in', 'recursive-include ' + addon_forename + ' *\nrecursive-include docs *\ninclude *.rst\nglobal-exclude *.pyc\nglobal-exclude *.pyo\n')
-        addFile(path + 'README.rst', 'Introduction\n============\n\n\
-An addon for Plone, aiming to [be so useful, you never want to miss it again].\n')
-        addDirs(path + 'docs')
-        addDocs(path)
-        setSetupPy(path + 'setup.py')
-
-    def addProfileSkel(self, path='.'):
-        """ Be installable via a Plonesite's quickinstaller.
-        """
-        if not path.endswith('/'): path += '/'
-        if path != './': self.addBaseSkel(path)
-        if not fileExists(getProfilePath(path)):
-            registerProfile(getLastLvlPath(path))
-            addDirs(getProfilePath(path))
-            addMetadata(getProfilePath(path))
-
-    def addSkinSkel(self, path='.'):
-        """ Add a skins-based skel."""
-        if not path.endswith('/'): path += '/'
-        if not fileExists(getProfilePath(path)):
-            self.addProfileSkel(path)
-        name_underscored = getUnderscoredName(path)
-        last_lvl = getLastLvlPath(path)
-        addDirs(last_lvl + 'skins/' + name_underscored)
-        addSkin(path)
 
     def getRepos(self, urls, path='.'):
         """ Expects a str with with repo-urls,

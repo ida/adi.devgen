@@ -4,14 +4,14 @@ from adi.commons.commons import fileExists
 
 def getAddonPath(path):
     """ 'path' must point to addon or a child of it. """
-    max_exceed = 27
+    max_recur = 9
     path = getRealPath(path)
     while not fileExists(path + 'setup.py'):
         path = getParentDirPath(path)
-        max_exceed -= 1
-        if max_exceed < 1:
-            print "No setup.py found. Please specify a path to the addon, by appending it as an additional argument."
-            path = None
+        max_recur -= 1
+        if max_recur < 1:
+            exit('No setup.py found. Please specify a path to the addon, \
+by appending it as an additional argument.')
     return path
 
 def getFirstLvlPath(path):

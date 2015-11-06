@@ -2,10 +2,17 @@ import sys
 import inspect
 from adi.devgen.scripts.skels import AddSkel
 
+def getFunctionsOfClass(class_):
+    available_functions = []
+    all_functions = dir(class_)
+    for fun in all_functions:
+        # Except built-in methods:
+        if not fun.startswith('__'):
+            available_functions.append(fun)
+    return available_functions
+
 def devgen():
     """
-    devgen - Create Plone-development-boilerplates of the commandline.
-
     Usage
     =====
 
@@ -14,12 +21,9 @@ def devgen():
     Legend
     ======
 
-    function_name = Any function you can find in './script/skels.py'.
+    FUNCTION_NAME = Required, can be any function-name present in './script/skels.py'.
 
-    argument(s)   = Any function expects at least one argument, it's the path 
-                    to the directory, in which the choosen function is supposed
-                    to be executed. You can omit the path, if your current
-                    location is anywhere inside of an addon.
+    ARGUMENT_N    = Optional. Usually path is the last arg and defaults to '.'.
 
     Help
     ====
@@ -28,10 +32,12 @@ def devgen():
     
         $ devgen
 
-    Show expected arguments of a function:
+    Show the expected arguments of a function:
     
         $ devgen [FUNCTION_NAME]
 """
+
+    defaults = None
 
     expected_args_amount = 0
 
@@ -45,12 +51,7 @@ def devgen():
     this_script_path = args.pop(0)                  
 
     # Get functions of AddSkel:
-    available_functions = []
-    all_functions = dir(AddSkel)
-    for fun in all_functions:
-        # Except built-in methods:
-        if not fun.startswith('__'):
-            available_functions.append(fun)
+    available_functions = getFunctionsOfClass(AddSkel)
 
     # HELP
     # No argument was provided of user:
@@ -78,7 +79,8 @@ Try again, you can choose of these:\n\n" + ", ".join(available_functions) + ".\n
     expected_args = inspect.getargspec(function)[0]
     if 'self' in expected_args: expected_args.remove('self')
     expected_args_amount = len(expected_args)
-    defaults = inspect.getargspec(function)[3]
+    if inspect.getargspec(function)[3]:
+        defaults = list(inspect.getargspec(function)[3])
 
     # COMPUTE REQUIRED ARGS:
     if defaults:
@@ -91,6 +93,13 @@ Try again, you can choose of these:\n\n" + ", ".join(available_functions) + ".\n
 
     # If less args than required or more args than expected were passed:
     if required_args_amount > args_amount or args_amount > expected_args_amount:
+        # Add default vals to args, if given:
+        if defaults:
+            i = 0
+            while i > len(defaults)*-1:
+                i -= 1
+                new_arg  = expected_args[i] + "='" + defaults[i] + "'"
+                expected_args[i] = new_arg
         # Prep hlp-msg:
         helptxt = "\nThis didn't work out, less or more arguments are given, \
 than expected, try again:\n\n"

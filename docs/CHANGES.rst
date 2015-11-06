@@ -4,7 +4,11 @@ Changelog
 0.9.dev0 (XXXXXX)
 ------------
 
-- Add default-values of a function's expected arguments, to help-msg.
+- Add default-values of a function's expected arguments to help-msg.
+
+- Fix use dot instead of slash for a resources' paths in js-registry-gen.
+
+- Let getAddonPath() fail with an exit, to prevent further code-exe.
 
 
 0.8 (151002)

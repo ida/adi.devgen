@@ -13,26 +13,41 @@ Installation
     pip install adi.devgen
 
 
-Alternatively add `adi.devgen` as an egg to your buildout, then
-the `devgen`-executable should be available in its bin-directory.
-
 Development-versions:
 
     pip install -e git+https://github.com/ida/adi.devgen.git#egg=adi.devgen
     pip install -e git+https://github.com/ida/adi.commons.git#egg=adi.commons
 
 
+Alternatively add `adi.devgen` as an egg to your buildout, then
+the `devgen`-executable will be available in its bin-directory, of
+which you can call it then, like: `./bin/devgen`.
+
+
+Configuration
+=============
+
+If a file '~/.buildout/devgen.cfg' is present, values will be read of it and
+inserted into the `setup.py` of an addon. Its format is expected to be like:
+
+author=Arbi Trary
+
+author_email=arbi@tra.ry
+
+url=https://github.com/arbitrary/your.addon
+
+
 Usage
 =====
 
-Type the command alone, to get a help-text, what it can do for you:
+Type the command alone, to get a list of the available generator-functions:
 
     $ devgen
 
 
-That'll also lists the available generator-functions, to get a function's help-text, type:
+To get a choosen function's help-text, type:
 
-    $ devgen [FUNCTION_NAME]
+    $ devgen [FUNCTION_NAME] help
 
 
 Examples
@@ -50,45 +65,28 @@ Create it not in the directory, where you are, but somewhere else:
 
 Register another addon as a dependency to your addon:
 
-    $ devgen addDep collective.bestaddonever your.addon
+    $ devgen addDep collective.bestaddonever some/where/your.addon
 
-Or, first locate into your addon, then you can omit the appended path (defaults to '.'):
+Or, first locate into your addon, then you can omit the appended path:
 
     $ cd your.addon
     $ devgen addDep collective.bestaddonever
 
+Register and add a browser-based stylesheet named 'main.css' in
+'your.addon/your/addon/browser/resources':
 
-Create an installable Plone-Addon, with a stylesheet, a javascript and a template in a skin folder:
+    $ devgen addCss
 
-    $ devgen addSkinSkel your.addon
+Register and add a browser-based Javascript named 'magic.js' in
+'your.addon/your/addon/browser/resources':
 
-In contrary to browser-based resources, you won't need to empty the browser's cache on a reload, after changing your stylesheet or javascript.
-
-
-Create an installable Plone-Addon, with a stylesheet and a javascript in a browser's resource-folder.
-
-    $ devgen addBrowserSkel your.addon
-
-
-Add docs-folder and read defaults for setup.py of a config:
-
-    $ devgen addMetaSkel
-
-If a file '~/.buildout/devgen.cfg' is present, values will be read of it and inserted to setup.py. Its format is expected to be like:
-
-author=Arbi Trary
-
-author_email=arbi@tra.ry
-
-url=https://github.com/arbitrary/your.addon
+    $ devgen addJS magic
 
 
 TODO
 ====
 
 - Regard more than one dotted namespace for addon.
-
-- Split functions into smaller reusable chunks.
 
 - Possibly transfer:
 https://github.com/ida/skriptz/blob/master/plone/Dexterity/addField.py

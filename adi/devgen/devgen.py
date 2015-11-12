@@ -21,9 +21,10 @@ def devgen():
     Legend
     ======
 
-    FUNCTION_NAME = Required, can be any function-name present in './script/skels.py'.
+    FUNCTION_NAME = Required. Can be any function-name present
+                    in 'adi.devgen/adi/devgen/scripts/skels.py'
 
-    ARGUMENT_X    = Depends on the choosen function, see help below.
+    ARGUMENT_X    = Depending on the choosen function, see help.
 
     Help
     ====

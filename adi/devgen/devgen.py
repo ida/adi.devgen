@@ -45,9 +45,9 @@ def devgen():
 
     required_args_amount = 0
 
-    # Get input:
+    # Get user-input:
     args = sys.argv
-    # Remove sys.argv's inbuilt arg of args:
+    # Remove sys.argv's inbuilt first arg, of args:
     this_script_path = args.pop(0)                  
 
     # Get functions of AddSkel:
@@ -119,11 +119,12 @@ than expected, try again:\n\n"
             default_arg = defaults[passed_defaults_amount]
             args.append(default_arg)
             missing_defaults_amount -= 1
+            passed_defaults_amount -= 1
 
     # EXECUTE FUNCTION OF PASSED FUNCTION-NAME:
     getattr(AddSkel(), function_name)(*args)
 
-# EXECUTE THIS FUNCTION, WHEN TRIGGERED OF COMMANDLINE:
+# ONLY EXECUTE THIS FUNCTION, WHEN TRIGGERED OF COMMANDLINE:
 # Explanation: '__name__' of this function is '__devgen__', 
 # unless executed of commandline, then it's '__main__'.
 if __name__ == '__main__':

@@ -30,8 +30,6 @@ def getConfigs(versions_url, configs_path):
         url = urls.pop(0)
         fname = url.split('/')[-1]
         fpath = configs_path + fname
-        print 'fpath'
-        print fpath
         if not fileExists(fpath):
             os.system('wget ' + url + ' -P ' + configs_path)
             string = open(fpath).read();
@@ -100,7 +98,7 @@ def addBuildoutSkel(plone_vs):
 
 def addPloneSkel(plone_vs, path):
     """Checks, if shared buildout-sources are available and adds a buildout.cfg to directory."""
-    addBuildoutSkel(plone_vs, path)
+    addBuildoutSkel(plone_vs)
     if not fileExists(path): addDirs(path)
     os.system('touch ' + path + 'buildout.cfg')
 

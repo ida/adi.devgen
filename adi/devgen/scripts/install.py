@@ -30,6 +30,7 @@ def getConfigs(versions_url, configs_path):
         url = urls.pop(0)
         fname = url.split('/')[-1]
         fpath = configs_path + fname
+        print 'fpath'
         print fpath
         if not fileExists(fpath):
             os.system('wget ' + url + ' -P ' + configs_path)

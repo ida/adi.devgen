@@ -135,16 +135,18 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         addDependency(dep_name, path)
 
     def addInstallScript(self, path='.'):
-        """ Add and register a file called 'setuphandlers.py', 
-            in addon, which will be executed on (re-)installs.
+        """
+        Add and register a file called 'setuphandlers.py', 
+        in addon, which will be executed on (re-)installs.
         """
         if not path.endswith('/'): path += '/'
         addSetuphandlers(path)
 
     def addLog(self, comment, path='.'):
         """
-        Add passed comment to docs/CHANGES.rst with auto-appended current username
-        and execute git-commit for all indexed modified files with the comment.
+        Add passed comment to docs/CHANGES.rst with auto-appended current
+        username and execute git-commit with the same comment, applying to
+        all modified git-indexed files.
         """
         if not path.endswith('/'): path += '/'
         path = getAddonPath(path) + 'docs/CHANGES.rst'
@@ -153,15 +155,16 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         os.system('git commit -am "' + comment + '"')
 
     def getRepos(self, urls, path='.'):
-        """ Expects a str with with repo-urls,
-            separated by commas, then downloads/clones/checks
-            them out to this directory, or specify another path.
-            Optionally prepend repo-type to address, available are:
-            'git', 'svn' and 'fs', if it lives on the filesystem, defaults to git.
-            If, url doesn't start with 'http://' and it's not of type 'fs', it will be appended.
-            If you are forced to use SSL, type full adress: 'https://github.com/(...)'
-            Example:
-            $ devgen getRepos 'github.com/ida/adi.devgen --branch brunch, svn svn.plone.org/svn/collective/adi.suite/trunk/ adi.suite'
+        """
+        Expects a str with with repo-urls,
+        separated by commas, then downloads/clones/checks
+        them out to this directory, or specify another path.
+        Optionally prepend repo-type to address, available are:
+        'git', 'svn' and 'fs', if it lives on the filesystem, defaults to git.
+        If, url doesn't start with 'http://' and it's not of type 'fs', it will be appended.
+        If you are forced to use SSL, type full adress: 'https://github.com/(...)'
+        Example:
+        $ devgen getRepos 'github.com/ida/adi.devgen --branch brunch, svn svn.plone.org/svn/collective/adi.suite/trunk/ adi.suite'
         """
         repos_path = path
         if repos_path == '.' or repos_path == './': repos_path = ''
@@ -205,7 +208,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         urls = ','.join(urls)
         self.getRepos(urls, path)
 
-    def addPlone(self, path='.', plone_version='4.3.4'):
+    def addPlone(self, path='build', plone_version='4.3.4'):
         """
         Check, if shared buildout-sources are available in $HOME/.buildout,
         add buildout.cfg to path, run buildout.

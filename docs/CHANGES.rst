@@ -6,7 +6,7 @@ Changelog
 
 - Add default-values of a function's expected arguments to help-msg.
 
-- Fix use dot instead of slash for a resources' paths in js-registry-gen.
+- Fix path: Use dot instead of slash, for a resources' paths in js-registry-gen.
 
 - Let getAddonPath() fail with an exit, to prevent further code-exe.
 

@@ -208,14 +208,13 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         urls = ','.join(urls)
         self.getRepos(urls, path)
 
-    def addPlone(self, path='Plone', plone_version='4.3.4'):
+    def addPlone(self, path='.', plone_version='4.3.4'):
         """
         Check, if shared buildout-sources are available in $HOME/.buildout,
         add buildout.cfg to path, run buildout.
         """
         if not path.endswith('/'): path += '/'
         if not fileExists(path): addDirs(path)
-        else: exit(path + ' exists already, aborting now, nothing changed.')
         addBuildoutSkel(plone_version)
         os.system('touch ' + path + 'buildout.cfg')
         self.buildOut(path)

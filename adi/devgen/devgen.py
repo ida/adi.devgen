@@ -23,7 +23,7 @@ def devgen():
 
     FUNCTION_NAME = Required, can be any function-name present in './script/skels.py'.
 
-    ARGUMENT_N    = Optional. Usually path is the last arg and defaults to '.'.
+    ARGUMENT_X    = Depends on the choosen function, see help below.
 
     Help
     ====
@@ -34,7 +34,7 @@ def devgen():
 
     Show the expected arguments of a function:
     
-        $ devgen [FUNCTION_NAME]
+        $ devgen [FUNCTION_NAME] help
 """
 
     defaults = None
@@ -57,14 +57,14 @@ def devgen():
     # No argument was provided of user:
     if len(args) < 1:
         exit("\nAvailable functions:\n\n    " + ", ".join(available_functions) + ".\n\n\
-Type `devgen [FUNCTION_NAME]` to see which arguments a function expects and its docstr.\n\n\
+Type `devgen [FUNCTION_NAME] help` to see which arguments a function expects and its docstr.\n\n\
 Type `devgen help` to get a verbose description of this tool.\n")
 
     # At least one arg was passed, it must be the function-name:
     function_name = args.pop(0)
     # Unless it's the call for help, show this function's docstr and abort:
     if function_name == 'help': exit(devgen.__doc__)
-    # Now after removing funcname of args, get amount of rest of args:
+    # Now, after removing funcname of args, get amount of rest of args:
     args_amount = len(args)
 
     # Passed function-name doesn't exist:
@@ -89,26 +89,32 @@ Try again, you can choose of these:\n\n" + ", ".join(available_functions) + ".\n
     else:
         required_args_amount = expected_args_amount
 
+    # PREP HELP-TXT:
+
+    # First, add default vals to expected_args, if given:
+    if defaults:
+        i = 0
+        while i > len(defaults)*-1:
+            i -= 1
+            new_arg  = expected_args[i] + "='" + defaults[i] + "'"
+            expected_args[i] = new_arg
+
+    # Get function, expected_args and docstr as one string:
+    function_as_str = '    ' + function_name + '(' + ', '.join(expected_args) + '):'
+    function_as_str += '\n        """' + getattr(function, '__doc__') + '"""'
+
+    # Did user ask for help, concerning the function's expectations and usage?
+    if args and args[0] == 'help':
+        exit(function_as_str)
+
     # VALIDATE ARGS:
 
     # If less args than required or more args than expected were passed:
     if required_args_amount > args_amount or args_amount > expected_args_amount:
-        # Add default vals to args, if given:
-        if defaults:
-            i = 0
-            while i > len(defaults)*-1:
-                i -= 1
-                new_arg  = expected_args[i] + "='" + defaults[i] + "'"
-                expected_args[i] = new_arg
-        # Prep hlp-msg:
         helptxt = "\nThis didn't work out, less or more arguments are given, \
-than expected, try again:\n\n"
-        # Include function-name, its expected args and default-vals in hlp-msg:
-        helptxt += '    ' + function_name + '(' + ', '.join(expected_args) + '):'
-        # Include function's docstr in hlp-msg:
-        helptxt += '\n        """' + getattr(function, '__doc__') + '"""'
+than expected. Try again:\n\n"
         # Show hlp-msg and abort:
-        exit(helptxt)
+        exit(helptxt + function_as_str)
 
     # If less args than expected were passed, append default-vals to args:
     if args_amount < expected_args_amount:

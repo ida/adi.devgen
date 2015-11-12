@@ -229,7 +229,7 @@ def addAndRegisterCss(filename, path):
     cacheable="True" compression="safe" cookable="True"\n\
     enabled="1" expression=""/>\n'
     insertBeforeLastTag(getProfilePath(path) + 'cssregistry.xml', string)
-    string = '#visual-portal-wrapper:before{content:"++resource++' + \
+    string = '#visual-portal-wrapper:before{content:"++resource++' +\
               getAddonName(path) + '.resources/' + filename + '.css loaded"}'
     addFile(getResourcesPath(path) + filename + '.css', string)
 
@@ -243,10 +243,57 @@ def addAndRegisterJs(filename, path):
     string = '\
 (function($) {\n\
         $(document).ready(function() {\n\
-            $("<div>++resource++' + getAddonName(path) + '/resources/' + filename + '.js loaded</div>").insertBefore("#visual-portal-wrapper")\n\
+            $("<div>++resource++' + getAddonName(path) + '/resources/' + \
+filename + '.js loaded</div>").insertBefore("#visual-portal-wrapper")\n\
         }); //docready\n\
 })(jQuery);\n'
     addFile(getResourcesPath(path) + filename + '.js', string)
+
+def addAndRegisterView(filename, path):
+    """Register and add browser-based view with an associated template."""
+    string = '''
+    <browser:page
+        for="*"
+        name="''' + getUnderscoredName(path) + '''_''' + filename + '''_view"
+        class=".resources.''' + filename + '''.View"
+        permission="zope2.View"
+        layer=".interfaces.I''' + getUppercasedName(path) + '''"
+      />
+'''
+    insertBeforeLastTag(getBrowserPath(path) + 'configure.zcml', string)
+    string = '''from Products.Five.browser import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+
+class View(BrowserView):
+
+    index = ViewPageTemplateFile("''' + filename + '''.pt")
+
+    def __call__(self):
+        return self.render()
+
+    def render(self):
+        return self.index()
+
+    def hello(self):
+        return "Hello!"
+
+'''
+    addFile(getBrowserPath(path) + 'resources/' + filename + '.py', string)
+    string = '''
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="context/main_template/macros/master"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="plone">
+    <metal:block fill-slot="content">
+        <div tal:define="hello nocall: view/hello">
+            <span tal:content="hello" />
+        </div>
+    </metal:block>
+</html>
+'''
+    addFile(getBrowserPath(path) + 'resources/' + filename + '.pt', string)
 
 def addBrowser(path):
     # Register browser-dir:

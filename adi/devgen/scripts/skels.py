@@ -15,6 +15,7 @@ from adi.devgen.scripts.conventions import getUnderscoredName
 
 from adi.devgen.scripts.create import addAndRegisterCss
 from adi.devgen.scripts.create import addAndRegisterJs
+from adi.devgen.scripts.create import addAndRegisterView
 from adi.devgen.scripts.create import addBrowser
 from adi.devgen.scripts.create import addDocs
 from adi.devgen.scripts.create import addDependency
@@ -108,7 +109,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         addDirs(last_lvl + 'skins/' + name_underscored)
         addSkin(path)
 
-    def addCss(self, filename, path='.'):
+    def addCss(self, filename='main', path='.'):
         """Register and add a browser-based CSS-file."""
         if not path.endswith('/'): path += '/'
         if path != './':
@@ -118,13 +119,23 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
                 self.addBrowserSkel(path)
         addAndRegisterCss(filename, path)
 
-    def addJs(self, filename, path='.'):
+    def addJs(self, filename='main', path='.'):
         """Register and add a browser-based JS-file."""
         if not path.endswith('/'): path += '/'
         if path != './':
-            if not fileExists(path) or not fileExists(getLastLvlPath(path) + 'browser'):
+            if not fileExists(path)\
+            or not fileExists(getLastLvlPath(path) + 'browser'):
                 self.addBrowserSkel(path)
         addAndRegisterJs(filename, path)
+
+    def addView(self, filename='main', path='.'):
+        """Register and add a browser-based view with a template."""
+        if not path.endswith('/'): path += '/'
+        if path != './':
+            if not fileExists(path)\
+            or not fileExists(getLastLvlPath(path) + 'browser'):
+                self.addBrowserSkel(path)
+        addAndRegisterView(filename, path)
 
     def addDep(self, dep_name, path='.'):
         """ Add a dependency-addon to an addon."""
@@ -211,7 +222,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
     def addPlone(self, path='.', plone_version='4.3.4'):
         """
         Check, if shared buildout-sources are available in $HOME/.buildout,
-        add buildout.cfg to path, run buildout.
+        add buildout.cfg to path, run buildout, raise server.
         """
         if not path.endswith('/'): path += '/'
         if not fileExists(path): addDirs(path)

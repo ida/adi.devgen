@@ -4,6 +4,8 @@ Changelog
 0.9.dev0 (XXXXXX)
 ------------
 
+- Add addView().
+
 - Add default-values of a function's expected arguments to help-msg.
 
 - Fix path: Use dot instead of slash, for a resources' paths in js-registry-gen.

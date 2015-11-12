@@ -251,14 +251,17 @@ filename + '.js loaded</div>").insertBefore("#visual-portal-wrapper")\n\
 
 def addAndRegisterView(filename, path):
     """Register and add browser-based view with an associated template."""
+    addFile(getResourcesPath(path) + '__init__.py', '')
     string = '''
     <browser:page
         for="*"
         name="''' + getUnderscoredName(path) + '''_''' + filename + '''_view"
         class=".resources.''' + filename + '''.View"
         permission="zope2.View"
-        layer=".interfaces.I''' + getUppercasedName(path) + '''"
+        layer="''' + getAddonName(path) + '''.interfaces.I''' +\
+        getUppercasedName(path) + '''"
       />
+
 '''
     insertBeforeLastTag(getBrowserPath(path) + 'configure.zcml', string)
     string = '''from Products.Five.browser import BrowserView

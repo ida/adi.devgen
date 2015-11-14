@@ -12,6 +12,10 @@ Changelog
 
 - Let getAddonPath() fail with an exit, to prevent further code-exe.
 
+- Fix addBrowser() from scratch – not on top of existing addon.
+
+- Improve addAndRegisterView().
+
 
 0.8 (151002)
 ------------

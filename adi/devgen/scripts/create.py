@@ -140,7 +140,7 @@ def addMetadata(path):
     if not fileExists(getProfilePath(path) + 'metadata.xml'):
         addFile(getProfilePath(path) + 'metadata.xml', string)
 
-def addSkin(path):
+def addSkinFiles(path):
     """Register skin-folder in configure.zcml and add metadata.xml to profile."""
     conf = getLastLvlPath(path) + 'configure.zcml'
     if not fileExists(conf): addConfig(getLastLvlPath(path))
@@ -159,7 +159,6 @@ directory="' + getAddonName(path) + ':skins/' + getUnderscoredName(path) + '"/>\
 \n\
 </object>'
     addFile(getProfilePath(path) + 'skins.xml', string)
-    #addFile(getSkinPath(path) + 'public.css', 'body{background:red}') # DEV
     addSkinResources(path)
 
 def addSkinResources(path):
@@ -298,7 +297,7 @@ class View(BrowserView):
 '''
     addFile(getBrowserPath(path) + 'resources/' + filename + '.pt', string)
 
-def addBrowser(path):
+def addBrowserFiles(path):
     # Register browser-dir:
     registerBrowser(path)
     # Add init to browser-dir:

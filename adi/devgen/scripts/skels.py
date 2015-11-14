@@ -16,7 +16,7 @@ from adi.devgen.scripts.conventions import getUnderscoredName
 from adi.devgen.scripts.create import addAndRegisterCss
 from adi.devgen.scripts.create import addAndRegisterJs
 from adi.devgen.scripts.create import addAndRegisterView
-from adi.devgen.scripts.create import addBrowser
+from adi.devgen.scripts.create import addBrowserFiles
 from adi.devgen.scripts.create import addDocs
 from adi.devgen.scripts.create import addDependency
 from adi.devgen.scripts.create import addFirstInit
@@ -24,7 +24,7 @@ from adi.devgen.scripts.create import addLastInit
 from adi.devgen.scripts.create import addMetadata
 from adi.devgen.scripts.create import addSetuphandlers
 from adi.devgen.scripts.create import addSetupPy
-from adi.devgen.scripts.create import addSkin
+from adi.devgen.scripts.create import addSkinFiles
 from adi.devgen.scripts.create import registerProfile
 from adi.devgen.scripts.create import setSetupPy
 
@@ -78,7 +78,7 @@ class AddSkel(object):
         if not fileExists(getProfilePath(path)):
             self.addProfileSkel(path)
         addDirs(getResourcesPath(path))
-        addBrowser(path)
+        addBrowserFiles(path)
 
     def addMetaSkel(self, path='.'):
         """ Add 'README.rst', 'MANIFEST.in' and a docs-folder with further files.
@@ -105,15 +105,18 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
             addDirs(getProfilePath(path))
             addMetadata(getProfilePath(path))
 
-    def addSkinSkel(self, path='.'):
+    def addSkin(self, path='.'):
         """ Add a skins-based skel."""
         if not path.endswith('/'): path += '/'
+        if path != './' and not fileExists(path):
+            path = path.split('/')[-2]
+            self.addProfileSkel(path)
         if not fileExists(getProfilePath(path)):
             self.addProfileSkel(path)
         name_underscored = getUnderscoredName(path)
         last_lvl = getLastLvlPath(path)
         addDirs(last_lvl + 'skins/' + name_underscored)
-        addSkin(path)
+        addSkinFiles(path)
 
     def addCss(self, filename='main', path='.'):
         """Register and add a browser-based CSS-file."""

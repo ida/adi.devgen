@@ -58,7 +58,7 @@ def devgen():
     # No argument was provided of user:
     if len(args) < 1:
         exit("\nAvailable functions:\n\n    " + ", ".join(available_functions) + ".\n\n\
-Type `devgen [FUNCTION_NAME] help` to see which arguments a function expects and its docstr.\n\n\
+Type `devgen [FUNCTION_NAME] help` to see the functions' docstr and which arguments it expects.\n\n\
 Type `devgen help` to get a verbose description of this tool.\n")
 
     # At least one arg was passed, it must be the function-name:

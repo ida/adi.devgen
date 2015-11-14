@@ -33,14 +33,21 @@ from adi.devgen.scripts.install import addBuildoutSkel
 class AddSkel(object):
 
     def addOn(self, path):
-        """Create addon with browser-based skel and metadata."""
-        self.addBrowserSkel(path)
+        """
+        Create addon with browser-based 'main.css', 'main.js',
+        'main.py' and 'main.pt'. Include metadata.
+        """
         self.addMetaSkel(path)
+        filename = 'main'
+        self.addCss(filename, path)
+        self.addJs(filename, path)
+        self.addView(filename, path)
 
     def addBaseSkel(self, path):
         """
-        Create minimum-skel: Root folder with setup.py, first-level and second-level-folder and their '__init__.py's.
-        Registers egg in buildout's syspath and is thereby
+        Create minimum-skel: Root folder with setup.py,
+        first-level and second-level-folder and their '__init__.py's.
+        Register egg in buildout's syspath and be thereby
         available to the ZOPE-instance's Python-interpreter. Can be
         used for addons, which don't need profiles.
 
@@ -69,7 +76,7 @@ class AddSkel(object):
             path = path.split('/')[-2]
             self.addProfileSkel(path)
         if not fileExists(getProfilePath(path)):
-            path = self.addProfileSkel(path)
+            self.addProfileSkel(path)
         addDirs(getResourcesPath(path))
         addBrowser(path)
 
@@ -79,7 +86,6 @@ class AddSkel(object):
         """
         if not path.endswith('/'): path += '/'
         if path != './': self.addBaseSkel(path)
-        
         addon_forename = getAddonFirstName(path)
         addFile(path + 'MANIFEST.in', 'recursive-include ' + addon_forename + ' *\nrecursive-include docs *\ninclude *.rst\nglobal-exclude *.pyc\nglobal-exclude *.pyo\n')
         addFile(path + 'README.rst', 'Introduction\n============\n\n\

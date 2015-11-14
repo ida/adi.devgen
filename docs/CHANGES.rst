@@ -12,7 +12,9 @@ Changelog
 
 - Let getAddonPath() fail with an exit, to prevent further code-exe.
 
-- Fix addBrowser() from scratch – not on top of existing addon.
+- Rename addBrowserSkel to addBrwoser and addSkinSkel to addSkin for less typing.
+
+- Fix addBrowser() and addSkin() from scratch – not on top of existing addon.
 
 - Improve addAndRegisterView().
 

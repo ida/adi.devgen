@@ -242,7 +242,7 @@ def addAndRegisterJs(filename, path):
     string = '\
 (function($) {\n\
         $(document).ready(function() {\n\
-            $("<div>++resource++' + getAddonName(path) + '/resources/' + \
+            $("<div>++resource++' + getAddonName(path) + '.resources/' + \
 filename + '.js loaded</div>").insertBefore("#visual-portal-wrapper")\n\
         }); //docready\n\
 })(jQuery);\n'

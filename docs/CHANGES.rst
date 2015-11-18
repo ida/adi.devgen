@@ -8,13 +8,17 @@ Changelog
 
 - Add default-values of a function's expected arguments to help-msg.
 
-- Fix path: Use dot instead of slash, for a resources' paths in js-registry-gen.
+- Fix path: Use dot instead of slash, for a resources' paths in
+  js-registry-generation.
 
-- Let getAddonPath() fail with an exit, to prevent further code-exe.
+- Let getAddonPath() fail with an exit, to prevent further
+  code-executions.
 
-- Rename addBrowserSkel to addBrwoser and addSkinSkel to addSkin for less typing.
+- Rename addBrowserSkel() to addBrowser(), addSkinSkel() to addSkin,
+  and so on, for less typing.
 
-- Fix addBrowser() and addSkin() from scratch – not on top of existing addon.
+- Fix addBrowser() and addSkin() from scratch – if not added on top of existing
+  addon.
 
 - Improve addAndRegisterView().
 

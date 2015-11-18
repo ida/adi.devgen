@@ -28,7 +28,7 @@ from adi.devgen.scripts.create import addSkinFiles
 from adi.devgen.scripts.create import registerProfile
 from adi.devgen.scripts.create import setSetupPy
 
-from adi.devgen.scripts.install import addBuildoutSkel
+from adi.devgen.scripts.install import addBuildout
 
 class AddSkel(object):
 
@@ -37,13 +37,13 @@ class AddSkel(object):
         Create addon with browser-based 'main.css', 'main.js',
         'main.py' and 'main.pt'. Include metadata.
         """
-        self.addMetaSkel(path)
+        self.addMeta(path)
         filename = 'main'
         self.addCss(filename, path)
         self.addJs(filename, path)
         self.addView(filename, path)
 
-    def addBaseSkel(self, path):
+    def addBase(self, path):
         """
         Create minimum-skel: Root folder with setup.py,
         first-level and second-level-folder and their '__init__.py's.
@@ -69,23 +69,23 @@ class AddSkel(object):
             addFirstInit(first_lvl)
             addLastInit(last_lvl)
 
-    def addBrowserSkel(self, path='.'):
+    def addBrowser(self, path='.'):
         """ Add a browser-based skel."""
         if not path.endswith('/'): path += '/'
         if path != './' and not fileExists(path):
             path = path.split('/')[-2]
-            self.addProfileSkel(path)
+            self.addProfile(path)
         if not fileExists(getProfilePath(path)):
-            self.addProfileSkel(path)
+            self.addProfile(path)
         addDirs(getResourcesPath(path))
         addBrowserFiles(path)
 
-    def addMetaSkel(self, path='.'):
+    def addMeta(self, path='.'):
         """ Add 'README.rst', 'MANIFEST.in' and a docs-folder with further files.
             To inform your users and to be possibly publishable on pypi.
         """
         if not path.endswith('/'): path += '/'
-        if path != './': self.addBaseSkel(path)
+        if path != './': self.addBase(path)
         addon_forename = getAddonFirstName(path)
         addFile(path + 'MANIFEST.in', 'recursive-include ' + addon_forename + ' *\nrecursive-include docs *\ninclude *.rst\nglobal-exclude *.pyc\nglobal-exclude *.pyo\n')
         addFile(path + 'README.rst', 'Introduction\n============\n\n\
@@ -94,12 +94,12 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         addDocs(path)
         setSetupPy(path + 'setup.py')
 
-    def addProfileSkel(self, path='.'):
+    def addProfile(self, path='.'):
         """ Be installable via a Plonesite's quickinstaller.
         """
         if not path.endswith('/'): path += '/'
         if not fileExists(path) and path != './':
-            self.addBaseSkel(path)
+            self.addBase(path)
         if not fileExists(getProfilePath(path)):
             registerProfile(getLastLvlPath(path))
             addDirs(getProfilePath(path))
@@ -110,9 +110,9 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         if not path.endswith('/'): path += '/'
         if path != './' and not fileExists(path):
             path = path.split('/')[-2]
-            self.addProfileSkel(path)
+            self.addProfile(path)
         if not fileExists(getProfilePath(path)):
-            self.addProfileSkel(path)
+            self.addProfile(path)
         name_underscored = getUnderscoredName(path)
         last_lvl = getLastLvlPath(path)
         addDirs(last_lvl + 'skins/' + name_underscored)
@@ -123,9 +123,9 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         if not path.endswith('/'): path += '/'
         if path != './':
             if not fileExists(path):
-                self.addBrowserSkel(path)
+                self.addBrowser(path)
             if not fileExists(getLastLvlPath(path)+'browser'):
-                self.addBrowserSkel(path)
+                self.addBrowser(path)
         addAndRegisterCss(filename, path)
 
     def addJs(self, filename='main', path='.'):
@@ -134,7 +134,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         if path != './':
             if not fileExists(path)\
             or not fileExists(getLastLvlPath(path) + 'browser'):
-                self.addBrowserSkel(path)
+                self.addBrowser(path)
         addAndRegisterJs(filename, path)
 
     def addView(self, filename='main', path='.'):
@@ -143,7 +143,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         if path != './':
             if not fileExists(path)\
             or not fileExists(getLastLvlPath(path) + 'browser'):
-                self.addBrowserSkel(path)
+                self.addBrowser(path)
         addAndRegisterView(filename, path)
 
     def addDep(self, dep_name, path='.'):
@@ -151,7 +151,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         if not path.endswith('/'): path += '/'
         if path != './':
             path = path.split('/')[-2]
-            self.addProfileSkel(path)
+            self.addProfile(path)
         addDependency(dep_name, path)
 
     def addInstallScript(self, path='.'):
@@ -235,7 +235,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         """
         if not path.endswith('/'): path += '/'
         if not fileExists(path): addDirs(path)
-        addBuildoutSkel(plone_version)
+        addBuildout(plone_version)
         os.system('touch ' + path + 'buildout.cfg')
         self.buildOut(path)
         self.run(path)

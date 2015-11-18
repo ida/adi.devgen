@@ -70,7 +70,7 @@ def makeConfigsUrlsLocal(configs_path):
             delFile(config_path)
         addFile(config_path, string)
 
-def addBuildoutSkel(plone_vs):
+def addBuildout(plone_vs):
     """
     Create $HOME/[path]. In it create default.cfg, eggs, deveggs, configs and a
     virtenv. Install buildout with the latter.
@@ -96,7 +96,7 @@ def addBuildoutSkel(plone_vs):
     # Create default-conf:
     addBuildoutDefaultConfig(plone_vs, path)
 
-def addPloneSkel(plone_vs, path):
+def addPlone(plone_vs, path):
     """Checks, if shared buildout-sources are available and adds a buildout.cfg to directory."""
     addBuildoutSkel(plone_vs)
     if not fileExists(path): addDirs(path)

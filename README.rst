@@ -1,38 +1,47 @@
 Introduction
 ============
 
-Yet another command-line Plone-Add-On-Generator, just the way I like it:
+Yet another command-line Plone-Add-On-Generator.
 
-No dependencies, no possible conflicts, some Python-methods, that's all.
+Hop right to the chapters "Usage" and "Examples " below,
+to get an impression of what it can do.
 
-Most commands expect the path to the addon as last parameter and defaults
-to the location where the command is executed. Do no matter where in the addon
-you are, you can execute commands without the need to be in a certain expected 
-location or passing a path, for less typing.
+
+Motivation
+==========
+
+While paster and zopeskel have served us well for a long time, at some point
+there were too often conflicts, due to some of its dependencies.
+This package doesn't have any dependencies, so all ever possible occuring
+problems can be safely attributed to itself.
 
 
 Installation
 =============
 
-    pip install adi.devgen
+    $ pip install adi.devgen
 
-
-Development-versions:
-
-    pip install -e git+https://github.com/ida/adi.devgen.git#egg=adi.devgen
-    pip install -e git+https://github.com/ida/adi.commons.git#egg=adi.commons
-
+That's it.
 
 Alternatively add `adi.devgen` as an egg to your buildout, then
 the `devgen`-executable will be available in its bin-directory, of
 which you can call it then, like: `./bin/devgen`.
 
+If you're a player, get and tweak the development-version, like this:
 
-Configuration
-=============
+    pip install -e git+https://github.com/ida/adi.devgen.git#egg=adi.devgen
+
+The latest state of this package will be added to a directory (a.k.a. folder)
+called 'src', which lives, where your pip lives. To find out where your pip
+lives, type `which pip` into your console. You can then change the code and
+see the effects immediately.
+
+
+Configuration / Presettings
+===========================
 
 If a file '~/.buildout/devgen.cfg' is present, values will be read of it and
-inserted into the `setup.py` of a generated addon. Its format is expected to be like:
+inserted into the `setup.py` of a generated addon, format must be like this:
 
 author=Arbi Trary
 
@@ -88,7 +97,6 @@ Register and add a browser-based Javascript named 'magic.js' in
 'your.addon/your/addon/browser/resources':
 
     $ devgen addJS magic
-
 
 Register and add a browser-based Template named 'main.pt' and a
 Python-script named 'main.py' with an example how to retrieve a

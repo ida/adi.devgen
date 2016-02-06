@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 from adi.commons.commons import addDirs
 from adi.commons.commons import addFile
@@ -253,4 +254,38 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         """
         if not path.endswith('/'): path += '/'
         os.system(path + 'bin/instance fg')
+
+    def doOnRemote(self, host, command):
+        """
+        Example:
+        $ devgen doOnRemote some.server.org "ls -al"
+        Relentlessly ripped off:
+        https://gist.github.com/bortzmeyer/1284249
+        """
+
+        ssh = None
+        results = []
+        output = ''
+
+        ssh = subprocess.Popen(["ssh", "%s" % host, command],
+                               shell=False,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE)
+
+        results = ssh.stdout.readlines()
+
+        if results == []:
+        # Note: `git clone` falsely returns 'Cloning into' as an error.
+            error = ssh.stderr.readlines()
+            # We probably should pipe the return into our local shell's stderr:
+            # print >>sys.stderr, "ERROR: %s" % error
+            # But we (her royal majesty and their multiple personalities)
+            # prefer another output-style:
+            for err in error:
+                output += err
+        else:
+            for item in results:
+                output += item
+
+        print output[:-1] # omit last linebreak, as `print` adds another one
 

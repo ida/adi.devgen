@@ -182,7 +182,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         them out to this directory, or specify another path.
         Optionally prepend repo-type to address, available are:
         'git', 'svn' and 'fs', if it lives on the filesystem, defaults to git.
-        If, url doesn't start with 'http://' and it's not of type 'fs', it will be appended.
+        If, url doesn't start with 'http://' and it's not of type 'fs', it will be prepended.
         If you are forced to use SSL, type full adress: 'https://github.com/(...)'
         Example:
         $ devgen getRepos 'github.com/ida/adi.devgen --branch brunch, svn svn.plone.org/svn/collective/adi.suite/trunk/ adi.suite'
@@ -243,14 +243,14 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
 
     def buildOut(self, path='.'):
         """
-        Run buildout in path.
+        Run buildout in passed path.
         """
         if not path.endswith('/'): path += '/'
         os.system(getHome() + '.buildout/virtenv/bin/buildout -c ' + path + 'buildout.cfg')
 
     def run(self, path='.'):
         """
-        Raise server-client, a.k.a. instance, in path.
+        Raise server-client, a.k.a. instance, in passed path.
         """
         if not path.endswith('/'): path += '/'
         os.system(path + 'bin/instance fg')
@@ -267,15 +267,29 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         results = []
         output = ''
 
+        # If we have a git-command, we have to deal with it returning
+        # non-error-msgs to stderr, the error-channel ('pipe') of a shell.
+        # We overcome this by additionally prepending 'echo $?' as a command,
+        # which will return the exit-code of the git-command, only, to be able
+        # to doublecheck, if we really have an error, or not:
+        if command.startswith('git '):
+            command = command.strip() # remove trailing spaces
+            if not command.endswith(';'): # add commands-separator
+                command += ';'
+            command += 'echo $?' # add command
+
+        # Open a connection and excute command-line on remote host:
+        print 'STA ' + command
         ssh = subprocess.Popen(["ssh", "%s" % host, command],
                                shell=False,
                                stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
 
+        # Read results:
         results = ssh.stdout.readlines()
 
+        # No results, probably an error:
         if results == []:
-        # Note: `git clone` falsely returns 'Cloning into' as an error.
             error = ssh.stderr.readlines()
             # We probably should pipe the return into our local shell's stderr:
             # print >>sys.stderr, "ERROR: %s" % error
@@ -285,7 +299,22 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
                 output += err
         else:
             for item in results:
-                output += item
+                # Omit following, if echo $? returned 0, see comment above.
+                # Then, git piped to stderr but actually everything's allright:
+                if item != '0\n':
+                    output += item
 
-        print output[:-1] # omit last linebreak, as `print` adds another one
+        with open('output.txt', 'w') as fil:
+            fil.write(output)
+        os.system('cat output.txt')
+
+        # Omit last linebreak, as the following
+        # `print` will add another one:
+        if output.endswith('\n'):
+            output = output[:-1]
+
+        # Print output:
+        if output != '':
+            pass#rint output
+        print 'END ' + command
 

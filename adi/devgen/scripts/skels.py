@@ -344,7 +344,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         os.system('git commit -m "' + new_commit_msg + '"')
         # If no new_commit_msg was passed, default
         # to msg of oldest squashed commit:
-        # Note: To have all msgs of all commits unified in the new msg,
+        # Nota: To have all msgs of all commits unified in the new msg,
         # simply change amount_of_backwardsteps to 1, here.
         if not new_commit_msg:
             new_commit_msg = os.system(

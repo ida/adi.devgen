@@ -4,6 +4,7 @@ from adi.commons.commons import addFile
 from adi.commons.commons import appendToFile
 from adi.commons.commons import delFile
 from adi.commons.commons import fileExists
+from adi.commons.commons import hasStr
 from adi.commons.commons import getStr
 from adi.commons.commons import getFirstChildrenDirPaths
 
@@ -37,7 +38,7 @@ def checkForDiffs(path, report_file='git-diff-report.txt'):
             delFile(p + sh)
             delFile(p + tmp)
     if DIFFS:
-        print "There are diffs, check './" + report_file + '" for a full report.'
+        print "There are diffs, check './" + report_file + '" for the full report.'
 
 def checkForUnpushedCommits(path, report_file='git-unpushed-commits.txt'):
     """
@@ -56,7 +57,7 @@ def checkForUnpushedCommits(path, report_file='git-unpushed-commits.txt'):
         if path == './': path = ''
         p = path + p
         if fileExists(p + '/.git'):
-            addFile( p + sh, 'cd ' + p + '; git status >> ' + tmp + '; cd ..')
+            addFile( p + sh, 'cd ' + p + '; git status > ' + tmp + '; cd ..')
             sis('chmod +x ' + p + sh)
             sis('./' + p + sh)
             if hasStr(getStr(p + tmp), 'Your branch is ahead of '):

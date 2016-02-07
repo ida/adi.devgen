@@ -33,6 +33,7 @@ from adi.devgen.scripts.create import registerProfile
 from adi.devgen.scripts.create import setSetupPy
 
 from adi.devgen.scripts.git import checkForDiffs
+from adi.devgen.scripts.git import checkForUnpushedCommits
 
 from adi.devgen.scripts.install import addBuildout
 
@@ -361,4 +362,5 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         """
         if not path.endswith('/'): path += '/'
         checkForDiffs(path)
+        checkForUnpushedCommits(path)
 

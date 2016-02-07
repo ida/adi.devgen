@@ -31,10 +31,10 @@ def checkForDiffs(path):
             sis('./' + p + sh)
             if getStr(p + tmp) != '':
                 DIFFS = True
-                appendToFile(fil, '" GIT-DIFF OF ' + p[:-1] + '\n'
+                appendToFile(fil, 'GIT-DIFF OF "' + p[:-1] + '":\n'
                                       + getStr(p + tmp) + '\n')
             delFile(p + sh)
             delFile(p + tmp)
     if DIFFS:
-        print "There are diffs, check './" + fil + ' for a full report.'
+        print "There are diffs, check './" + fil + '" for a full report.'
 

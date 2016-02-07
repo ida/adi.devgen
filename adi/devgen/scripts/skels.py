@@ -32,6 +32,8 @@ from adi.devgen.scripts.create import addSkinFiles
 from adi.devgen.scripts.create import registerProfile
 from adi.devgen.scripts.create import setSetupPy
 
+from adi.devgen.scripts.git import checkForDiffs
+
 from adi.devgen.scripts.install import addBuildout
 
 class AddSkel(object):
@@ -331,11 +333,11 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         os.system('cat prompt.txt')
 #        if ERRORS: print 'There have been errors, check full report in "./report.txt".'
 
-    def squashCommits(self, amount_of_backwardsteps, new_commit_msg=''):
+    def squash(self, amount_of_backwardsteps, new_commit_msg=''):
         """
-        Unify several commits into one. Optionally pass new commit-msg,
+        Unify several git-commits into one. Optionally pass new commit-msg,
         otherwise the msg of the oldest commit of the squashed commits is used.
-        Thanks Chris Johnson:
+        Thanks to Chris Johnson:
         http://stackoverflow.com/questions/5189560/squash-my-last-x-commits-together-using-git/5201642#5201642
         """
         # Remove last n commit-logs:
@@ -350,4 +352,13 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
             new_commit_msg = os.system(
                 'git commit -m"$(git log --format=%B HEAD..HEAD@{' +
                 amount_of_backwardsteps + '})"')
+
+    def getGitReport(self, path='.'):
+        """
+        Perform a diff- and unpushed-commits-check,
+        for each directory in the given path. Write each check
+        into reportfiles 'git-diff-report.txt' and 'git-unpushed-commits.txt'.
+        """
+        if not path.endswith('/'): path += '/'
+        checkForDiffs(path)
 

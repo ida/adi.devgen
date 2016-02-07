@@ -15,6 +15,7 @@ from adi.commons.commons import hasStr
 from adi.devgen.scripts.create import addBuildoutDefaultConfig
 
 def installBuildout(virtenv_path):
+    if not virtenv_path.endswith('/'): virtenv_path += '/'
     os.system('virtualenv ' + virtenv_path)
     os.system(virtenv_path + 'bin/pip install setuptools -U')
     os.system(virtenv_path + 'bin/pip install zc.buildout')
@@ -84,7 +85,7 @@ def addBuildout(plone_vs):
     for p in paths: addDirs(p)
 
     # Create virtenv:
-    #if not fileExists(path + 'virtenv'): installBuildout(path + 'virtenv')
+    if not fileExists(path + 'virtenv'): installBuildout(path + 'virtenv/')
 
     # Create confs:
     configs_path = path + 'configs/' + plone_vs + '/'

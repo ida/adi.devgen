@@ -331,3 +331,23 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         os.system('cat prompt.txt')
 #        if ERRORS: print 'There have been errors, check full report in "./report.txt".'
 
+    def squashCommits(self, amount_of_backwardsteps, new_commit_msg=''):
+        """
+        Unify several commits into one. Optionally pass new commit-msg,
+        otherwise the msg of the oldest commit of the squashed commits is used.
+        Thanks Chris Johnson:
+        http://stackoverflow.com/questions/5189560/squash-my-last-x-commits-together-using-git/5201642#5201642
+        """
+        # Remove last n commit-logs:
+        os.system('git reset --soft HEAD~' + amount_of_backwardsteps)
+        # Add new log:
+        os.system('git commit -m "' + new_commit_msg + '"')
+        # If no new_commit_msg was passed, default
+        # to msg of oldest squashed commit:
+        # Note: To have all msgs of all commits unified in the new msg,
+        # simply change amount_of_backwardsteps to 1, here.
+        if not new_commit_msg:
+            new_commit_msg = os.system(
+                'git commit -m"$(git log --format=%B HEAD..HEAD@{' +
+                amount_of_backwardsteps + '})"')
+

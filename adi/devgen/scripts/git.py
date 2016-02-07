@@ -14,8 +14,7 @@ def checkForDiffs(path, report_file='git-diff-report.txt'):
     Directories not containing a '.git'-dir are ignored.
     """
     tmp = report_file + '.tmp'
-    sh = 'sh.sh'
-    exe_prefix = ''
+    sh = report_file + '.sh.tmp'
     DIFFS = False
     if not path.endswith('/'): path += '/'
     if path.startswith('./'): path = path[2:]
@@ -46,5 +45,26 @@ def checkForUnpushedCommits(path, report_file='git-unpushed-commits.txt'):
     and collect the filenames of files with unpushed commits
     in the report-file.
     """
-    pass
+    tmp = report_file + '.tmp'
+    sh = report_file + '.sh.tmp'
+    DIFFS = False
+    if not path.endswith('/'): path += '/'
+    if path.startswith('./'): path = path[2:]
+    if fileExists(report_file): delFile(report_file)
+    paths = getFirstChildrenDirPaths(path)
+    for p in paths:
+        if path == './': path = ''
+        p = path + p
+        if fileExists(p + '/.git'):
+            addFile( p + sh, 'cd ' + p + '; git status >> ' + tmp + '; cd ..')
+            sis('chmod +x ' + p + sh)
+            sis('./' + p + sh)
+            if hasStr(getStr(p + tmp), 'Your branch is ahead of '):
+                DIFFS = True
+                appendToFile(report_file, '    - ' + p[:-1])
+            delFile(p + sh)
+            delFile(p + tmp)
+    if DIFFS:
+        print "There are unpushed commits in:"
+        print getStr(report_file)
 

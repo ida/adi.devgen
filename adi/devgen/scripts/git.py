@@ -7,20 +7,19 @@ from adi.commons.commons import fileExists
 from adi.commons.commons import getStr
 from adi.commons.commons import getFirstChildrenDirPaths
 
-def checkForDiffs(path):
+def checkForDiffs(path, report_file='git-diff-report.txt'):
     """
     For each first-child-dir of path perform a git-diff
     and collect the diffs in a reportfile.
     Directories not containing a '.git'-dir are ignored.
     """
-    fil = 'git-diff-report.txt'
-    tmp = fil + '.tmp'
+    tmp = report_file + '.tmp'
     sh = 'sh.sh'
     exe_prefix = ''
     DIFFS = False
     if not path.endswith('/'): path += '/'
     if path.startswith('./'): path = path[2:]
-    if fileExists(fil): delFile(fil)
+    if fileExists(report_file): delFile(report_file)
     paths = getFirstChildrenDirPaths(path)
     for p in paths:
         if path == './': path = ''
@@ -31,10 +30,21 @@ def checkForDiffs(path):
             sis('./' + p + sh)
             if getStr(p + tmp) != '':
                 DIFFS = True
-                appendToFile(fil, 'GIT-DIFF OF "' + p[:-1] + '":\n'
-                                      + getStr(p + tmp) + '\n')
+                # Nota: We insert the info about dir-name prended with 'diff ',
+                # so syntaxhighlighting keeps intact for diff-files:
+                appendToFile(report_file,
+                             'diff of "' + p[:-1] + '":\n'
+                             + getStr(p + tmp) + '\n\n')
             delFile(p + sh)
             delFile(p + tmp)
     if DIFFS:
-        print "There are diffs, check './" + fil + '" for a full report.'
+        print "There are diffs, check './" + report_file + '" for a full report.'
+
+def checkForUnpushedCommits(path, report_file='git-unpushed-commits.txt'):
+    """
+    For each first-child-dir of path perform a git-status
+    and collect the filenames of files with unpushed commits
+    in the report-file.
+    """
+    pass
 

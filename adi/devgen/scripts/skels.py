@@ -1,11 +1,14 @@
 import os
 import subprocess
+import sys
 
 from adi.commons.commons import addDirs
 from adi.commons.commons import addFile
+from adi.commons.commons import appendToFile
 from adi.commons.commons import fileExists
 from adi.commons.commons import getHome
 from adi.commons.commons import insertAfterNthLine
+from adi.commons.commons import writeFile
 
 from adi.devgen.scripts.conventions import getAddonFirstName
 from adi.devgen.scripts.conventions import getAddonPath
@@ -39,7 +42,6 @@ class AddSkel(object):
         'main.py' and 'main.pt'. Include metadata.
         """
         self.addMeta(path)
-        filename = 'main'
         self.addCss(filename, path)
         self.addJs(filename, path)
         self.addView(filename, path)
@@ -47,7 +49,7 @@ class AddSkel(object):
     def addBase(self, path):
         """
         Create minimum-skel: Root folder with setup.py,
-        first-level and second-level-folder and their '__init__.py's.
+        first-level and second-level-folder and their '__init__.py'-s.
         Register egg in buildout's syspath and be thereby
         available to the ZOPE-instance's Python-interpreter. Can be
         used for addons, which don't need profiles.
@@ -71,7 +73,7 @@ class AddSkel(object):
             addLastInit(last_lvl)
 
     def addBrowser(self, path='.'):
-        """ Add a browser-based skel."""
+        """ Add browser-skel."""
         if not path.endswith('/'): path += '/'
         if path != './' and not fileExists(path):
             path = path.split('/')[-2]
@@ -107,7 +109,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
             addMetadata(getProfilePath(path))
 
     def addSkin(self, path='.'):
-        """ Add a skins-based skel."""
+        """ Add skins-skel."""
         if not path.endswith('/'): path += '/'
         if path != './' and not fileExists(path):
             path = path.split('/')[-2]
@@ -263,9 +265,14 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         https://gist.github.com/bortzmeyer/1284249
         """
 
+        ERRORS = False
         ssh = None
-        results = []
-        output = ''
+        results = ''
+        prompt = ''
+        report = ''
+        passed_command = command # keep orig before altering it
+
+        report += 'STA ' + passed_command + '\n'
 
         # If we have a git-command, we have to deal with it returning
         # non-error-msgs to stderr, the error-channel ('pipe') of a shell.
@@ -277,9 +284,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
             if not command.endswith(';'): # add commands-separator
                 command += ';'
             command += 'echo $?' # add command
-
         # Open a connection and excute command-line on remote host:
-        print 'STA ' + command
         ssh = subprocess.Popen(["ssh", "%s" % host, command],
                                shell=False,
                                stdout=subprocess.PIPE,
@@ -290,31 +295,39 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
 
         # No results, probably an error:
         if results == []:
-            error = ssh.stderr.readlines()
+            ERRORS = True
+            errors = ssh.stderr.readlines()
             # We probably should pipe the return into our local shell's stderr:
             # print >>sys.stderr, "ERROR: %s" % error
             # But we (her royal majesty and their multiple personalities)
-            # prefer another output-style:
-            for err in error:
-                output += err
+            # prefer another prompt-style:
+            for error in errors:
+                prompt += error
+                report += 'ERR ' + error
         else:
-            for item in results:
-                # Omit following, if echo $? returned 0, see comment above.
-                # Then, git piped to stderr but actually everything's allright:
-                if item != '0\n':
-                    output += item
+            for result in results:
+                # Regard a program might have piped a success to stderr, exitcode tells
+                # us, there really went something wrong:
+                if result == '1\n' or result == '128\n':
+                    ERRORS = True
+                    report += 'ERR ' + result
+                    prompt += result
+                # Regard a program might have piped a success to stderr, exitcode tells
+                # us, everything went allright, we omit prompting the exitcode:
+                elif result != '0\n':
+                    report += 'SCS ' + result
+                # Otherwise proceed as usual:
+                else:
+                    report += 'SCS ' + result
+                    prompt += result
 
-        with open('output.txt', 'w') as fil:
-            fil.write(output)
-        os.system('cat output.txt')
+        report += 'END ' + passed_command + '\n\n'
 
-        # Omit last linebreak, as the following
-        # `print` will add another one:
-        if output.endswith('\n'):
-            output = output[:-1]
-
-        # Print output:
-        if output != '':
-            pass#rint output
-        print 'END ' + command
+        # Add report:
+        appendToFile('report.txt', report)
+        # Write prompt to file:
+        writeFile('prompt.txt', prompt)
+        # Prompt prompt:
+        os.system('cat prompt.txt')
+#        if ERRORS: print 'There have been errors, check full report in "./report.txt".'
 

@@ -44,6 +44,7 @@ class AddSkel(object):
         Create addon with browser-based 'main.css', 'main.js',
         'main.py' and 'main.pt'. Include metadata.
         """
+        filename = 'main'
         self.addMeta(path)
         self.addCss(filename, path)
         self.addJs(filename, path)

@@ -11,6 +11,8 @@ Changelog
 - Re-add default-filename "main" for generating stylesheet, Javascript,
   Python-script and a template via addOn().
 
+- Fix, if browserlayer is missing in addCss() and addJs().
+
 
 0.9 (2015-11-18)
 ----------------

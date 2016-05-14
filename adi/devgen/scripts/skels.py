@@ -128,20 +128,15 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
     def addCss(self, filename='main', path='.'):
         """Register and add a browser-based CSS-file."""
         if not path.endswith('/'): path += '/'
-        if path != './':
-            if not fileExists(path):
-                self.addBrowser(path)
-            if not fileExists(getLastLvlPath(path)+'browser'):
-                self.addBrowser(path)
+        if path != './' or not fileExists(getResourcesPath(path)):
+            self.addBrowser(path)
         addAndRegisterCss(filename, path)
 
     def addJs(self, filename='main', path='.'):
         """Register and add a browser-based JS-file."""
         if not path.endswith('/'): path += '/'
-        if path != './':
-            if not fileExists(path)\
-            or not fileExists(getLastLvlPath(path) + 'browser'):
-                self.addBrowser(path)
+        if path != './' or not fileExists(getResourcesPath(path)):
+            self.addBrowser(path)
         addAndRegisterJs(filename, path)
 
     def addView(self, filename='main', path='.'):

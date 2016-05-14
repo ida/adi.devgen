@@ -4,7 +4,12 @@ Changelog
 1.0 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Add doOnRemote(), squash() and getUnpushedCommits().
+
+- Fix "cannot find virtenv" in addPlone().
+
+- Re-add default-filename "main" for generating stylesheet, Javascript,
+  Python-script and a template via addOn().
 
 
 0.9 (2015-11-18)

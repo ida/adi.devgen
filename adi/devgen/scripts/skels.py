@@ -238,7 +238,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         urls = ','.join(urls)
         self.getRepos(urls, path)
 
-    def addPlone(self, path='.', plone_version='4.3.4'):
+    def addPlone(self, path='.', plone_version='4.3.9'):
         """
         Check, if shared buildout-sources are available in $HOME/.buildout,
         add buildout.cfg to path, run buildout, raise server.

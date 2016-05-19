@@ -384,9 +384,12 @@ extends = configs/""" + plone_vs + """/versions.cfg
 
 eggs-directory = eggs
 
+extensions = buildout.eggtractor
+
 versions = versions
 
-#develop = src/dev.addon
+develop =
+#    src/dev.addon
 
 [instance]
 recipe = plone.recipe.zope2instance

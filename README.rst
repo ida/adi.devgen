@@ -3,27 +3,18 @@ Introduction
 
 Yet another command-line Plone-Add-On-Generator.
 
-Hop right to the chapters "Usage" and "Examples " below,
-to get an impression of what it can do.
-
-
-Motivation
-==========
-
-While paster and zopeskel have served us well for a long time, at some point
-there were too often conflicts, due to some of its dependencies.
 This package doesn't have any dependencies, so all ever possible occuring
 problems can safely be attributed to itself.
 
 Additionally it was desirable to be able to execute any Plone-addon-extending
 command of within any location of an addon. Or, of outside of an addon, by
-prependning the path to the addon to the command, so one doesn't necessarily
+prepending the path to the addon to the command, so one doesn't necessarily
 need to change directories and executing a command doesn't require you to be in
 a certain directory.
 
 Besides of Plone-addon-related helper-functions, there are also functions more
 general related to developing, like `doOnRemote()`, `getRepos()`, 
-`squashCommits()`, a.s.o.
+`squash()`, and so on.
 
 Setting up a new Plone-instance is as easy as `addPlone()`, will download the
 configs for buildout locally and set buildout's mode to 'offline', so we save
@@ -34,18 +25,19 @@ remote addresses, like usually, as time is honey.
 Installation
 =============
 
-Stable-version:
+Stable-version
 --------------
 
-From the commandline execute::
+Of the commandline execute::
 
     pip install adi.devgen
 
 
-Develop-version:
-----------------
+Develop-version
+---------------
 
-::
+Of the commandline execute::
+
     pip install -e git+https://github.com/ida/adi.devgen.git#egg=adi.devgen
 
 
@@ -64,19 +56,28 @@ values will be read of it and inserted into the `setup.py` of the addon.
 The file-contents' format must be like this::
 
 author=Arbi Trary
+
 author_email=arbi@tra.ry
+
 url=https://github.com/arbitrary/your.addon
 
 
 Usage
 =====
 
+Type the command  and 'help', to get a verbose description fo this tool::
+
+    devgen help
+
 Type the command alone, to get a list of the available generator-functions::
 
     devgen
 
+Or, have a look into the methods of adi.devgen.scripts.skel.addSkel, all of
+those are available of the commandline, when prepending 'devgen'.
 
-To get a choosen function's help-text, type::
+
+To get a choosen function's help-text, to see what arguments it expects, type::
 
     devgen [FUNCTION_NAME] help
 

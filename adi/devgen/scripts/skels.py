@@ -8,6 +8,7 @@ from adi.commons.commons import appendToFile
 from adi.commons.commons import fileExists
 from adi.commons.commons import getHome
 from adi.commons.commons import insertAfterNthLine
+from adi.commons.commons import removeLinesContainingPattern
 from adi.commons.commons import writeFile
 
 from adi.devgen.scripts.conventions import getAddonFirstName
@@ -155,6 +156,13 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
             path = path.split('/')[-2]
             self.addProfile(path)
         addDependency(dep_name, path)
+
+    def delDep(self, dep_name, path='.'):
+        """Remove a dependency-addon off an addon."""
+        fil = getProfilePath(path) + 'metadata.xml'
+        removeLinesContainingPattern(fil, dep_name)
+        fil = getAddonPath(path) + 'setup.py'
+        removeLinesContainingPattern(fil, dep_name)
 
     def addInstallScript(self, path='.'):
         """

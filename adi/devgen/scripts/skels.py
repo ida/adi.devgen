@@ -143,10 +143,8 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
     def addView(self, filename='main', path='.'):
         """Register and add a browser-based view with a template."""
         if not path.endswith('/'): path += '/'
-        if path != './':
-            if not fileExists(path)\
-            or not fileExists(getLastLvlPath(path) + 'browser'):
-                self.addBrowser(path)
+        if path != './' or fileExists(getResourcesPath(path)) == False:
+            self.addBrowser(path)
         addAndRegisterView(filename, path)
 
     def addDep(self, dep_name, path='.'):

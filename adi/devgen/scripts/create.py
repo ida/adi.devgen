@@ -121,7 +121,7 @@ def registerProfile(path):
       name="default"\n\
       title="' + getAddonName(path) + '"\n\
       directory="profiles/default"\n\
-      description="Installs the ' + getAddonFirstName(path) + ' package"\n\
+      description="Installs the ' + getAddonName(path) + ' package"\n\
       provides="Products.GenericSetup.interfaces.EXTENSION"\n\
       />\n'
     fil = getLastLvlPath(path) + 'configure.zcml'

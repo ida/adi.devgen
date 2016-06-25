@@ -1,3 +1,5 @@
+# String-generations with addon-name-substitutions.
+
 import os
 
 from adi.commons.commons import addFile
@@ -66,8 +68,13 @@ setup(name=\'' + addon_name + '\',\n\
     addFile(path + 'setup.py', string)
 
 def addDocs(path):
-    """Add doc-folder containing 'CHANGES.rst', 'INSTALL.rst' and 'USAGE.rst'."""
-    addFile(path + 'docs/CHANGES.rst', """Changelog for """ + getAddonName(path) + """\n==================
+    """
+    Add doc-folder containing 'CHANGES.rst', 'INSTALL.rst' and 'USAGE.rst'.
+    """
+    addFile(path + 'docs/CHANGES.rst', """Changelog for """\
+     + getAddonName(path) + """\n==============
+
+
 0.1.dev0 (unreleased)
 ---------------------
 
@@ -417,6 +424,9 @@ setuptools = >= 2.2
     addFile(path + 'default.cfg', string)
 
 def addSetuphandlers(path):
+    """
+    Add file 'setuphandlers.py' for executing stuff on an addon's install.
+    """
     string = '<genericsetup:importStep\n\
       name="' + getAddonName(path) + '"\n\
       title="' + getAddonName(path) + ' special import handlers"\n\
@@ -427,22 +437,29 @@ def addSetuphandlers(path):
         insertBeforeLine(getConfigPath(path), '</configure>', string)
     string = "from Products.CMFCore.utils import getToolByName\n\
 \n\
+\n\
+def isIniInstall(context):\n\
+    qi = getToolByName(context, 'portal_quickinstaller')\n\
+    prods = qi.listInstallableProducts(skipInstalled=False)\n\
+    for prod in prods:\n\
+        if (prod['id'] == '" + getAddonName(path) + "')\\\n\
+          and (prod['status'] == 'uninstalled'):\n\
+            return True\n\
+    return False\n\
+\n\
 def doOnInstall(context):\n\
-    # Put your code, to be executed on an install, here.\n\
-    # If you want this to happen only on the initial, very first install,\n\
-    # uncomment the next lines:\n\
-#    qi = getToolByName(context, 'portal_quickinstaller')\n\
-#    prods = qi.listInstallableProducts(skipInstalled=False)\n\
-#    for prod in prods:\n\
-#        if (prod['id'] == '" + getAddonName(path) + "') and (prod['status'] == 'uninstalled'):\n\
+    pass # Put your code here.\n\
+    # You might want to restrict this to initial installs:\n\
+    # if isIniInstall(context):\n\
 \n\
 def setupVarious(context):\n\
     portal = context.getSite()\n\
-    # The text-file is a flag, the following will only be excecuted, if it's present in an imported profile:\n\
+    # Looks, if the following file is present, in 'profiles/default',\n\
+    # otherwise doOnInstall() would be executed, when running buildout, also:\n\
     if context.readDataFile('" + getAddonName(path) + ".marker.txt') is None:\n\
         return\n\
 \n\
-    doOnInstall(portal)"
+    doOnInstall(portal)\n"
 
     addFile(getLastLvlPath(path) + 'setuphandlers.py', string)
     addFile(getProfilePath(path) + getAddonName(path) + '.marker.txt')

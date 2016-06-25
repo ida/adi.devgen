@@ -167,7 +167,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         Add and register a file called 'setuphandlers.py', 
         in addon, which will be executed on (re-)installs.
         """
-        if not path.endswith('/'): path += '/'
+        self.addProfile(path)
         addSetuphandlers(path)
 
     def addLog(self, comment, path='.'):

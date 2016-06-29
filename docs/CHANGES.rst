@@ -4,7 +4,14 @@ Changelog
 1.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Add plone.py including recursive child-population.
+
+- Improve addInstallScript().
+
+- Add eggtractor, add develop-section in default-buildout-conf,
+  increase default plone-vs.
+
+- Add delDep() (delete dependency).
 
 
 1.0 (2016-05-14)

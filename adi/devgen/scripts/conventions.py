@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+
+# Assumes all profiles are in 'profiles/default' and
+# all browser-resources are in 'browser/resources.
+
 from adi.commons.commons import getRealPath
 from adi.commons.commons import getParentDirPath
 from adi.commons.commons import fileExists

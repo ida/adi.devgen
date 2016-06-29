@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import sys
 import inspect
 from adi.devgen.scripts.skels import AddSkel

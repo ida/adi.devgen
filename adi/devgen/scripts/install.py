@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 
 from adi.commons.commons import addFile

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 import subprocess
 import sys
@@ -111,6 +113,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         if not fileExists(getProfilePath(path)):
             registerProfile(getLastLvlPath(path))
             addDirs(getProfilePath(path))
+        if not fileExists(getProfilePath(path) + 'metadata.xml'):
             addMetadata(getProfilePath(path))
 
     def addSkin(self, path='.'):

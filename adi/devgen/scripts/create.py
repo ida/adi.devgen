@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # String-generations with addon-name-substitutions.
 
 import os

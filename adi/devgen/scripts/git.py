@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from os import system as sis
 
 from adi.commons.commons import addFile

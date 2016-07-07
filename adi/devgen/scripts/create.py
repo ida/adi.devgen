@@ -445,7 +445,7 @@ def isIniInstall(context):\n\
     prods = qi.listInstallableProducts(skipInstalled=False)\n\
     for prod in prods:\n\
         if (prod['id'] == '" + getAddonName(path) + "')\\\n\
-          and (prod['status'] == 'uninstalled'):\n\
+          and (prod['status'] == 'new'):\n\
             return True\n\
     return False\n\
 \n\

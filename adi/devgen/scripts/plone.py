@@ -111,6 +111,23 @@ def getChildDepthInSite(context):
 def getChildPath(child):
     return '/'.join(child.getPhysicalPath())
 
+def getField(context, field_name):
+    """Return val of field as str."""
+    return context.Schema()[field_name]
+
+def getFields(context, field_names=None):
+    """
+    Return list of key/value-pairs-sequence, all as strings, e.g.:
+    ['title', 'Welcome', 'creation_date', '2016/07/08 19:03:33.607601 GMT+2']
+    Filter by field_names if passed, else return all fields of context.
+    """
+    fields = []
+    for field in context.Schema().fields():
+        if not field_names or field.getName() in field_names:
+            fields.append(str(field.getName()))
+            fields.append(str(field.get(context)))
+    return fields
+
 def getParentPath(child):
     return '/'.join(child.getPhysicalPath()[:-1])
 

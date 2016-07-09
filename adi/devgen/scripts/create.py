@@ -156,12 +156,15 @@ def addSkinFiles(path):
     insertAfterFirstLine(conf, '    xmlns:cmf="http://namespaces.zope.org/cmf"\n')
     insertBeforeLastTag(conf, '\n  <cmf:registerDirectory name="' + getUnderscoredName(path) + '"/>\n\n')
     string = '\
+<?xml version="1.0"?>\n\
 <object name="portal_skins">\n\
 <object name="' + getUnderscoredName(path) + '"\n\
 meta_type="Filesystem Directory View"\n\
 directory="' + getAddonName(path) + ':skins/' + getUnderscoredName(path) + '"/>\n\
 \n\
-<skin-path name="' + getAddonName(path) + '" based-on="Sunburst Theme">\n\
+<!-- For unknown reasons, inserting add-name as\n\
+     skin-path name will not work, yet asterix does. -->\n\
+<skin-path name="*" based-on="Sunburst Theme">\n\
 <layer name="' + getUnderscoredName(path) + '" insert-after="custom"/>\n\
 \n\
 </skin-path>\n\

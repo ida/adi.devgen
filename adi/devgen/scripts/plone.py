@@ -120,6 +120,9 @@ def getSiteId(child):
 def getSitePath(child):
     return '/'.join(child.getPhysicalPath()[:1])
 
+def getUserId(child):
+    return str(child.portal_membership.getAuthenticatedMember())
+
 def hasChildren(parent):
     if len(getChildren(parent)) > 0: return True
     else: return False

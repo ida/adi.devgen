@@ -4,14 +4,23 @@ Changelog
 1.1 (unreleased)
 ----------------
 
-- Add plone.py including recursive child-population.
+- Last release was a brown bag, pardon.
 
-- Improve addInstallScript().
+- Add addNChildrenRecursive(), delDep(), deploy(), getField(), getFields(),
+  getUserId(),
+
+- Fix skin-path name, so templates get immediately callable after added to product.
+
+- Fix isIniInstall() in addInstallScript().
+
+- Improve addInstallScript()
+
+- Regard if browser-skel is missing in addView().
+
+- Show complete name, not just first name in quickinstaller.
 
 - Add eggtractor, add develop-section in default-buildout-conf,
   increase default plone-vs.
-
-- Add delDep() (delete dependency).
 
 
 1.0 (2016-05-14)

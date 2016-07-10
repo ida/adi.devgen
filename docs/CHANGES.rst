@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.1 (unreleased)
+1.1 (2016-07-10)
 ----------------
 
 - Last release was a brown bag, pardon.

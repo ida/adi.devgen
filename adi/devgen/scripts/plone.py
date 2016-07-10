@@ -117,17 +117,25 @@ def getField(context, field_name):
 
 def getFields(context, field_names=None):
     """
-    Return list of key/value-pairs-sequence, all as strings, e.g.:
+    Return all fields of an archetype based content-item
+    as a list of key/value-pairs-sequence, e.g.:
     ['title', 'Welcome', 'creation_date', '2016/07/08 19:03:33.607601 GMT+2']
-    Filter by field_names if passed, else return all fields of context.
-    If field_names are passed, sort output by order of passed field_names.
+    Filter by field_names if passed, return results in same order.
+    Fail silently, if context is not an archetype, e.g. on the siteroot.
     """
-    fields = []
-    fields_amount = len(fields)
-    for field in context.Schema().fields():
-        fields.append( str( field.getName() ) )
-        fields.append( str(field.get(context)) )
-    return fields
+    pairs = []
+    if context.Schema(): # is archetype
+        schema = context.Schema()
+        fields = schema.fields()
+        if field_names:
+            for field_name in field_names:
+                pairs.append(schema[field_name].getName())
+                pairs.append(schema[field_name].get(context))
+        else:
+            for field in fields:
+                pairs.append(field.getName())
+                pairs.append(field.get(context))
+    return pairs
 
 def getParentPath(child):
     return '/'.join(child.getPhysicalPath()[:-1])

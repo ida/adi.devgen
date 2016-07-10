@@ -17,6 +17,9 @@ def createTag():
     as its name using this format: yymmddhhmmss.
     """
     sis('DATE=`date +%y%m%d%H%M%S`;\
+    git commit -am \
+    "Commit and push latest changes before auto-creating annotated tag.";\
+    git push origin master;\
     git tag -a $DATE -m "Create annotated tag.";\
     git push origin --tags')
 

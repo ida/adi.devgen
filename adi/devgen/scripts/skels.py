@@ -37,6 +37,7 @@ from adi.devgen.scripts.create import setSetupPy
 
 from adi.devgen.scripts.git import checkForDiffs
 from adi.devgen.scripts.git import checkForUnpushedCommits
+from adi.devgen.scripts.git import createTag
 
 from adi.devgen.scripts.install import addBuildout
 
@@ -173,6 +174,36 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         self.addProfile(path)
         addSetuphandlers(path)
 
+    def addPlone(self, path='.', plone_version='4.3.9'):
+        """
+        Check, if shared buildout-sources are available in $HOME/.buildout,
+        add buildout.cfg to path, run buildout, raise server.
+        """
+        if not path.endswith('/'): path += '/'
+        if not fileExists(path): addDirs(path)
+        addBuildout(plone_version)
+        os.system('touch ' + path + 'buildout.cfg')
+        self.buildOut(path)
+        self.run(path)
+
+    def buildOut(self, path='.'):
+        """
+        Run buildout in passed path.
+        """
+        if not path.endswith('/'): path += '/'
+        os.system(getHome() + '.buildout/virtenv/bin/buildout -c ' + path + 'buildout.cfg')
+
+    def run(self, path='.'):
+        """
+        Raise server-client, a.k.a. instance, in passed path.
+        """
+        if not path.endswith('/'): path += '/'
+        os.system(path + 'bin/instance fg')
+
+###########
+#  REPOS  #
+###########
+
     def addLog(self, comment, path='.'):
         """
         Add passed comment to docs/CHANGES.rst with auto-appended current
@@ -184,6 +215,34 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         if not fileExists(path): addFile(path)
         insertAfterNthLine(path, '- ' + comment + '. [' + os.getenv('USER') + ']\n', 6)
         os.system('git commit -am "' + comment + '"')
+
+    def checkoutLatestTag(self, path='.'):
+        """
+        Fetch newest tag of remote-master-repo
+        and switch local branch to newest tag.
+        """
+        os.system('cd ' + path + ';\
+        git checkout master; git fetch; git checkout tags/$(git describe)')
+
+    def deploy(self, host, path):
+        """
+        Creates an annotated tag in a local repo, then fetches it on an existing
+        remote clone, and switches branch to this newest tag with a checkout.
+
+        Example:
+            devgen deploy example.org /home/someone/the-remote-repo-dir
+
+        Where path can also be relative to the user's $HOME on remote.
+
+        Assumes you have a local repo and a clone of it on a remote machine.
+        Assumes you are located in the local repo, when executing this.
+        Assumes adi.devgen is also installed on remote.
+        Assumes authentication is done automagically by an ssh-agent, pubkey
+        is deposited and registered as allowed on remote.
+        """
+        createTag()
+        kommand = 'devgen checkoutLatestTag ' + path
+        os.system('devgen doOnRemote ' + host + ' "' + kommand + '"')
 
     def getRepos(self, urls, path='.'):
         """
@@ -239,31 +298,40 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         urls = ','.join(urls)
         self.getRepos(urls, path)
 
-    def addPlone(self, path='.', plone_version='4.3.9'):
+    def squash(self, amount_of_backwardsteps, new_commit_msg=''):
         """
-        Check, if shared buildout-sources are available in $HOME/.buildout,
-        add buildout.cfg to path, run buildout, raise server.
+        Unify several git-commits into one. Optionally pass new commit-msg,
+        otherwise the msg of the oldest commit of the squashed commits is used.
+        Thanks to Chris Johnson:
+        http://stackoverflow.com/questions/5189560/squash-my-last-x-commits-together-using-git/5201642#5201642
         """
-        if not path.endswith('/'): path += '/'
-        if not fileExists(path): addDirs(path)
-        addBuildout(plone_version)
-        os.system('touch ' + path + 'buildout.cfg')
-        self.buildOut(path)
-        self.run(path)
+        # Remove last n commit-logs:
+        os.system('git reset --soft HEAD~' + amount_of_backwardsteps)
+        # Add new log:
+        os.system('git commit -m "' + new_commit_msg + '"')
+        # If no new_commit_msg was passed, default
+        # to msg of oldest squashed commit:
+        # Nota: To have all msgs of all commits unified in the new msg,
+        # simply change amount_of_backwardsteps to 1, in the following lines:
+        if not new_commit_msg:
+            new_commit_msg = os.system(
+                'git commit -m"$(git log --format=%B HEAD..HEAD@{' +
+                amount_of_backwardsteps + '})"')
 
-    def buildOut(self, path='.'):
+    def getGitReport(self, path='.'):
         """
-        Run buildout in passed path.
+        Perform a diff- and unpushed-commits-check,
+        for each directory in the given path. Write each check
+        into reportfiles 'git-diff-report.txt' and 'git-unpushed-commits.txt'.
         """
         if not path.endswith('/'): path += '/'
-        os.system(getHome() + '.buildout/virtenv/bin/buildout -c ' + path + 'buildout.cfg')
+        checkForDiffs(path)
+        checkForUnpushedCommits(path)
 
-    def run(self, path='.'):
-        """
-        Raise server-client, a.k.a. instance, in passed path.
-        """
-        if not path.endswith('/'): path += '/'
-        os.system(path + 'bin/instance fg')
+
+############
+#  REMOTE  #
+############
 
     def doOnRemote(self, host, command):
         """
@@ -335,37 +403,6 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         appendToFile('report.txt', report)
         # Write prompt to file:
         writeFile('prompt.txt', prompt)
-        # Prompt prompt:
+        # Prompt prompt-txt:
         os.system('cat prompt.txt')
-#        if ERRORS: print 'There have been errors, check full report in "./report.txt".'
-
-    def squash(self, amount_of_backwardsteps, new_commit_msg=''):
-        """
-        Unify several git-commits into one. Optionally pass new commit-msg,
-        otherwise the msg of the oldest commit of the squashed commits is used.
-        Thanks to Chris Johnson:
-        http://stackoverflow.com/questions/5189560/squash-my-last-x-commits-together-using-git/5201642#5201642
-        """
-        # Remove last n commit-logs:
-        os.system('git reset --soft HEAD~' + amount_of_backwardsteps)
-        # Add new log:
-        os.system('git commit -m "' + new_commit_msg + '"')
-        # If no new_commit_msg was passed, default
-        # to msg of oldest squashed commit:
-        # Nota: To have all msgs of all commits unified in the new msg,
-        # simply change amount_of_backwardsteps to 1, here.
-        if not new_commit_msg:
-            new_commit_msg = os.system(
-                'git commit -m"$(git log --format=%B HEAD..HEAD@{' +
-                amount_of_backwardsteps + '})"')
-
-    def getGitReport(self, path='.'):
-        """
-        Perform a diff- and unpushed-commits-check,
-        for each directory in the given path. Write each check
-        into reportfiles 'git-diff-report.txt' and 'git-unpushed-commits.txt'.
-        """
-        if not path.endswith('/'): path += '/'
-        checkForDiffs(path)
-        checkForUnpushedCommits(path)
 

@@ -10,6 +10,16 @@ from adi.commons.commons import hasStr
 from adi.commons.commons import getStr
 from adi.commons.commons import getFirstChildrenDirPaths
 
+
+def createTag():
+    """
+    Creates an annotated tag with the current date and time
+    as its name using this format: yymmddhhmmss.
+    """
+    sis('DATE=`date +%y%m%d%H%M%S`;\
+    git tag -a $DATE -m "Create annotated tag.";\
+    git push origin --tags')
+
 def checkForDiffs(path, report_file='git-diff-report.txt'):
     """
     For each first-child-dir of path perform a git-diff

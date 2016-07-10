@@ -222,7 +222,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         and switch local branch to newest tag.
         """
         os.system('cd ' + path + ';\
-        git checkout master; git fetch; git checkout tags/$(git describe)')
+        git checkout master; git pull --rebase origin master; git fetch; git checkout tags/$(git describe)')
 
     def deploy(self, host, path):
         """
@@ -241,7 +241,8 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         is deposited and registered as allowed on remote.
         """
         createTag()
-        kommand = 'devgen checkoutLatestTag ' + path
+        kommand = 'cd ' + path + '; devgen checkoutLatestTag;'
+        kommand += 'cd instance; ./bin/instance restart'
         os.system('devgen doOnRemote ' + host + ' "' + kommand + '"')
 
     def getRepos(self, urls, path='.'):

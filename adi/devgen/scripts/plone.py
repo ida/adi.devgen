@@ -7,6 +7,8 @@
 # allthough in reality, it is a child of ZOPE.
 # A ZOPE is a child in time.
 
+from adi.commons.commons import iterToTags
+from adi.commons.commons import newlinesToTags
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import _createObjectByType
 
@@ -19,8 +21,7 @@ def addChild(parent, id_, typ='Folder'):
     if not idExistsInSite(parent, id_):
         child = _createObjectByType(typ, parent, id_)
         child.reindexObject()
-# Possible fallback to fail silently: Return the already existing child.
-# Keeping for reference:
+    # To fail silently return the already existing child.
     else:
         child = parent[id_]
     return child
@@ -118,7 +119,7 @@ def getField(context, field_name):
 def getFields(context, field_names=None):
     """
     Return all fields of an archetype based content-item
-    as a list of key/value-pairs-sequence, e.g.:
+    as a list of key/value-pairs-sequence, as strings, e.g.:
     ['title', 'Welcome', 'creation_date', '2016/07/08 19:03:33.607601 GMT+2']
     Filter by field_names if passed, return results in same order.
     Fail silently, if context is not an archetype, e.g. on the siteroot.
@@ -129,12 +130,22 @@ def getFields(context, field_names=None):
         fields = schema.fields()
         if field_names:
             for field_name in field_names:
+                val = None
                 pairs.append(schema[field_name].getName())
-                pairs.append(schema[field_name].get(context))
+                val = schema[field_name].get(context)
+                if isinstance(val, tuple) or isinstance(val, list):
+                    val = iterToTags(val)
+                elif str(val).find('\n') != -1:
+                    val = newlinesToTags(val)
+                pairs.append(val)
         else:
             for field in fields:
+                val = None
                 pairs.append(field.getName())
-                pairs.append(field.get(context))
+                val = str(field.get(context))
+                if val.find('\n') != -1:
+                    val = newlinesToTags(val)
+                pairs.append(val)
     return pairs
 
 def getParentPath(child):

@@ -171,11 +171,12 @@ directory="' + getAddonName(path) + ':skins/' + getUnderscoredName(path) + '"/>\
 \n\
 </object>'
     addFile(getProfilePath(path) + 'skins.xml', string)
-    addSkinResources(path)
 
 def addSkinResources(path):
-    """ Adds a stylesheet, a javascript and a template to the skin
-        and registers them.
+    """
+    TODO: See https://github.com/ida/adi.devgen/issues/7
+    Add a stylesheet, a javascript and a template
+    to the skin and register them.
     """
     # Add stylesheet:
     string = 'body:before{content:"Congrats, ' + getUnderscoredName(path) + '.css has been loaded succesfully!"}'

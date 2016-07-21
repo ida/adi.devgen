@@ -162,8 +162,10 @@ def addSkinFiles(path):
 meta_type="Filesystem Directory View"\n\
 directory="' + getAddonName(path) + ':skins/' + getUnderscoredName(path) + '"/>\n\
 \n\
-<!-- For unknown reasons, inserting add-name as\n\
-     skin-path name will not work, yet asterix does. -->\n\
+<!-- For unknown reasons, inserting addon-name as\n\
+     skin-path-name will not work, yet asterix does.\n\
+     TODO TEST: Also it might be better to not base upon\n\
+     "Sunburst Theme", but "Plone Default". -->\n\
 <skin-path name="*" based-on="Sunburst Theme">\n\
 <layer name="' + getUnderscoredName(path) + '" insert-after="custom"/>\n\
 \n\

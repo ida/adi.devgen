@@ -164,6 +164,10 @@ def hasChildren(parent):
     if len(getChildren(parent)) > 0: return True
     else: return False
 
+def hasField(child, field_name):
+    if field_name in dir(child): return True
+    else: return False
+
 def idExists(parent, id_):
     """Short form for idExistsInParent()."""
     idExistsInParent(parent, id_)

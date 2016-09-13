@@ -4,6 +4,7 @@ Changelog
 1.2 (unreleased)
 ----------------
 
+- Add 'helpers/workflow.py' and 'helpers/debug.py'.. [ida]
 - Nothing changed yet.
 
 

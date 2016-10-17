@@ -24,6 +24,9 @@ def hasWorkflow(obj):
     """
     return len(obj.portal_workflow.getWorkflowsFor(obj)) > 0
 
+def hasState(obj):
+    return hasWorkflow(obj)
+
 def hasTransition(obj, transition):
     if transition in getTransitions(obj): return True
     else: return False

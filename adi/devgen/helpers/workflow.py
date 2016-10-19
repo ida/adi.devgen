@@ -1,4 +1,6 @@
+from zope.globalrequest import getRequest
 from DateTime import DateTime
+from Products.statusmessages.interfaces import IStatusMessage
 
 def getState(obj):
     """

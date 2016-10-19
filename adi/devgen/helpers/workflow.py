@@ -1,3 +1,5 @@
+from DateTime import DateTime
+
 def getState(obj):
     """
     Return workflow-state-id or None, if no workflow is assigned.
@@ -55,26 +57,57 @@ def publishReferences(obj, eve, RUHTLESS=False):
                 if RUTHLESS:
                     setStateRelentlessly(ref, transition)
 
-def setState(obj, transition):
+def setState(content, state_id, acquire_permissions=False,
+                        portal_workflow=None, **kw):
+    """Change the workflow state of an object.
+    Thanks to Gilles Lenfant:
+    https://glenfant.wordpress.com/2010/04/02/changing-workflow-state-quickly-on-cmfplone-content/ # noqa
+    @param content: Content obj which state will be changed
+    @param state_id: name of the state to put on content
+    @param acquire_permissions: True->All permissions unchecked and on riles and
+                                acquired
+                                False->Applies new state security map
+    @param portal_workflow: Provide workflow tool (optimisation) if known
+    @param kw: change the values of same name of the state mapping
+    @return: None
     """
-    Execute transition, return possible error as an UI-message,
-    instead of consuming the whole content-area with a raised Exeption.
-    """
-    path = '/'.join(obj.getPhysicalPath())
-    messages = IStatusMessage(getRequest())
-    if hasWorkflow(obj):
-        if hasTransition(obj, transition):
-            try:
-                obj.portal_workflow.doActionFor(obj, transition)
-            except Exception as error:
-                messages.add(error, type=u'error')
-        else:
-            message = 'The transition "%s" is not available for "%s".'\
-                       % (transition, path)
-            messages.add(message, type=u'warning')
+
+    if portal_workflow is None:
+        portal_workflow = content.portal_workflow
+
+    # Might raise IndexError if no workflow is associated to this type
+    wf_def = portal_workflow.getWorkflowsFor(content)[0]
+    wf_id= wf_def.getId()
+
+    wf_state = {
+        'action': None,
+        'actor': None,
+        'comments': "Setting state to %s" % state_id,
+        'review_state': state_id,
+        'time': DateTime(),
+        }
+
+    # Updating wf_state from keyword args
+    for k in kw.keys():
+        # Remove unknown items
+        if not wf_state.has_key(k):
+            del kw[k]
+    if kw.has_key('review_state'):
+        del kw['review_state']
+    wf_state.update(kw)
+
+    portal_workflow.setStatusOf(wf_id, content, wf_state)
+
+    if acquire_permissions:
+        # Acquire all permissions
+        for permission in content.possible_permissions():
+            content.manage_permission(permission, acquire=1)
     else:
-        message = 'No workflow retrievable for "%s".' % path
-        messages.add(message, type=u'warning')
+        # Setting new state permissions
+        wf_def.updateRoleMappingsFor(content)
+
+    # Map changes to the catalogs
+    content.reindexObject(idxs=['allowedRolesAndUsers', 'review_state'])
 
 def setStateRelentlessly(obj, transition):
     """
@@ -84,7 +117,33 @@ def setStateRelentlessly(obj, transition):
     while not getState(obj, state):
         obj = obj.getParentNode()
         if isSite(obj): break
-    setState(obj, transition)
+    switchState(obj, transition)
+
+def switchState(obj, transition):
+    """
+    Try to execute transition, return possible error as an UI-message
+    instead of consuming the whole content-area with a raised Exeption.
+    Return True if it worked, else False.
+    """
+    path = '/'.join(obj.getPhysicalPath())
+    messages = IStatusMessage(getRequest())
+    if hasWorkflow(obj):
+        if hasTransition(obj, transition):
+            try:
+                obj.portal_workflow.doActionFor(obj, transition)
+            except Exception as error:
+                messages.add(error, type=u'error')
+                return False
+        else:
+            message = 'The transition "%s" is not available for "%s".'\
+                       % (transition, path)
+            messages.add(message, type=u'warning')
+            return False
+    else:
+        message = 'No workflow retrievable for "%s".' % path
+        messages.add(message, type=u'warning')
+        return False
+    return True
 
 def warnAboutPossiblyInaccessibleBackReferences(obj, eve):
     """
@@ -108,4 +167,5 @@ def warnAboutPossiblyInaccessibleBackReferences(obj, eve):
             if this item can still be accessed by the intended audience.' \
             % (item_path, ref_path)
             messages.add(message, type=u'warning')
+
 

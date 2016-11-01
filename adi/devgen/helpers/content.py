@@ -7,10 +7,12 @@
 # allthough in reality, it is a child of ZOPE.
 # A ZOPE is a child in time.
 
-from adi.commons.commons import iterToTags
-from adi.commons.commons import newlinesToTags
+from Acquisition import aq_parent
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import _createObjectByType
+from adi.commons.commons import iterToTags
+from adi.commons.commons import newlinesToTags
+
 
 def addChild(parent, id_, typ='Folder'):
     """
@@ -26,7 +28,7 @@ def addChild(parent, id_, typ='Folder'):
         child = parent[id_]
     return child
 
-def addChildren(parent, ids):
+def addChildren(parent, ids, typ='Folder'):
     """ For each id execute addChild()."""
     children = []
     for id_ in ids:
@@ -34,7 +36,7 @@ def addChildren(parent, ids):
         if child: children.append(child)
     return children
 
-def addNChildren(parent, n):
+def addNChildren(parent, n, typ='Folder'):
     """
     For quick population, passing ids is not needed:
     Add n-children, each getting its nr as id.
@@ -43,7 +45,7 @@ def addNChildren(parent, n):
     while n > 0:
         children_ids.append(str(n))
         n -= 1
-    children = addChildren(parent, children_ids)
+    children = addChildren(parent, children_ids, typ='Folder')
     return children
 
 def addNChildrenRecursive(parent, n=3, container_id='0', max_depth=4):
@@ -69,7 +71,7 @@ had been warned: Beyond there may be porcupines!
 Tested with factor five, results in 100MB.
 
 """)
-    # Add root-step:
+    # Add root-item:
     parent = addChild(parent, container_id)
     first_children = [parent]
     second_children = []
@@ -85,9 +87,8 @@ Tested with factor five, results in 100MB.
         if len(first_children) == 0:
             # Refill first_children-list with second_children:
             first_children = second_children
-            # Reset second_children:
-            second_children = []
-            # Raise while-loop end-condition:
+            second_children = [] # clear
+            # Raise while-loop-end-condition:
             depth +=1
 
 def childExists(parent, child_id):
@@ -112,8 +113,36 @@ def getChildDepthInSite(context):
 def getChildPath(child):
     return '/'.join(child.getPhysicalPath())
 
+def getChildPosInParent(child):
+    """
+    Get child position in parent as a number, return None, if not found.
+    """
+    nr = 0
+    if not isSite(child):
+        parent = child.aq_parent
+        siblings = parent.getFolderContents()
+        for sibling in siblings:
+            nr += 1
+            if sibling['id'] == child.id:
+                return nr
+    return nr
+
+def getChildPosInParents(child):
+    """
+    Get child position in parents as a dot-separated string of numbers,
+    like e.g.: '1.2.7' (= 7th child of 2nd child of 1st child of site).
+    """
+    nrs = ''
+    while not isSite(child):
+        nrs = str( getChildPosInParent(child) ) + '.' + nrs
+        child = child.aq_parent
+    nrs = nrs[:-1]
+    return nrs
+
 def getField(context, field_name):
-    """Return val of field as str."""
+    """
+    Return value of field as a string.
+    """
     return context.Schema()[field_name]
 
 def getFields(context, field_names=None):
@@ -176,6 +205,11 @@ def idExistsInParent(parent, id_):
     if id_ in parent.keys(): return True
     else: return False
 
+def idExistsInParentFamily(parent, id_):
+    """Include grand-children in search."""
+    path = getChildPath(parent)
+    return idExistsInPath(parent, id_, path)
+
 def idExistsInPath(child, id_, path):
     results = child.portal_catalog(path=path, id=id_)
     if results:
@@ -183,11 +217,6 @@ def idExistsInPath(child, id_, path):
         if len(results) > 0: return True
         else: return False
     else: return False
-
-def idExistsInParentFamily(parent, id_):
-    """Include grand-children in search."""
-    path = getChildPath(parent)
-    return idExistsInPath(parent, id_, path)
 
 def idExistsInSite(child, id_):
     path = getSitePath(child)
@@ -198,15 +227,15 @@ def idIsUnique(child, id_):
     if len(results) == 1: return True
     else: return False
 
+def isSite(context):
+    if len( context.getPhysicalPath() ) == 2: return True
+    else: return False
+
 def isSiteFirstChild(child):
     if len( child.getPhysicalPath() ) == 3: return True
     else: return False
 
-def isSiteRoot(context):
-    if len( context.getPhysicalPath() ) == 2: return True
-    else: return False
-
-def isZopeRoot(context):
+def isZope(context):
     if len( context.getPhysicalPath() ) == 1: return True
     else: return False
 

@@ -14,18 +14,24 @@ from adi.commons.commons import iterToTags
 from adi.commons.commons import newlinesToTags
 
 
-def addChild(parent, id_, typ='Folder'):
+def addChild(parent, id_, typ='Folder', FIRE=False):
     """
-    Add child to parent and return it, unless
-    child exists already, then return None.
+    Add child to parent and return it, unless child exists already, then return
+    existing child. If FIRE is True, use 'invokeFactory()', which triggers
+    firing of events, like when done manually by a user. Otherwise use
+    `_createObjectByType()`, which does not fire events.
+    Sets a child's id as default-title, so something shows up in folder-listings.
     """
     child = None
     if not idExistsInSite(parent, id_):
-        child = _createObjectByType(typ, parent, id_)
+        if FIRE:
+            parent.invokeFactory(typ, id_)
+            child = parent[id_]
+        else:
+            child = _createObjectByType(typ, parent, id_)
+        child.setTitle(id_)
         child.reindexObject()
-    # To fail silently return the already existing child.
-    else:
-        child = parent[id_]
+    else: child = parent[id_]
     return child
 
 def addChildren(parent, ids, typ='Folder'):

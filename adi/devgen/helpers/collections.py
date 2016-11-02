@@ -1,5 +1,7 @@
-# 'Old-style'-collectios are of content-type 'Topic,
-# 'new-sytle'-collectios are of content-type 'Collection'.
+# 'Old-style'-collections are of content-type 'Topic' and
+#  described in 'Products/ATContentTypes/tests/test_topictool.py'.
+# 'New-style'-collections are of content-type 'Collection' and
+#  described in 'plone/app/collection/tests/test_collection.py'.
 
 from Acquisition import aq_parent
 

@@ -16,14 +16,17 @@ def addUser(context, user_email):
         pt = context.portal_registration
         pt.addMember(user_id, passwd, properties=properties)
 
+def getCurrentUser(context):
+    return context.request.AUTHENTICATED_USER.getUserName()
+
 def getUser(context, user_id):
     """
     Get user-obj by user-id, requires holding the Manager-role.
     """
-    user = None
-    member_tool = getToolByName(context, 'portal_membership')
-    user = member_tool.getMemberById(user_id)
-    return user
+    return context.portal_membership.getMemberById(user_id)
+
+def isLoggedIn(context):
+    return getCurrentUserId(context) != 'Anonymous user'
 
 def setUserFullname(context, user, user_fullname):
     """
@@ -34,5 +37,5 @@ def setUserFullname(context, user, user_fullname):
         user.setMemberProperties(mapping={"fullname":user_fullname})
 
 def userExists(context, user_id):
-    return context.portal_membership.getMemberById(user_id) is not None
+    return getUser(user_id) is not None
 

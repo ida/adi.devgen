@@ -21,6 +21,9 @@ configs for buildout locally and set buildout's mode to 'offline', so we save
 time, whenever running buildout, because it will not look up the configs of
 remote addresses, like usually, as time is honey.
 
+DISCLAIMER: The usual formatting of Plone-configs have changed, addPlone() works
+testedly up to Plone vs. 4.3.4, needs to be fixed for getting newer versions.
+
 
 Installation
 =============

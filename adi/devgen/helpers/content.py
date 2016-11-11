@@ -110,6 +110,9 @@ def getAllChildren(parent):
 def getChildren(parent):
     return parent.getFolderContents()
 
+def getChildrenOfType(parent, typ):
+    return parent.listFolderContents({'portal_type':typ})
+
 def getChildBrainById(parent, id_):
     return parent.portal_catalog(id=id_)[0][0]
 

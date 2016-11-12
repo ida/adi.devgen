@@ -37,5 +37,5 @@ def setUserFullname(context, user, user_fullname):
         user.setMemberProperties(mapping={"fullname":user_fullname})
 
 def userExists(context, user_id):
-    return getUser(user_id) is not None
+    return getUser(context, user_id) is not None
 

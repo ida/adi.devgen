@@ -10,13 +10,13 @@ def computeAge(item):
 def getAge(item):
     """ Return age of item in prettified format. """
     time = computeAge(item)
-    time = humanReadableToPrettified(time)
+    time = msToPrettified(time)
     return time
 
 def msToHumanReadable(ms):
     """
     Convert milliseconds to a string in this format:
-    'yy:mo:dd:hh:mi:ss', e.g.: '16:11:11:07:42:08'.
+    'yy:mo:dd:hh:mi:ss', e.g.: '16:11:11:7:42:8'.
     """
     string = ''
     ss = ms / 1000
@@ -38,11 +38,15 @@ def msToHumanReadable(ms):
             string += ':'
     return string
 
-def humanReadableToPrettified(ms, SHORTFORM=True, OMITZERO=False):
+def msToPrettified(ms, SHORTFORM=True, OMITZERO=False):
     """
-    Convert milliseconds to a list of key-value-pairs:
+    Convert milliseconds to a list of key-value-pairs,
+    prepend zero for single digits:
     ['01', 'yrs', '07', 'mth', '27', 'dys',
      '23', 'hrs', '13', 'min', '04', 'sec']
+    If SHORTFORM is True, only the first two biggest vals
+    will be returned:
+    ['01', 'yrs', '07', 'mth']
     """
     OMIT = False
     pretties = []
@@ -61,8 +65,9 @@ def humanReadableToPrettified(ms, SHORTFORM=True, OMITZERO=False):
     if SHORTFORM:
         if len(pretties) > 4: # only take first two non-zero vals
             pretties = pretties[0:4]
-        # Prepend zero-val, if there is only one non-zero val, for better
-        # readability (same horizontal line-up as the other entries in listview):
+        # Prepend pair with zero-val, if there is only one pair with a
+        # non-zero-val, for better readability (same horizontal line-up
+        # as the other entries in listview):
         if len(pretties) == 2:
             current_unit = pretties[1]
             previous_unit = units[units.index(current_unit) - 1]

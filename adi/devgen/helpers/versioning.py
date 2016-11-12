@@ -1,4 +1,5 @@
 from AccessControl.SecurityManagement import newSecurityManager
+from plone.app.layout.viewlets.content import ContentHistoryViewlet
 from plone.app.layout.viewlets.content import WorkflowHistoryViewlet
 from zope.publisher.browser import TestRequest
 from zope.site.hooks import getSite as portal

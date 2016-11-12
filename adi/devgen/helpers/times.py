@@ -38,32 +38,37 @@ def msToHumanReadable(ms):
             string += ':'
     return string
 
-def humanReadableToPrettified(ms):
+def humanReadableToPrettified(ms, SHORTFORM=True, OMITZERO=False):
     """
     Convert milliseconds to a list of key-value-pairs:
     ['01', 'yrs', '07', 'mth', '27', 'dys',
      '23', 'hrs', '13', 'min', '04', 'sec']
     """
+    OMIT = False
     pretties = []
     units = ['yrs','mth','dys','hrs','min','sec']
 
     human_readables = msToHumanReadable(ms).split(':')
     for i, human_readable in enumerate(human_readables):
-        if human_readable != '0': # omit zero-vals
+        if human_readable == '0' and SHORTFORM or OMITZERO: # omit zero-vals
+            OMIT = True
+        else: OMIT = False
+        if not OMIT:
             if len(human_readable) == 1: # prepend zero if single digit
                 human_readable = '0' + human_readable
             pretties.append(human_readable)
             pretties.append(units[i])
-    if len(pretties) > 4: # only take first two non-zero vals
-        pretties = pretties[0:4]
-    # Prepend zero-val, if there is only one non-zero val, for better
-    # readability (same horizontal line-up as the other entries in listview):
-    if len(pretties) == 2:
-        current_unit = pretties[1]
-        previous_unit = units[units.index(current_unit) - 1]
-        pretties = ['00', previous_unit] + pretties
-    # Dummy val, if no time consumed:
-    if len(pretties) == 0:
-        pretties = ['00', 'min', '00', 'sec']
+    if SHORTFORM:
+        if len(pretties) > 4: # only take first two non-zero vals
+            pretties = pretties[0:4]
+        # Prepend zero-val, if there is only one non-zero val, for better
+        # readability (same horizontal line-up as the other entries in listview):
+        if len(pretties) == 2:
+            current_unit = pretties[1]
+            previous_unit = units[units.index(current_unit) - 1]
+            pretties = ['00', previous_unit] + pretties
+        # Dummy val, if no time consumed:
+        if len(pretties) == 0:
+            pretties = ['00', 'min', '00', 'sec']
     return pretties
 

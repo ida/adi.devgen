@@ -8,14 +8,15 @@ def computeAge(item):
     return created
 
 def getAge(item):
+    """ Return age of item in prettified format. """
     time = computeAge(item)
     time = humanReadableToPrettified(time)
     return time
 
 def msToHumanReadable(ms):
     """
-    Convert milliseconds to:
-    yy:mo:dd:hh:mi:ss
+    Convert milliseconds to a string in this format:
+    'yy:mo:dd:hh:mi:ss', e.g.: '16:11:11:07:42:08'.
     """
     string = ''
     ss = ms / 1000
@@ -39,6 +40,9 @@ def msToHumanReadable(ms):
 
 def humanReadableToPrettified(ms):
     """
+    Convert milliseconds to a list of key-value-pairs:
+    ['01', 'yrs', '07', 'mth', '27', 'dys',
+     '23', 'hrs', '13', 'min', '04', 'sec']
     """
     pretties = []
     units = ['yrs','mth','dys','hrs','min','sec']

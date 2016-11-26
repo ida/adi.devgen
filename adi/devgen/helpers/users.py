@@ -1,4 +1,6 @@
+from Acquisition import aq_parent
 from Products.CMFCore.utils import getToolByName
+from Products.Five.browser import BrowserView
 
 def addUser(context, user_email):
     """
@@ -23,7 +25,11 @@ def getUser(context, user_id):
     """
     Get user-obj by user-id, requires holding the Manager-role.
     """
+    if isView(context): context = context.aq_parent
     return context.portal_membership.getMemberById(user_id)
+
+def isView(context):
+    return isinstance(context, BrowserView)
 
 def isLoggedIn(context):
     return getCurrentUserId(context) != 'Anonymous user'

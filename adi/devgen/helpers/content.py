@@ -206,9 +206,9 @@ def hasField(child, field_name):
     if field_name in dir(child): return True
     else: return False
 
-def idExists(parent, id_):
-    """Short form for idExistsInParent()."""
-    idExistsInParent(parent, id_)
+def idExists(item, id_):
+    """Short form for idExistsInSite()."""
+    return idExistsInSite(item, id_)
 
 def idExistsInParent(parent, id_):
     if id_ in parent.keys(): return True
@@ -227,9 +227,11 @@ def idExistsInPath(child, id_, path):
         else: return False
     else: return False
 
-def idExistsInSite(child, id_):
-    path = getSitePath(child)
-    return idExistsInPath(child, id_, path)
+def idExistsInSite(item, id_):
+    """Return bool indicating whether id exists in site, or not."""
+    results = item.portal_catalog(id=id_)
+    if len(results) > 0: return True
+    else: return False
 
 def idIsUnique(child, id_):
     results = child.getSite().portal_catalog(id=id_)

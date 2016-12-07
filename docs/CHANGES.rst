@@ -4,7 +4,7 @@ Changelog
 1.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Add isView() and improve idExists-methods. [ida]
 
 
 1.2 (2016-10-21)

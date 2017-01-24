@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-# String-generations with addon-name-substitutions.
+# This file is supposed to hold methods which
+# create add-on-files and generate their content.
 
 import os
 

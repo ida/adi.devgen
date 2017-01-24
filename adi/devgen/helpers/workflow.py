@@ -59,7 +59,7 @@ def publishReferences(obj, eve, RUHTLESS=False):
                 if RUTHLESS:
                     setStateRelentlessly(ref, transition)
 
-def setState(content, state_id, acquire_permissions=False,
+def setStateOld(content, state_id, acquire_permissions=False,
                         portal_workflow=None, **kw):
     """Change the workflow state of an object.
     Thanks to Gilles Lenfant:
@@ -109,6 +109,32 @@ def setState(content, state_id, acquire_permissions=False,
         wf_def.updateRoleMappingsFor(content)
 
     # Map changes to the catalogs
+    content.reindexObject(idxs=['allowedRolesAndUsers', 'review_state'])
+
+def setState(obj, state_id, user_id=None):
+    if portal_workflow is None:
+        portal_workflow = content.portal_workflow
+    wf_def = portal_workflow.getWorkflowsFor(content)[0]
+    wf_id= wf_def.getId()
+    wf_state = {
+        'action': None,
+        'actor': user_id,
+        'comments': "Setting state to %s" % state_id,
+        'review_state': state_id,
+        'time': DateTime(),
+        }
+    for k in kw.keys():
+        if not wf_state.has_key(k):
+            del kw[k]
+    if kw.has_key('review_state'):
+        del kw['review_state']
+    wf_state.update(kw)
+    portal_workflow.setStatusOf(wf_id, content, wf_state)
+    if acquire_permissions:
+        for permission in content.possible_permissions():
+            content.manage_permission(permission, acquire=1)
+    else:
+        wf_def.updateRoleMappingsFor(content)
     content.reindexObject(idxs=['allowedRolesAndUsers', 'review_state'])
 
 def setStateRelentlessly(obj, transition):

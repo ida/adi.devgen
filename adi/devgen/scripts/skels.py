@@ -224,7 +224,7 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         os.system('cd ' + path + ';\
         git checkout master; git pull --rebase origin master; git fetch; git checkout tags/$(git describe)')
 
-    def deploy(self, host, path):
+    def deploy(self, host, repo_path, instance_path):
         """
         Creates an annotated tag in a local repo, then fetches it on an existing
         remote clone, and switches branch to this newest tag with a checkout.
@@ -241,8 +241,8 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         is deposited and registered as allowed on remote.
         """
         createTag()
-        kommand = 'cd ' + path + '; devgen checkoutLatestTag;'
-        kommand += 'cd instance; ./bin/instance restart'
+        kommand = 'cd ' + repo_path + '; devgen checkoutLatestTag;'
+        kommand += 'cd ' + instance_path + '; ./bin/instance restart'
         os.system('devgen doOnRemote ' + host + ' "' + kommand + '"')
 
     def getRepos(self, urls, path='.'):

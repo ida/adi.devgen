@@ -230,19 +230,22 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         remote clone, and switches branch to this newest tag with a checkout.
 
         Example:
-            devgen deploy example.org /home/someone/the-remote-repo-dir
+            devgen deploy example.org /home/someone/the-remote-repo-dir remote_instance_path
 
         Where path can also be relative to the user's $HOME on remote.
 
         Assumes you have a local repo and a clone of it on a remote machine.
         Assumes you are located in the local repo, when executing this.
         Assumes adi.devgen is also installed on remote.
+        Assumes remote repo-instance has at least two clients named 'client1' and 'client2'.
         Assumes authentication is done automagically by an ssh-agent, pubkey
         is deposited and registered as allowed on remote.
         """
         createTag()
         kommand = 'cd ' + repo_path + '; devgen checkoutLatestTag;'
         kommand += 'cd ' + instance_path + '; ./bin/instance restart'
+#        kommand += 'cd ' + instance_path + '; ./bin/client1 restart;'
+#        kommand += 'sleep 27; ./bin/client2 restart'
         os.system('devgen doOnRemote ' + host + ' "' + kommand + '"')
 
     def getRepos(self, urls, path='.'):

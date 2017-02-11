@@ -92,7 +92,7 @@ def makeConfigsUrlsLocal(configs_path):
     for config_path in configs_paths:
         string = getStr(config_path)
         string = replaceAbsoluteUrlsWithRelPath(string)
-        addFile(config_path + '.tmp', string, True)
+        addFile(config_path, string, True)
 
 def addBuildout(plone_vs):
     """

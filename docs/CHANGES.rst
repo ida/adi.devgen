@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.3 (unreleased)
+1.3 (2017-05-11)
 ----------------
 
 - Improve addPlone() and deploy(). [ida]

@@ -4,7 +4,11 @@ Changelog
 1.3 (unreleased)
 ----------------
 
+- Improve addPlone() and deploy(). [ida]
+
 - Add isView() and improve idExists-methods. [ida]
+
+- Add getChildPosInParent() and getChildPosInParents() [ida]
 
 
 1.2 (2016-10-21)

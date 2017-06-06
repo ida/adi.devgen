@@ -182,7 +182,9 @@ An addon for Plone, aiming to [be so useful, you never want to miss it again].\n
         if not path.endswith('/'): path += '/'
         if not fileExists(path): addDirs(path)
         addBuildout(plone_version)
-        os.system('touch ' + path + 'buildout.cfg')
+        os.system('echo """[buildout]\n\
+extends = ' + getHome() + '.buildout/configs/' + plone_version + '/versions.cfg\
+""" > ' + path + 'buildout.cfg')
         self.buildOut(path)
         self.run(path)
 

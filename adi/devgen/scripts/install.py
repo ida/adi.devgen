@@ -25,7 +25,7 @@ def getConfigs(versions_url, configs_path):
     """
     Download versions.cfg, looks for the referenced other configs in its
     extends-section, also downloads these configs  and looks in their
-    extends-section, for more urls, until all configs are downoladed.
+    extends-section, for more urls, until all configs are downloaded.
     """
     urls = [versions_url]
     while urls:

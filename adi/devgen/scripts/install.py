@@ -34,7 +34,7 @@ def getConfigs(versions_url, configs_path):
         fpath = configs_path + fname
         if not fileExists(fpath):
             os.system('wget ' + url + ' -P ' + configs_path)
-            string = open(fpath).read();
+            string = open(fpath).read()
             read_urls = getUrls(string)
             for read_url in read_urls:
                 read_name = read_url.split('/')[-1]

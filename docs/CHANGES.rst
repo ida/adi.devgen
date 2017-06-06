@@ -4,7 +4,11 @@ Changelog
 1.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Adjust addBuildout() to parse extends-sections, instead of unsharply finding patterns,
+  now works also for Plone-5-builds.
+
+- Add extends-part to a build's default buildout.cfg, pointing to the used versions.cfg,
+  defining the Plone-version.
 
 
 1.3 (2017-05-11)

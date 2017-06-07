@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.5 (unreleased)
+1.5 (2017-06-07)
 ----------------
 
 - Do not reference versions.cfg in versions.cfg, results in infinite loop. [ida]

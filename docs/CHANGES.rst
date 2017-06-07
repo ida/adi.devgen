@@ -4,8 +4,7 @@ Changelog
 1.5 (unreleased)
 ----------------
 
-- Do not reference versions.cfg in versions.cfg, results in infinite loop.. [ida]
-- Nothing changed yet.
+- Do not reference versions.cfg in versions.cfg, results in infinite loop. [ida]
 
 
 1.4 (2017-06-06)

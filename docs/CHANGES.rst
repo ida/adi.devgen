@@ -1,14 +1,20 @@
 Changelog
 =========
 
-1.4 (unreleased)
+1.5 (2017-06-07)
+----------------
+
+- Do not reference versions.cfg in versions.cfg, results in infinite loop. [ida]
+
+
+1.4 (2017-06-06)
 ----------------
 
 - Adjust addBuildout() to parse extends-sections, instead of unsharply finding patterns,
   now works also for Plone-5-builds.
 
-- Add extends-part to a build's default buildout.cfg, pointing to the used versions.cfg,
-  defining the Plone-version.
+- Fix addPlone(): Add extends-part to a build's default buildout.cfg,
+  pointing to the used versions.cfg, defining the Plone-version.
 
 
 1.3 (2017-05-11)

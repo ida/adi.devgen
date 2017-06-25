@@ -45,7 +45,8 @@ def addBuildout(plone_vs):
         configs_paths = getFirstChildrenPaths(configs_path)
         for cpath in configs_paths:
             cpath = cpath.split('/')[-1]
-            local_configs_names.append(cpath)
+            if cpath != 'versions.cfg': # exclude possible ref of main-config
+                local_configs_names.append(cpath)
         replaceExtends(configs_path + 'versions.cfg', local_configs_names)
 
     # Create default-conf:

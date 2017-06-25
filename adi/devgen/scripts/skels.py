@@ -13,6 +13,14 @@ from adi.commons.commons import insertAfterNthLine
 from adi.commons.commons import removeLinesContainingPattern
 from adi.commons.commons import writeFile
 
+from adi.devgen.scripts.buildout import addAddonToBinScripts
+from adi.devgen.scripts.buildout import addAddonToBuildoutConfig
+from adi.devgen.scripts.buildout import addAddonToInterpreterScript
+from adi.devgen.scripts.buildout import delAddonOfScripts
+from adi.devgen.scripts.buildout import getAddonVersions
+from adi.devgen.scripts.buildout import getDependencies
+from adi.devgen.scripts.buildout import getEggPaths
+
 from adi.devgen.scripts.conventions import getAddonFirstName
 from adi.devgen.scripts.conventions import getAddonPath
 from adi.devgen.scripts.conventions import getLastLvlPath
@@ -42,6 +50,67 @@ from adi.devgen.scripts.git import createTag
 from adi.devgen.scripts.install import addBuildout
 
 class AddSkel(object):
+
+    def addAddon(self, addon_name, vs_pin='', instance_path='./'):
+        """
+        Register an addon in all bin-scripts of the instance,
+        in the parts/interpreter-script of the instance and
+        add an entry in the buildout-config.
+        Do the same with any dependency of the add-on.
+        """
+        INSTALLED_IN_INTERPRETER = False
+        addon_name_and_vs_pin = addon_name + vs_pin
+        addon_name_and_vs_pins = [addon_name_and_vs_pin]
+        addon_paths = None
+        addon_path = None
+        vs_pin_pos = None
+        for i, addon_name_and_vs_pin in enumerate(addon_name_and_vs_pins):
+            INSTALLED_IN_INTERPRETER = False # reset
+
+            # Extract addon_name and vs_pin:
+            # vs-pin can start with '<, '>', '=' or ' ':
+            for j, char in enumerate(addon_name_and_vs_pin):
+                if char == '<' or char == '>' or char == '=' or char == ' ':
+                    vs_pin_pos = j
+                    break
+            if vs_pin_pos:
+                addon_name = addon_name_and_vs_pin[:vs_pin_pos]
+                vs_pin = addon_name_and_vs_pin[vs_pin_pos:]
+                vs_pin = vs_pin.strip() # remove trailing spaces
+                vs_pin_pos = None # reset
+            else:
+                addon_name = addon_name_and_vs_pin
+            addon_paths = getEggPaths(addon_name)
+
+            # No addon-paths found, this can have several reasons:
+            if len(addon_paths) < 1:
+# The egg's name contains underscores and is represented in the addon-name with minus-signs:
+                addon_paths = getEggPaths(addon_name.replace('-', '_'))
+            if len(addon_paths) < 1:
+# The egg's name is capitalized and is represented in the addon-name with lowercase:
+                addon_paths = getEggPaths(addon_name.capitalize())
+            if len(addon_paths) < 1:
+# The egg is installed to the Python-interpreter, we'll then skip any further procedure with this addon:
+                if os.system('python -m ' + addon_name) == 0: # check exit-code
+                    INSTALLED_IN_INTERPRETER = True
+# No other case thinkable, the egg is actually not available:
+            if len(addon_paths) < 1 and not INSTALLED_IN_INTERPRETER:
+                exit('The addon "' + addon_name + '" seems not to exist, you \
+probably wanna run buildout to get it."')
+
+            # There are addon_paths (= addon not installed in py-interpreter):
+            if len(addon_paths) > 0:
+                addon_path = addon_paths[0] # first is either a dev-vs or newest stable-vs
+                # TODO: Regard version-pinning.
+                dependencies = getDependencies(addon_path)
+                for dependency in dependencies:
+                    if not dependency in addon_name_and_vs_pins:
+                        addon_name_and_vs_pins.append(dependency)
+                addAddonToBinScripts(addon_path, instance_path)
+                addAddonToInterpreterScript(addon_path, instance_path)
+                # Add only the intital add-on to buildout-conf:
+                if i == 0:
+                    addAddonToBuildoutConfig(addon_path, instance_path)
 
     def addOn(self, path):
         """
@@ -187,6 +256,26 @@ extends = ' + getHome() + '.buildout/configs/' + plone_version + '/versions.cfg\
 """ > ' + path + 'buildout.cfg')
         self.buildOut(path)
         self.run(path)
+
+    def delAddon(self, addon_name, instance_path='./'):
+        """
+        Unregister an add-on.
+        Add-on name can contain a specified version, starting with a '='.
+        Otherwise a found development-version will preceed a found stable
+        version, when no development-version is found, then the newest
+        found version will be taken.
+        """
+        addon_versions = None
+        addon_names = [addon_name]
+        for addon_name in addon_names:
+            addon_paths = getEggPaths(addon_name)
+            addon_versions = getAddonVersions(addon_paths)
+            addon_path = getEggPaths(addon_name)[-1] # latest found
+            dependencies = getDependencies(addon_path)
+            for dependency in dependencies:
+                if not dependency in addon_names:
+                    addon_names.append(dependency)
+            delAddonOfScripts(addon_path, instance_path)
 
     def buildOut(self, path='.'):
         """

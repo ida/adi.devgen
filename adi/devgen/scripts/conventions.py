@@ -3,6 +3,7 @@
 # Assumes all profiles are in 'profiles/default' and
 # all browser-resources are in 'browser/resources.
 
+from adi.commons.commons import getHome
 from adi.commons.commons import getRealPath
 from adi.commons.commons import getParentDirPath
 from adi.commons.commons import fileExists
@@ -18,6 +19,10 @@ def getAddonPath(path):
             exit('No setup.py found. Please specify a path to the addon, \
 by appending it as an additional argument.')
     return path
+
+def getEggCachePaths():
+    buildout_path = getHome() + '.buildout/'
+    return [buildout_path + 'eggs/', buildout_path + 'src/']
 
 def getFirstLvlPath(path):
     path = getAddonPath(path) + getAddonFirstName(path) + '/'

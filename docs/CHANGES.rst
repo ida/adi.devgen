@@ -4,6 +4,7 @@ Changelog
 1.6 (unreleased)
 ----------------
 
+- Add convention getEggCachePaths().. [ida]
 - Nothing changed yet.
 
 

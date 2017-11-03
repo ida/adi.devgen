@@ -4,6 +4,7 @@ Changelog
 1.6 (unreleased)
 ----------------
 
+- deploy()/doOnRemote(): Add ssh_port as para in case it doesn't default to 22.. [ida]
 - Add convention getEggCachePaths().. [ida]
 - Nothing changed yet.
 

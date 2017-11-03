@@ -315,29 +315,27 @@ extends = ' + getHome() + '.buildout/configs/' + plone_version + '/versions.cfg\
         os.system('cd ' + path + ';\
         git checkout master; git pull --rebase origin master; git fetch; git checkout tags/$(git describe)')
 
-    def deploy(self, host, repo_path, instance_path):
+    def deploy(self, host, repo_path, instance_path, ssh_port='22'):
         """
         Creates an annotated tag in a local repo, then fetches it on an existing
         remote clone, and switches branch to this newest tag with a checkout.
 
         Example:
-            devgen deploy example.org /home/someone/the-remote-repo-dir remote_instance_path
+            devgen deploy username@example.org repo_path instance_path
 
-        Where path can also be relative to the user's $HOME on remote.
+        Where the paths are relative to the user's $HOME on remote.
 
         Assumes you have a local repo and a clone of it on a remote machine.
         Assumes you are located in the local repo, when executing this.
         Assumes adi.devgen is also installed on remote.
-        Assumes remote repo-instance has at least two clients named 'client1' and 'client2'.
+        Assumes remote repo-instance lives in instance_path and is called 'instance'.
         Assumes authentication is done automagically by an ssh-agent, pubkey
         is deposited and registered as allowed on remote.
         """
         createTag()
         kommand = 'cd ' + repo_path + '; devgen checkoutLatestTag;'
         kommand += 'cd ' + instance_path + '; ./bin/instance restart'
-#        kommand += 'cd ' + instance_path + '; ./bin/client1 restart;'
-#        kommand += 'sleep 27; ./bin/client2 restart'
-        os.system('devgen doOnRemote ' + host + ' "' + kommand + '"')
+        os.system('devgen doOnRemote ' + host + ' "' + kommand + '"' + ' ' + ssh_port)
 
     def getRepos(self, urls, path='.'):
         """
@@ -428,16 +426,23 @@ extends = ' + getHome() + '.buildout/configs/' + plone_version + '/versions.cfg\
 #  REMOTE  #
 ############
 
-    def doOnRemote(self, host, command):
+    def doOnRemote(self, host, command, ssh_port='22'):
         """
         Example:
-        $ devgen doOnRemote some.server.org "ls -al"
-        Relentlessly ripped off:
+        $ devgen doOnRemote username@example.org "ls -al"
+
+        A file named 'report.txt' will be created in the same directory where
+        you execute this, containing all output the commands on the remote-
+        machine return. Additionally there'S also a file 'prompt.txt',
+        containing returned errors only and prompt them immediately to the
+        user. Otherwise no news are good news.
+
+        Found inspiration here:
         https://gist.github.com/bortzmeyer/1284249
         """
 
         ERRORS = False
-        ssh = None
+        ssh_connection = None
         results = ''
         prompt = ''
         report = ''
@@ -456,18 +461,19 @@ extends = ' + getHome() + '.buildout/configs/' + plone_version + '/versions.cfg\
                 command += ';'
             command += 'echo $?' # add command
         # Open a connection and excute command-line on remote host:
-        ssh = subprocess.Popen(["ssh", "%s" % host, command],
-                               shell=False,
-                               stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE)
+        args = ['ssh', '-p', ssh_port, host, command]
+        ssh_connection = subprocess.Popen(args,
+                                          shell=False,
+                                          stdout=subprocess.PIPE,
+                                          stderr=subprocess.PIPE)
 
         # Read results:
-        results = ssh.stdout.readlines()
+        results = ssh_connection.stdout.readlines()
 
         # No results, probably an error:
         if results == []:
             ERRORS = True
-            errors = ssh.stderr.readlines()
+            errors = ssh_connection.stderr.readlines()
             # We probably should pipe the return into our local shell's stderr:
             # print >>sys.stderr, "ERROR: %s" % error
             # But we (her royal majesty and their multiple personalities)

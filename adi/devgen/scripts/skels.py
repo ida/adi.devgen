@@ -321,14 +321,15 @@ extends = ' + getHome() + '.buildout/configs/' + plone_version + '/versions.cfg\
         remote clone, and switches branch to this newest tag with a checkout.
 
         Example:
-            devgen deploy username@example.org repo_path instance_path
 
-        Where the paths are relative to the user's $HOME on remote.
+        devgen deploy user@example.org /path/to/repo /path/to/instance
 
-        Assumes you have a local repo and a clone of it on a remote machine.
+        Where the paths must be absolut.
+
         Assumes you are located in the local repo, when executing this.
+        Assumes you have a local repo and a clone of it on a remote machine.
         Assumes adi.devgen is also installed on remote.
-        Assumes remote repo-instance lives in instance_path and is called 'instance'.
+        Assumes remote instance lives in instance_path and is called 'instance'.
         Assumes authentication is done automagically by an ssh-agent, pubkey
         is deposited and registered as allowed on remote.
         """
@@ -433,7 +434,7 @@ extends = ' + getHome() + '.buildout/configs/' + plone_version + '/versions.cfg\
 
         A file named 'report.txt' will be created in the same directory where
         you execute this, containing all output the commands on the remote-
-        machine return. Additionally there'S also a file 'prompt.txt',
+        machine return. Additionally there's also a file 'prompt.txt',
         containing returned errors only and prompt them immediately to the
         user. Otherwise no news are good news.
 

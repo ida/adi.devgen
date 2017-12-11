@@ -315,10 +315,13 @@ extends = ' + getHome() + '.buildout/configs/' + plone_version + '/versions.cfg\
         os.system('cd ' + path + ';\
         git checkout master; git pull --rebase origin master; git fetch; git checkout tags/$(git describe)')
 
-    def deploy(self, host, repo_path, instance_path, ssh_port='22'):
+
+    def deploy(self, host, repo_path, instance_path=None, ssh_port='22'):
         """
         Creates an annotated tag in a local repo, then fetches it on an existing
         remote clone, and switches branch to this newest tag with a checkout.
+
+        If instance_path is given, restarts instance after changes.
 
         Example:
 
@@ -335,8 +338,9 @@ extends = ' + getHome() + '.buildout/configs/' + plone_version + '/versions.cfg\
         """
         createTag()
         kommand = 'cd ' + repo_path + '; devgen checkoutLatestTag;'
-        kommand += 'cd ' + instance_path + '; ./bin/instance restart'
+        if instance_path: kommand += 'cd ' + instance_path + '; ./bin/instance restart'
         os.system('devgen doOnRemote ' + host + ' "' + kommand + '"' + ' ' + ssh_port)
+
 
     def getRepos(self, urls, path='.'):
         """

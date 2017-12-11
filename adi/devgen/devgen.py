@@ -99,7 +99,7 @@ Try again, you can choose of these:\n\n" + ", ".join(available_functions) + ".\n
         i = 0
         while i > len(defaults)*-1:
             i -= 1
-            new_arg  = expected_args[i] + "='" + defaults[i] + "'"
+            new_arg  = str(expected_args[i]) + "='" + str(defaults[i]) + "'"
             expected_args[i] = new_arg
 
     # Get function, expected_args and docstr as one string:

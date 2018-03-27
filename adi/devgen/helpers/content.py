@@ -14,7 +14,7 @@ from adi.commons.commons import iterToTags
 from adi.commons.commons import newlinesToTags
 
 
-def addChild(parent, id_, typ='Folder', FIRE=False):
+def addChild(parent, id_='sample-id', typ='Folder', FIRE=False):
     """
     Add child to parent and return it, unless child exists already, then return
     existing child. If FIRE is True, use 'invokeFactory()', which triggers
@@ -23,7 +23,7 @@ def addChild(parent, id_, typ='Folder', FIRE=False):
     Sets a child's id as default-title, so something shows up in folder-listings.
     """
     child = None
-    if not idExistsInSite(parent, id_):
+    if not idExistsInParent(parent, id_):
         if FIRE:
             parent.invokeFactory(typ, id_)
             child = parent[id_]

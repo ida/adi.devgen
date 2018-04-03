@@ -75,11 +75,29 @@ def getConfigs(versions_url, configs_path):
             posis = getExtendsPosis(string)
             extends_content = string[posis[0]:posis[1]]
             read_urls = getExtendsUrls(extends_content)
-            replaceExtends(file_path, []) # empty extends-section
+            read_urls_rel = makeUrlsRelative(read_urls)
+            # Replace abs-urls with rel-paths in `extends=`-section:
+            replaceExtends(file_path, read_urls_rel)
             for read_url in read_urls:
                 read_name = read_url.split('/')[-1]
                 if not fileExists(configs_path + read_name):
+                    #TODO: Regard dups, name of different files could be the same,
+                    # e.g. 'example.org/versions.cfg' and 'example.com/versions.cfg'
                     urls.append(read_url)
+
+def makeUrlRelative(url):
+    if '/' in url:
+        while url.endswith('/'):
+            url = url[:-1]
+        url = url.split('/')[-1]
+    return url
+
+def makeUrlsRelative(urls):
+    rel_urls = []
+    for url in urls:
+        url = makeUrlRelative(url)
+        rel_urls.append(url)
+    return rel_urls
 
 def getExtendsPosis(string):
     """

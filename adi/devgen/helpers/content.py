@@ -34,6 +34,17 @@ def addChild(parent, id_='sample-id', typ='Folder', FIRE=False):
     else: child = parent[id_]
     return child
 
+def addChildByPath(parent, path, typ='Folder'):
+    """
+    - path is expected to be relative to parent
+    - missing folders are created on the fly
+    """
+    paths = path.split('/')
+    for i, path in enumerate(paths):
+        if i == len(paths)-1: parent = addChild(parent, path, typ)
+        else: parent = addChild(parent, path, 'Folder')
+    return parent
+
 def addChildren(parent, ids, typ='Folder'):
     """ For each id execute addChild()."""
     children = []

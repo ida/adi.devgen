@@ -1,8 +1,16 @@
-def setLocalRole(context, user_id, role_id):
-    # TODO: Check if role-id exists! Currently fails silently.
-    context.manage_setLocalRoles(userid, [role_id])
+from zope.component.hooks import getSite
+from AccessControl import getSecurityManager
+from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl.SecurityManagement import setSecurityManager
+from AccessControl.User import UnrestrictedUser
 
-def execute_under_special_role(portal, role, function, *args, **kwargs):
+
+def setLocalRole(context, user_id, role_id):
+    # todo: Check if role-id exists! Currently fails silently.
+    context.manage_setLocalRoles(user_id, [role_id])
+
+
+def execute_under_special_role(role, function, *args, **kwargs):
     """ Blatantly copied for reference, of:
     http://pydoc.net/Python/Products.EasyNewsletter/2.6.15/Products.EasyNewsletter.content.EasyNewsletter/ #noqa
     Execute code under special role priviledges.
@@ -18,7 +26,7 @@ def execute_under_special_role(portal, role, function, *args, **kwargs):
     @param args: Passed to the function
     @param kwargs: Passed to the function
     """
-
+    portal = getSite()
     sm = getSecurityManager()
     try:
         try:
@@ -40,6 +48,5 @@ def execute_under_special_role(portal, role, function, *args, **kwargs):
             # If special exception handlers are needed, run them here
             raise
     finally:
-        # Restore the old security manager
         setSecurityManager(sm)
 

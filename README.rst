@@ -28,27 +28,36 @@ testedly up to Plone vs. 4.3.4, needs to be fixed for getting newer versions.
 Installation
 =============
 
-Stable-version
---------------
 
-Of the commandline execute::
+Using pip
+----------
+
+
+If you have pip installed, you can simply do::
 
     pip install adi.devgen
 
 
-Develop-version
----------------
-
-Of the commandline execute::
+If you want to dabble with bleeding edge development version, do::
 
     pip install -e git+https://github.com/ida/adi.devgen.git#egg=adi.devgen
 
 
-The latest state of this package will be added to a directory (a.k.a. folder)
+In the latter case this package will be added to a directory (a.k.a. folder)
 called 'src', which lives, where your pip lives. To find out where your pip
-lives, type `which pip` into your console. You can then change the code inside
-of the src-directory and get the effects immediately.
+lives, type `which pip` into your console. You can then change the code in
+the src-directory and get the effects immediately.
 
+
+Using buildout
+--------------
+
+
+In your buildout-config eggs-section, add `adi.devgen`, run buildout.
+The exececutable then lives in your instance's bin-directory and can
+used like this: `./bin/devgen`.
+
+If you chose this install-method, prefix all following examples with `./bin/`.
 
 
 Configuration / Presettings
